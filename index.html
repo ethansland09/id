@@ -1332,6 +1332,51 @@ function orderPoints(points) {
 
 
 /* =========================================================
+   ROTATED RECT -> 4 CORNERS
+========================================================= */
+
+function rotatedRectCorners(rect) {
+
+    /*
+     * Standard OpenCV RotatedRect::points() formula,
+     * reimplemented in JS so we don't depend on a
+     * particular opencv.js build exposing it.
+     */
+
+    const angle =
+        rect.angle * Math.PI / 180;
+
+    const b =
+        Math.cos(angle) * 0.5;
+
+    const a =
+        Math.sin(angle) * 0.5;
+
+    const cx =
+        rect.center.x;
+
+    const cy =
+        rect.center.y;
+
+    const w =
+        rect.size.width;
+
+    const h =
+        rect.size.height;
+
+    return [
+
+        { x: cx - a * h - b * w, y: cy + b * h - a * w },
+        { x: cx + a * h - b * w, y: cy - b * h - a * w },
+        { x: cx + a * h + b * w, y: cy - b * h + a * w },
+        { x: cx - a * h + b * w, y: cy + b * h + a * w }
+
+    ];
+
+}
+
+
+/* =========================================================
    DOCUMENT DETECTION
 ========================================================= */
 
@@ -1353,10 +1398,16 @@ function detectDocument(imageData) {
     const gray =
         new cv.Mat();
 
+    const enhanced =
+        new cv.Mat();
+
     const blur =
         new cv.Mat();
 
     const edges =
+        new cv.Mat();
+
+    const dilated =
         new cv.Mat();
 
     const closed =
@@ -1374,31 +1425,115 @@ function detectDocument(imageData) {
         cv.COLOR_RGBA2GRAY
     );
 
+    /*
+     * Even out glare and uneven indoor lighting before
+     * looking for edges. Laminated ID cards catch a lot
+     * of glare, and a plain fixed-threshold Canny pass
+     * loses the card outline whenever a bright patch or a
+     * dim corner throws the contrast off. If this build of
+     * opencv.js doesn't expose CLAHE, just fall through to
+     * the plain grayscale frame.
+     */
+
+    let lightingSource =
+        gray;
+
+    try {
+
+        const clahe =
+            new cv.CLAHE(
+                3,
+                new cv.Size(8, 8)
+            );
+
+        clahe.apply(
+            gray,
+            enhanced
+        );
+
+        clahe.delete();
+
+        lightingSource =
+            enhanced;
+
+    } catch(error) {
+
+        gray.copyTo(
+            enhanced
+        );
+
+        lightingSource =
+            enhanced;
+
+    }
+
     cv.GaussianBlur(
-        gray,
+        lightingSource,
         blur,
         new cv.Size(5, 5),
         0
     );
 
+    /*
+     * Pick the Canny thresholds from this frame's own
+     * brightness instead of one fixed pair. A single fixed
+     * (35, 120) pair only really works in one lighting
+     * condition; a dim room or a bright window each need a
+     * different pair to still find the card edge.
+     */
+
+    const brightness =
+        cv.mean(blur)[0];
+
+    const lowerThreshold =
+        Math.max(
+            15,
+            brightness * 0.4
+        );
+
+    const upperThreshold =
+        Math.min(
+            210,
+            brightness * 1.3
+        );
+
     cv.Canny(
         blur,
         edges,
-        35,
-        120
+        lowerThreshold,
+        upperThreshold
     );
 
-    const kernel =
+    /*
+     * A small dilate before the close bridges the faint,
+     * broken edge segments that glare and low contrast
+     * tend to leave behind, so the outline forms a full
+     * loop more often.
+     */
+
+    const dilateKernel =
         cv.getStructuringElement(
             cv.MORPH_RECT,
-            new cv.Size(5, 5)
+            new cv.Size(3, 3)
+        );
+
+    cv.dilate(
+        edges,
+        dilated,
+        dilateKernel
+    );
+
+    const closeKernel =
+        cv.getStructuringElement(
+            cv.MORPH_RECT,
+            new cv.Size(7, 7)
         );
 
     cv.morphologyEx(
-        edges,
+        dilated,
         closed,
         cv.MORPH_CLOSE,
-        kernel
+        closeKernel
     );
 
     cv.findContours(
@@ -1432,13 +1567,50 @@ function detectDocument(imageData) {
             );
 
         if (
-            perimeter < 300
+            perimeter < 260
         ) {
 
             contour.delete();
             continue;
 
         }
+
+        const area =
+            Math.abs(
+                cv.contourArea(
+                    contour
+                )
+            );
+
+        const areaRatio =
+            area /
+            imageArea;
+
+        /*
+         * Widened from (0.12, 0.92) so a card held a
+         * little farther from the camera than the guide
+         * suggests still registers.
+         */
+
+        if (
+            areaRatio < 0.07 ||
+            areaRatio > 0.94
+        ) {
+
+            contour.delete();
+            continue;
+
+        }
+
+        /*
+         * Real cards rarely approximate to a clean 4-point
+         * outline: rounded plastic corners, a slightly
+         * noisy background, or minor lens distortion
+         * usually add extra vertices. Instead of throwing
+         * those away, fall back to the contour's minimum-
+         * area rectangle, which is far more forgiving and
+         * still yields four usable corners.
+         */
 
         const approx =
             new cv.Mat();
@@ -1450,202 +1622,212 @@ function detectDocument(imageData) {
             true
         );
 
+        let points = null;
+
         if (
             approx.rows === 4 &&
             cv.isContourConvex(approx)
         ) {
 
-            const area =
-                Math.abs(
-                    cv.contourArea(
-                        approx
-                    )
-                );
+            points = [];
 
-            const areaRatio =
-                area /
-                imageArea;
-
-            if (
-                areaRatio > 0.12 &&
-                areaRatio < 0.92
+            for (
+                let j = 0;
+                j < 4;
+                j++
             ) {
 
-                const points = [];
-
-                for (
-                    let j = 0;
-                    j < 4;
-                    j++
-                ) {
-
-                    let x;
-                    let y;
-
-                    if (
-                        approx.data32S &&
-                        approx.data32S.length >= 8
-                    ) {
-
-                        x =
-                            approx.data32S[
-                                j * 2
-                            ];
-
-                        y =
-                            approx.data32S[
-                                j * 2 + 1
-                            ];
-
-                    } else {
-
-                        x =
-                            approx.data32F[
-                                j * 2
-                            ];
-
-                        y =
-                            approx.data32F[
-                                j * 2 + 1
-                            ];
-
-                    }
-
-                    points.push({
-                        x,
-                        y
-                    });
-
-                }
-
-                const ordered =
-                    orderPoints(points);
-
-                const top =
-                    distance(
-                        ordered[0],
-                        ordered[1]
-                    );
-
-                const right =
-                    distance(
-                        ordered[1],
-                        ordered[2]
-                    );
-
-                const bottom =
-                    distance(
-                        ordered[2],
-                        ordered[3]
-                    );
-
-                const left =
-                    distance(
-                        ordered[3],
-                        ordered[0]
-                    );
-
-                const width =
-                    (top + bottom) / 2;
-
-                const height =
-                    (left + right) / 2;
-
-                const ratio =
-                    Math.max(
-                        width,
-                        height
-                    ) /
-                    Math.max(
-                        1,
-                        Math.min(
-                            width,
-                            height
-                        )
-                    );
+                let x;
+                let y;
 
                 if (
-                    ratio >= 1.35 &&
-                    ratio <= 2.05
+                    approx.data32S &&
+                    approx.data32S.length >= 8
                 ) {
 
-                    const horizontal =
-                        Math.min(
-                            top,
-                            bottom
-                        ) /
-                        Math.max(
-                            top,
-                            bottom
-                        );
+                    x =
+                        approx.data32S[
+                            j * 2
+                        ];
 
-                    const vertical =
-                        Math.min(
-                            left,
-                            right
-                        ) /
-                        Math.max(
-                            left,
-                            right
-                        );
+                    y =
+                        approx.data32S[
+                            j * 2 + 1
+                        ];
 
-                    const rectangularity =
-                        (horizontal +
-                         vertical) / 2;
+                } else {
 
-                    /*
-                     * Prefer cards that:
-                     * - are large
-                     * - are rectangular
-                     * - have a believable ID-card ratio
-                     */
+                    x =
+                        approx.data32F[
+                            j * 2
+                        ];
 
-                    const ratioScore =
-                        1 -
-                        Math.min(
-                            1,
-                            Math.abs(
-                                ratio - 1.586
-                            ) / 0.75
-                        );
-
-                    const score =
-                        areaRatio *
-                        rectangularity *
-                        (0.75 + ratioScore * 0.25);
-
-                    if (
-                        score >
-                        bestScore
-                    ) {
-
-                        bestScore =
-                            score;
-
-                        best =
-                            ordered;
-
-                    }
+                    y =
+                        approx.data32F[
+                            j * 2 + 1
+                        ];
 
                 }
 
+                points.push({
+                    x,
+                    y
+                });
+
             }
+
+        } else {
+
+            const rotated =
+                cv.minAreaRect(
+                    contour
+                );
+
+            points =
+                rotatedRectCorners(
+                    rotated
+                );
 
         }
 
         approx.delete();
         contour.delete();
 
+        if (!points)
+            continue;
+
+        const ordered =
+            orderPoints(points);
+
+        const top =
+            distance(
+                ordered[0],
+                ordered[1]
+            );
+
+        const right =
+            distance(
+                ordered[1],
+                ordered[2]
+            );
+
+        const bottom =
+            distance(
+                ordered[2],
+                ordered[3]
+            );
+
+        const left =
+            distance(
+                ordered[3],
+                ordered[0]
+            );
+
+        const width =
+            (top + bottom) / 2;
+
+        const height =
+            (left + right) / 2;
+
+        const ratio =
+            Math.max(
+                width,
+                height
+            ) /
+            Math.max(
+                1,
+                Math.min(
+                    width,
+                    height
+                )
+            );
+
+        /*
+         * Widened from (1.35, 2.05) to tolerate the mild
+         * skew a hand-held angle or lens distortion adds
+         * to a true 1.586 card ratio.
+         */
+
+        if (
+            ratio < 1.30 ||
+            ratio > 2.15
+        ) {
+
+            continue;
+
+        }
+
+        const horizontal =
+            Math.min(
+                top,
+                bottom
+            ) /
+            Math.max(
+                top,
+                bottom
+            );
+
+        const vertical =
+            Math.min(
+                left,
+                right
+            ) /
+            Math.max(
+                left,
+                right
+            );
+
+        const rectangularity =
+            (horizontal +
+             vertical) / 2;
+
+        /*
+         * Prefer cards that:
+         * - are large
+         * - are rectangular
+         * - have a believable ID-card ratio
+         */
+
+        const ratioScore =
+            1 -
+            Math.min(
+                1,
+                Math.abs(
+                    ratio - 1.586
+                ) / 0.75
+            );
+
+        const score =
+            areaRatio *
+            rectangularity *
+            (0.75 + ratioScore * 0.25);
+
+        if (
+            score >
+            bestScore
+        ) {
+
+            bestScore =
+                score;
+
+            best =
+                ordered;
+
+        }
+
     }
 
     src.delete();
     gray.delete();
+    enhanced.delete();
     blur.delete();
     edges.delete();
+    dilated.delete();
     closed.delete();
     contours.delete();
     hierarchy.delete();
-    kernel.delete();
+    dilateKernel.delete();
+    closeKernel.delete();
 
     return best;
 }
@@ -1770,7 +1952,27 @@ function isStable(points) {
             })
         );
 
-    return movement < 35;
+    /*
+     * A fixed 35px budget was measured against the full
+     * video resolution (often 1920x1080), which made normal
+     * handheld wobble reset the counter almost every frame
+     * and the scan rarely got to "hold still". Scale the
+     * tolerance to the stream's actual size instead.
+     */
+
+    const diagonal =
+        Math.hypot(
+            video.videoWidth || 1280,
+            video.videoHeight || 720
+        );
+
+    const tolerance =
+        Math.max(
+            35,
+            diagonal * 0.022
+        );
+
+    return movement < tolerance;
 }
 
 
@@ -3683,7 +3885,7 @@ function detectionLoop() {
             stableFrames =
                 Math.max(
                     0,
-                    stableFrames - 2
+                    stableFrames - 1
                 );
 
         }
@@ -3707,7 +3909,7 @@ function detectionLoop() {
         }
 
         if (
-            stableFrames >= 10 &&
+            stableFrames >= 8 &&
             !processing
         ) {
 
