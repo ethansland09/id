@@ -2177,20 +2177,25 @@ function extractPortrait() {
 
 
 /* =========================================================
-   OCR PREPROCESSING
+   OCR IMAGE PREP
 
-   Shared image-cleanup pipeline used by both the name
-   pass and the full-card pass. Boosts local contrast,
-   removes sensor noise while keeping edges crisp, then
-   binarizes with an adaptive threshold so Tesseract sees
-   clean dark-on-light text regardless of card lighting.
-   Automatically flips light-on-dark card designs so the
-   output is always dark text on a light background.
+   Two lightweight, purpose-specific variants instead of
+   one heavy pipeline:
+
+   - enhanceContrastGray(): grayscale + local contrast
+     boost only. No thresholding, so it stays safe to run
+     across a busy full card (photo + barcode + text)
+     without turning non-text regions into speckle noise.
+
+   - binarizeTextCrop(): grayscale + normalize + a single
+     global Otsu threshold. Meant only for a tight, mostly-
+     text crop (like the name line), where a clean black/
+     white version helps Tesseract without the risk of
+     shredding a photo region into fake "text".
 ========================================================= */
 
-function preprocessForOCR(
-    sourceCanvas,
-    options = {}
+function enhanceContrastGray(
+    sourceCanvas
 ) {
 
     if (
@@ -2200,13 +2205,6 @@ function preprocessForOCR(
         return sourceCanvas;
 
     }
-
-
-    const {
-        blockSize = 31,
-        C = 12,
-        useAdaptive = true
-    } = options;
 
 
     const mat =
@@ -2222,13 +2220,8 @@ function preprocessForOCR(
     );
 
 
-    /*
-     * Local contrast boost so faint or
-     * unevenly-lit printing becomes legible.
-     */
-
     const clahe =
-        new cv.CLAHE(3, new cv.Size(8, 8));
+        new cv.CLAHE(2.5, new cv.Size(8, 8));
 
     const contrasted =
         new cv.Mat();
@@ -2241,114 +2234,76 @@ function preprocessForOCR(
     clahe.delete();
 
 
-    /*
-     * Edge-preserving smoothing to
-     * knock out sensor / paper noise.
-     */
+    const outCanvas =
+        document.createElement(
+            "canvas"
+        );
 
-    const smooth =
-        new cv.Mat();
-
-    cv.bilateralFilter(
-        contrasted,
-        smooth,
-        7,
-        50,
-        50
+    cv.imshow(
+        outCanvas,
+        contrasted
     );
 
 
-    /*
-     * Unsharp mask to make character
-     * strokes crisper for the OCR engine.
-     */
+    mat.delete();
+    gray.delete();
+    contrasted.delete();
 
-    const blurred =
+
+    return outCanvas;
+
+}
+
+
+function binarizeTextCrop(
+    sourceCanvas
+) {
+
+    if (
+        typeof cv === "undefined"
+    ) {
+
+        return sourceCanvas;
+
+    }
+
+
+    const mat =
+        cv.imread(sourceCanvas);
+
+    const gray =
         new cv.Mat();
 
-    cv.GaussianBlur(
-        smooth,
-        blurred,
-        new cv.Size(0, 0),
-        3
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
     );
 
-    const sharp =
+
+    const enhanced =
         new cv.Mat();
 
-    cv.addWeighted(
-        smooth,
-        1.5,
-        blurred,
-        -0.5,
+    cv.normalize(
+        gray,
+        enhanced,
         0,
-        sharp
+        255,
+        cv.NORM_MINMAX
     );
 
 
     const binary =
         new cv.Mat();
 
-    if (useAdaptive) {
-
-        const size =
-            blockSize % 2 === 0
-                ? blockSize + 1
-                : blockSize;
-
-        cv.adaptiveThreshold(
-            sharp,
-            binary,
-            255,
-            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv.THRESH_BINARY,
-            size,
-            C
-        );
-
-    } else {
-
-        cv.threshold(
-            sharp,
-            binary,
-            0,
-            255,
-            cv.THRESH_BINARY +
-            cv.THRESH_OTSU
-        );
-
-    }
-
-
-    /*
-     * Normalize polarity: Tesseract wants
-     * dark text on a light background.
-     */
-
-    let result =
-        binary;
-
-    let inverted =
-        null;
-
-    const whiteRatio =
-        cv.countNonZero(binary) /
-        (binary.rows * binary.cols);
-
-    if (whiteRatio < 0.5) {
-
-        inverted =
-            new cv.Mat();
-
-        cv.bitwise_not(
-            binary,
-            inverted
-        );
-
-        result =
-            inverted;
-
-    }
+    cv.threshold(
+        enhanced,
+        binary,
+        0,
+        255,
+        cv.THRESH_BINARY +
+        cv.THRESH_OTSU
+    );
 
 
     const outCanvas =
@@ -2358,20 +2313,14 @@ function preprocessForOCR(
 
     cv.imshow(
         outCanvas,
-        result
+        binary
     );
 
 
     mat.delete();
     gray.delete();
-    contrasted.delete();
-    smooth.delete();
-    blurred.delete();
-    sharp.delete();
+    enhanced.delete();
     binary.delete();
-
-    if (inverted)
-        inverted.delete();
 
 
     return outCanvas;
@@ -2382,12 +2331,16 @@ function preprocessForOCR(
 /* =========================================================
    NAME CLEANUP
 
-   Strips OCR noise, drops stray leading labels like
-   "Name:", and title-cases the result so "JOHN q SMITH"
-   or "john smith" both come out as "John Smith".
+   Works at the word level, not the whole line: Tesseract
+   reports a confidence per word, so low-confidence noise
+   words (stray marks near the crop edges, partial letters
+   from a line above/below) get dropped individually instead
+   of dragging the whole reading down or getting glued onto
+   the real name. Falls back to whole-line cleanup only if
+   word-level data isn't available.
 ========================================================= */
 
-function cleanName(raw) {
+function cleanNameText(raw) {
 
     let name =
         String(raw || "")
@@ -2407,23 +2360,6 @@ function cleanName(raw) {
             /^(name|student|student name|full name|cardholder)\s*[:\-]?\s*/i,
             ""
         );
-
-
-    /*
-     * Drop leftover single stray letters
-     * that adaptive thresholding sometimes
-     * produces at the start/end of the line.
-     */
-
-    name =
-        name
-            .split(" ")
-            .filter(
-                (word, index, all) =>
-                    word.length > 1 ||
-                    all.length === 1
-            )
-            .join(" ");
 
 
     if (!name)
@@ -2470,6 +2406,120 @@ function cleanName(raw) {
 
 
     return name;
+
+}
+
+
+function extractNameFromResult(result) {
+
+    const words =
+        (result.data.words || [])
+            .filter(
+                w =>
+                    w.text &&
+                    w.text.trim()
+            );
+
+
+    if (words.length) {
+
+        const kept =
+            words
+                .filter(w => {
+
+                    const t =
+                        w.text.trim();
+
+                    if (
+                        !/^[A-Za-zÀ-ÿ'-]+$/.test(t)
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (t.length < 2)
+                        return false;
+
+
+                    if (
+                        (w.confidence || 0) < 45
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                })
+                .map(
+                    w => w.text.trim()
+                );
+
+
+        const confidences =
+            words
+                .filter(
+                    w =>
+                        kept.includes(
+                            w.text.trim()
+                        )
+                )
+                .map(
+                    w => w.confidence || 0
+                );
+
+
+        const avgConfidence =
+            confidences.length
+                ? confidences.reduce(
+                    (a, b) => a + b, 0
+                  ) / confidences.length
+                : 0;
+
+
+        const cleaned =
+            cleanNameText(
+                kept.join(" ")
+            );
+
+
+        if (cleaned) {
+
+            return {
+                text: cleaned,
+                confidence: avgConfidence,
+                wordCount: kept.length
+            };
+
+        }
+
+    }
+
+
+    /*
+     * Fallback: no per-word data
+     * (or nothing survived filtering),
+     * clean the raw line instead.
+     */
+
+    const cleaned =
+        cleanNameText(
+            result.data.text
+        );
+
+
+    return {
+        text: cleaned,
+        confidence: result.data.confidence || 0,
+        wordCount:
+            cleaned
+                ? cleaned.split(" ").length
+                : 0
+    };
 
 }
 
@@ -2563,15 +2613,18 @@ async function readName() {
     /*
      * The original profile photo remains
      * completely untouched and in color;
-     * only this OCR copy is processed.
+     * only these OCR copies are processed.
+     *
+     * Both candidates are read as a SINGLE
+     * LINE only (psm 7) — the name is one
+     * line in this layout, so block mode is
+     * deliberately avoided here since it can
+     * pull in neighboring noise as extra
+     * "words".
      */
 
-    const preprocessed =
-        preprocessForOCR(crop, {
-            blockSize: 35,
-            C: 15
-        });
-
+    const binarized =
+        binarizeTextCrop(crop);
 
     const whitelist =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -2581,28 +2634,10 @@ async function readName() {
         "'- .";
 
 
-    /*
-     * Several passes with different
-     * segmentation modes and inputs; the
-     * highest-confidence reading wins.
-     */
-
     const attempts = [
 
-        {
-            canvas: preprocessed,
-            psm: "7"
-        },
-
-        {
-            canvas: preprocessed,
-            psm: "6"
-        },
-
-        {
-            canvas: crop,
-            psm: "7"
-        }
+        binarized,
+        crop
 
     ];
 
@@ -2611,7 +2646,7 @@ async function readName() {
 
 
     for (
-        const attempt of attempts
+        const attemptCanvas of attempts
     ) {
 
         try {
@@ -2619,7 +2654,7 @@ async function readName() {
             const result =
                 await Tesseract.recognize(
 
-                    attempt.canvas,
+                    attemptCanvas,
 
                     "eng",
 
@@ -2644,7 +2679,7 @@ async function readName() {
                         config: {
 
                             tessedit_pageseg_mode:
-                                attempt.psm,
+                                "7",
 
                             tessedit_char_whitelist:
                                 whitelist
@@ -2656,22 +2691,17 @@ async function readName() {
                 );
 
 
-            const cleaned =
-                cleanName(
-                    result.data.text
+            const extracted =
+                extractNameFromResult(
+                    result
                 );
 
 
-            if (cleaned) {
+            if (extracted.text) {
 
-                candidates.push({
-
-                    text: cleaned,
-
-                    confidence:
-                        result.data.confidence || 0
-
-                });
+                candidates.push(
+                    extracted
+                );
 
             }
 
@@ -2694,11 +2724,41 @@ async function readName() {
     }
 
 
-    candidates.sort(
-        (a, b) =>
+    /*
+     * Prefer a plausible name length
+     * (1-4 words) over raw confidence,
+     * then break ties on confidence.
+     */
+
+    candidates.sort((a, b) => {
+
+        const aPlausible =
+            a.wordCount >= 1 &&
+            a.wordCount <= 4;
+
+        const bPlausible =
+            b.wordCount >= 1 &&
+            b.wordCount <= 4;
+
+
+        if (
+            aPlausible !==
+            bPlausible
+        ) {
+
+            return aPlausible
+                ? -1
+                : 1;
+
+        }
+
+
+        return (
             b.confidence -
             a.confidence
-    );
+        );
+
+    });
 
 
     return candidates[0].text;
@@ -2708,56 +2768,71 @@ async function readName() {
 
 /* =========================================================
    FULL CARD OCR
+
+   Two gentle candidates only — the raw color frame, and a
+   grayscale/contrast-boosted version with NO binarization,
+   since thresholding a busy card (photo + barcode + text)
+   tends to turn the non-text areas into noise Tesseract
+   tries to "read". Whichever pass produces cleaner-looking
+   text (real words, not a wall of stray symbols) wins,
+   using a sanity score rather than raw confidence alone.
 ========================================================= */
 
-async function readFullCard() {
+function scoreOcrText(text, confidence) {
 
-    const preprocessed =
-        preprocessForOCR(
-            originalCapture,
-            {
-                blockSize: 41,
-                C: 10
-            }
+    const tokens =
+        String(text || "")
+            .split(/\s+/)
+            .filter(Boolean);
+
+
+    if (!tokens.length)
+        return -1;
+
+
+    const goodTokens =
+        tokens.filter(
+            t =>
+                /^[A-Za-z0-9À-ÿ'.,#:%-]{2,}$/.test(t)
         );
 
 
-    /*
-     * Run the raw color frame and a
-     * cleaned-up binary version through
-     * two segmentation modes each, and
-     * keep whichever pass Tesseract was
-     * most confident about.
-     */
+    const ratio =
+        goodTokens.length /
+        tokens.length;
+
+
+    return (
+        (confidence || 0) * ratio
+    );
+
+}
+
+
+async function readFullCard() {
+
+    const contrastEnhanced =
+        enhanceContrastGray(
+            originalCapture
+        );
+
 
     const attempts = [
 
-        {
-            canvas: preprocessed,
-            psm: "6"
-        },
-
-        {
-            canvas: originalCapture,
-            psm: "6"
-        },
-
-        {
-            canvas: preprocessed,
-            psm: "11"
-        }
+        originalCapture,
+        contrastEnhanced
 
     ];
 
 
     let best = {
         text: "",
-        confidence: -1
+        score: -1
     };
 
 
     for (
-        const attempt of attempts
+        const attemptCanvas of attempts
     ) {
 
         try {
@@ -2765,7 +2840,7 @@ async function readFullCard() {
             const result =
                 await Tesseract.recognize(
 
-                    attempt.canvas,
+                    attemptCanvas,
 
                     "eng",
 
@@ -2790,7 +2865,7 @@ async function readFullCard() {
                         config: {
 
                             tessedit_pageseg_mode:
-                                attempt.psm
+                                "6"
 
                         }
 
@@ -2799,21 +2874,24 @@ async function readFullCard() {
                 );
 
 
-            const confidence =
-                result.data.confidence || 0;
-
             const text =
                 (result.data.text || "").trim();
+
+            const score =
+                scoreOcrText(
+                    text,
+                    result.data.confidence
+                );
 
 
             if (
                 text &&
-                confidence > best.confidence
+                score > best.score
             ) {
 
                 best = {
                     text,
-                    confidence
+                    score
                 };
 
             }
