@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <title>Card Scanner</title>
 
-<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+<script async
+        src="https://docs.opencv.org/4.x/opencv.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
@@ -88,10 +89,12 @@ button {
 
 .permission {
     min-height: 650px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     padding: 30px;
     text-align: center;
 }
@@ -99,12 +102,17 @@ button {
 .cameraIcon {
     width: 100px;
     height: 100px;
+
     display: grid;
     place-items: center;
+
     border-radius: 50%;
+
     background: #102b44;
     border: 1px solid #2c5578;
+
     font-size: 44px;
+
     margin-bottom: 24px;
 }
 
@@ -122,10 +130,14 @@ button {
 .primary {
     border: 0;
     border-radius: 13px;
+
     padding: 14px 22px;
+
     color: white;
     background: var(--blue);
+
     font-weight: 750;
+
     transition: .15s;
 }
 
@@ -159,28 +171,37 @@ button {
 #video {
     position: absolute;
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     object-fit: cover;
 }
 
 #overlay {
     position: absolute;
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     pointer-events: none;
 }
 
 .guide {
     position: absolute;
+
     left: 8%;
     right: 8%;
+
     top: 18%;
     bottom: 18%;
+
     border: 2px solid rgba(255,255,255,.35);
     border-radius: 18px;
+
     pointer-events: none;
+
     transition:
         border-color .2s,
         box-shadow .2s;
@@ -188,26 +209,36 @@ button {
 
 .guide.detected {
     border-color: var(--blue);
+
     box-shadow:
         0 0 35px rgba(38,140,245,.35);
 }
 
 .guide.stable {
     border-color: var(--green);
+
     box-shadow:
         0 0 45px rgba(53,214,139,.4);
 }
 
 .scanMessage {
     position: absolute;
+
     left: 50%;
     bottom: 22px;
+
     transform: translateX(-50%);
+
     padding: 11px 17px;
+
     max-width: 90%;
+
     border-radius: 999px;
+
     background: rgba(0,0,0,.78);
+
     backdrop-filter: blur(12px);
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -215,10 +246,15 @@ button {
 
 .status {
     margin: 18px;
+
     padding: 17px;
+
     border-radius: 15px;
+
     background: var(--panel);
+
     border: 1px solid var(--border);
+
     line-height: 1.5;
 }
 
@@ -240,15 +276,19 @@ button {
 .progress {
     height: 5px;
     margin-top: 12px;
+
     background: #182a3b;
     border-radius: 999px;
+
     overflow: hidden;
 }
 
 .progressBar {
     width: 0%;
     height: 100%;
+
     background: var(--blue);
+
     transition: width .15s;
 }
 
@@ -263,10 +303,14 @@ button {
 
 .cardPreview {
     display: block;
+
     width: 100%;
     height: auto;
+
     border-radius: 16px;
+
     background: black;
+
     border: 1px solid var(--border);
 }
 
@@ -276,22 +320,33 @@ button {
 
 .profile {
     margin-top: 20px;
+
     padding: 20px;
+
     display: flex;
     align-items: center;
+
     gap: 20px;
+
     background: var(--panel);
+
     border: 1px solid var(--border);
+
     border-radius: 18px;
 }
 
 .profilePicture {
     width: 120px;
     height: 120px;
+
     flex: 0 0 auto;
+
     object-fit: cover;
+
     border-radius: 50%;
+
     border: 3px solid #3779a9;
+
     background: #111;
 }
 
@@ -301,15 +356,21 @@ button {
 
 .profile p {
     margin: 6px 0;
+
     color: var(--muted);
 }
 
 .smallButton {
     border: 1px solid var(--border);
+
     border-radius: 10px;
+
     padding: 9px 13px;
+
     background: #172a3d;
+
     color: white;
+
     font-weight: 650;
 }
 
@@ -321,6 +382,7 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 9px;
+
     margin-top: 14px;
 }
 
@@ -330,10 +392,15 @@ button {
 
 .editor {
     display: none;
+
     margin-top: 22px;
+
     padding: 20px;
+
     border-radius: 18px;
+
     background: #091521;
+
     border: 1px solid var(--border);
 }
 
@@ -346,21 +413,14 @@ button {
     line-height: 1.5;
 }
 
-/*
- * Larger editing area.
- *
- * The image starts significantly farther zoomed out.
- * This gives the user much more room to position the
- * portrait instead of starting already zoomed in.
- */
-
 .cropArea {
     position: relative;
 
-    width: min(560px, 100%);
+    width: min(500px, 100%);
+
     aspect-ratio: 1 / 1;
 
-    margin: 22px auto;
+    margin: 18px auto;
 
     overflow: hidden;
 
@@ -371,21 +431,11 @@ button {
         )
         50% / 24px 24px;
 
-    border-radius: 20px;
+    border-radius: 18px;
 
     touch-action: none;
     user-select: none;
-
-    box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.05),
-        0 20px 60px rgba(0,0,0,.3);
 }
-
-/*
- * Important:
- * The image is allowed to extend far outside the editor.
- * object-fit is intentionally NOT used.
- */
 
 #editImage {
     position: absolute;
@@ -397,52 +447,29 @@ button {
     height: auto;
 
     max-width: none;
-    max-height: none;
 
-    transform-origin: center center;
+    transform-origin: center;
 
     pointer-events: none;
     user-select: none;
 
-    image-rendering: auto;
-
-    will-change: transform;
+    will-change: transform, width, height;
 }
-
-/*
- * The actual crop is 80% of the editor.
- */
 
 .cropWindow {
     position: absolute;
 
-    left: 10%;
-    top: 10%;
-    right: 10%;
-    bottom: 10%;
+    inset: 10%;
 
     border: 3px solid white;
 
     border-radius: 50%;
 
     box-shadow:
-        0 0 0 9999px rgba(0,0,0,.56),
-        0 0 35px rgba(0,0,0,.45);
+        0 0 0 9999px rgba(0,0,0,.53),
+        0 0 30px rgba(0,0,0,.4);
 
     pointer-events: none;
-}
-
-.cropWindow::before {
-    content: "";
-
-    position: absolute;
-
-    inset: -1px;
-
-    border-radius: inherit;
-
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,.18);
 }
 
 .zoomRow {
@@ -450,7 +477,8 @@ button {
     align-items: center;
     gap: 12px;
 
-    max-width: 560px;
+    max-width: 500px;
+
     margin: auto;
 }
 
@@ -462,20 +490,11 @@ button {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+
     gap: 10px;
+
     margin-top: 18px;
 }
-
-.zoomLabel {
-    min-width: 50px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-/* =========================================================
-   OCR
-========================================================= */
 
 .output {
     margin-top: 18px;
@@ -487,14 +506,22 @@ button {
 
 pre {
     margin: 0;
+
     padding: 14px;
+
     max-height: 220px;
+
     overflow: auto;
+
     white-space: pre-wrap;
     word-break: break-word;
+
     background: #050c13;
+
     border: 1px solid var(--border);
+
     border-radius: 12px;
+
     color: #adc0d1;
 }
 
@@ -517,20 +544,29 @@ pre {
 
 .account {
     margin-top: 28px;
+
     padding: 25px;
+
     display: flex;
     align-items: center;
+
     gap: 22px;
+
     border-radius: 20px;
+
     background: var(--panel);
+
     border: 1px solid var(--border);
 }
 
 .account img {
     width: 125px;
     height: 125px;
+
     object-fit: cover;
+
     border-radius: 50%;
+
     border: 3px solid #3779a9;
 }
 
@@ -540,6 +576,7 @@ pre {
 
 .account p {
     margin: 6px 0;
+
     color: var(--muted);
 }
 
@@ -547,12 +584,9 @@ pre {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+
     margin-top: 20px;
 }
-
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media(max-width: 650px) {
 
@@ -580,13 +614,8 @@ pre {
     .home {
         padding: 16px;
     }
-
-    .cropArea {
-        width: min(94vw, 560px);
-    }
 }
 </style>
-
 </head>
 
 <body>
@@ -595,282 +624,350 @@ pre {
 
 <section id="scannerPage">
 
-<div class="header">
+    <div class="header">
+        <h1>📇 Card Scanner</h1>
 
-<h1>📇 Card Scanner</h1>
+        <p>
+            Hold the card inside the frame. The scanner
+            automatically detects the document and chooses
+            a sharp frame before processing it.
+        </p>
+    </div>
 
-<p>
-Hold the card inside the frame. The scanner
-automatically detects the document and chooses
-a sharp frame before processing it.
-</p>
+    <div
+        id="permission"
+        class="permission">
 
-</div>
+        <div class="cameraIcon">
+            📷
+        </div>
 
-<div id="permission" class="permission">
+        <h2>
+            Camera Access
+        </h2>
 
-<div class="cameraIcon">
-📷
-</div>
+        <p>
+            Camera access is needed for automatic
+            document detection.
+        </p>
 
-<h2>
-Camera Access
-</h2>
+        <button
+            id="startCamera"
+            class="primary">
 
-<p>
-Camera access is needed for automatic
-document detection.
-</p>
+            Allow Camera
 
-<button id="startCamera" class="primary">
-Allow Camera
-</button>
+        </button>
 
-<p id="cameraError" class="error"></p>
+        <p
+            id="cameraError"
+            class="error">
+        </p>
 
-</div>
+    </div>
 
-<div id="scannerInterface" style="display:none;">
+    <div
+        id="scannerInterface"
+        style="display:none;">
 
-<div class="scanner">
+        <div class="scanner">
 
-<video
-id="video"
-autoplay
-playsinline> </video>
+            <video
+                id="video"
+                autoplay
+                playsinline>
+            </video>
 
-<canvas id="overlay"></canvas>
+            <canvas
+                id="overlay">
+            </canvas>
 
-<div id="guide" class="guide"></div>
+            <div
+                id="guide"
+                class="guide">
+            </div>
 
-<div id="scanMessage" class="scanMessage">
-Looking for card...
-</div>
+            <div
+                id="scanMessage"
+                class="scanMessage">
 
-</div>
+                Looking for card...
 
-<div id="status" class="status">
+            </div>
 
-<strong>
-📷 Camera ready
-</strong>
+        </div>
 
-<br>
+        <div
+            id="status"
+            class="status">
 
-Place the complete card inside the frame.
+            <strong>
+                📷 Camera ready
+            </strong>
 
-<div class="progress">
-<div id="progressBar" class="progressBar"></div>
-</div>
+            <br>
 
-</div>
+            Place the complete card inside the frame.
 
-</div>
+            <div class="progress">
+                <div
+                    id="progressBar"
+                    class="progressBar">
+                </div>
+            </div>
 
-<div id="results" class="results">
+        </div>
 
-<h2>
-Scan Result
-</h2>
+    </div>
 
-<canvas
-id="corrected"
-class="cardPreview"> </canvas>
+    <div
+        id="results"
+        class="results">
 
-<div class="profile">
+        <h2>
+            Scan Result
+        </h2>
 
-<img
-id="profilePicture"
-class="profilePicture"
-alt="Profile picture">
+        <canvas
+            id="corrected"
+            class="cardPreview">
+        </canvas>
 
-<div>
+        <div class="profile">
 
-<h2 id="detectedName">
-Name not detected
-</h2>
+            <img
+                id="profilePicture"
+                class="profilePicture"
+                alt="Profile picture">
 
-<p id="detectedId">
-ID not detected
-</p>
+            <div>
 
-<p id="barcodeStatus"></p>
+                <h2
+                    id="detectedName">
+                    Name not detected
+                </h2>
 
-<div class="controls">
+                <p
+                    id="detectedId">
+                    ID not detected
+                </p>
 
-<button
-id="editPhoto"
-class="smallButton">
-✂️ Edit Photo </button>
+                <p
+                    id="barcodeStatus">
+                </p>
 
-<button
-id="replacePhoto"
-class="smallButton">
-🖼️ Change Image </button>
+                <div class="controls">
 
-<input
-id="photoInput"
-type="file"
-accept="image/*"
-hidden>
+                    <button
+                        id="editPhoto"
+                        class="smallButton">
 
-</div>
+                        ✂️ Edit Photo
 
-</div>
+                    </button>
 
-</div>
+                    <button
+                        id="replacePhoto"
+                        class="smallButton">
 
-<div id="editor" class="editor">
+                        🖼️ Change Image
 
-<h2>
-✂️ Profile Picture Editor
-</h2>
+                    </button>
 
-<p class="editorHint">
-Drag the image to reposition it. The image starts
-zoomed farther out so you can see more of the
-original photo. Use the slider to zoom in when needed.
-The circular area becomes your profile picture.
-</p>
+                    <input
+                        id="photoInput"
+                        type="file"
+                        accept="image/*"
+                        hidden>
 
-<div id="cropArea" class="cropArea">
+                </div>
 
-<img
-id="editImage"
-alt="Image being cropped">
+            </div>
 
-<div class="cropWindow"></div>
+        </div>
 
-</div>
+        <div
+            id="editor"
+            class="editor">
 
-<div class="zoomRow">
+            <h2>
+                ✂️ Profile Picture Editor
+            </h2>
 
-<span>−</span>
+            <p class="editorHint">
+                Drag the image to reposition it.
+                The image starts zoomed farther out so
+                you can see the whole portrait. Use the
+                slider to zoom in only when needed.
+            </p>
 
-<input
-id="zoom"
-type="range"
-min="0.20"
-max="3"
-value="0.65"
-step="0.01">
+            <div
+                id="cropArea"
+                class="cropArea">
 
-<span>+</span>
+                <img
+                    id="editImage"
+                    alt="Image being cropped">
 
-<span
-id="zoomValue"
-class="zoomLabel">
-65% </span>
+                <div
+                    class="cropWindow">
+                </div>
 
-</div>
+            </div>
 
-<div class="editorButtons">
+            <div class="zoomRow">
 
-<button
-id="resetCrop"
-class="smallButton">
-Reset </button>
+                <span>−</span>
 
-<button
-id="saveCrop"
-class="primary">
-Save Profile Picture </button>
+                <input
+                    id="zoom"
+                    type="range"
+                    min="0.30"
+                    max="3"
+                    value="0.72"
+                    step="0.01">
 
-<button
-id="cancelCrop"
-class="smallButton">
-Cancel </button>
+                <span>+</span>
 
-</div>
+            </div>
 
-</div>
+            <div class="editorButtons">
 
-<div class="output">
+                <button
+                    id="resetCrop"
+                    class="smallButton">
 
-<h3>
-📝 Name OCR
-</h3>
+                    Reset
 
-<pre id="nameOCR"></pre>
+                </button>
 
-</div>
+                <button
+                    id="saveCrop"
+                    class="primary">
 
-<div class="output">
+                    Save Profile Picture
 
-<h3>
-🔎 Card OCR
-</h3>
+                </button>
 
-<pre id="fullOCR"></pre>
+                <button
+                    id="cancelCrop"
+                    class="smallButton">
 
-</div>
+                    Cancel
 
-<div class="output">
+                </button>
 
-<h3>
-📊 Barcode
-</h3>
+            </div>
 
-<pre id="barcodeText"></pre>
+        </div>
 
-</div>
+        <div class="output">
 
-<div class="homeActions">
+            <h3>
+                📝 Name OCR
+            </h3>
 
-<button
-id="createLocalProfile"
-class="primary">
-Continue to Local Home </button>
+            <pre
+                id="nameOCR">
+            </pre>
 
-</div>
+        </div>
 
-</div>
+        <div class="output">
+
+            <h3>
+                🔎 Card OCR
+            </h3>
+
+            <pre
+                id="fullOCR">
+            </pre>
+
+        </div>
+
+        <div class="output">
+
+            <h3>
+                📊 Barcode
+            </h3>
+
+            <pre
+                id="barcodeText">
+            </pre>
+
+        </div>
+
+        <div class="homeActions">
+
+            <button
+                id="createLocalProfile"
+                class="primary">
+
+                Continue to Local Home
+
+            </button>
+
+        </div>
+
+    </div>
 
 </section>
 
-<section id="homePage" class="home">
+<section
+    id="homePage"
+    class="home">
 
-<h1>
-🏠 Home
-</h1>
+    <h1>
+        🏠 Home
+    </h1>
 
-<p class="subtitle">
-Your profile is stored locally in this browser.
-</p>
+    <p class="subtitle">
+        Your profile is stored locally in this browser.
+    </p>
 
-<div class="account">
+    <div class="account">
 
-<img
-id="homePicture"
-alt="Profile picture">
+        <img
+            id="homePicture"
+            alt="Profile picture">
 
-<div>
+        <div>
 
-<h2 id="homeName"></h2>
+            <h2
+                id="homeName">
+            </h2>
 
-<p id="homeId"></p>
+            <p
+                id="homeId">
+            </p>
 
-<p>
-Local profile
-</p>
+            <p>
+                Local profile
+            </p>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="homeActions">
+    <div class="homeActions">
 
-<button
-id="homeEdit"
-class="primary">
-✂️ Edit Profile Picture </button>
+        <button
+            id="homeEdit"
+            class="primary">
 
-<button
-id="clearProfile"
-class="smallButton">
-Clear Local Profile </button>
+            ✂️ Edit Profile Picture
 
-</div>
+        </button>
+
+        <button
+            id="clearProfile"
+            class="smallButton">
+
+            Clear Local Profile
+
+        </button>
+
+    </div>
 
 </section>
 
@@ -883,79 +980,76 @@ Clear Local Profile </button>
 ========================================================= */
 
 const video =
-document.getElementById("video");
+    document.getElementById("video");
 
 const overlay =
-document.getElementById("overlay");
+    document.getElementById("overlay");
 
 const overlayCtx =
-overlay.getContext("2d");
+    overlay.getContext("2d");
 
 const permission =
-document.getElementById("permission");
+    document.getElementById("permission");
 
 const scannerInterface =
-document.getElementById("scannerInterface");
+    document.getElementById("scannerInterface");
 
 const startCamera =
-document.getElementById("startCamera");
+    document.getElementById("startCamera");
 
 const cameraError =
-document.getElementById("cameraError");
+    document.getElementById("cameraError");
 
 const guide =
-document.getElementById("guide");
+    document.getElementById("guide");
 
 const scanMessage =
-document.getElementById("scanMessage");
+    document.getElementById("scanMessage");
 
 const status =
-document.getElementById("status");
+    document.getElementById("status");
 
 const results =
-document.getElementById("results");
+    document.getElementById("results");
 
 const corrected =
-document.getElementById("corrected");
+    document.getElementById("corrected");
 
 const profilePicture =
-document.getElementById("profilePicture");
+    document.getElementById("profilePicture");
 
 const detectedName =
-document.getElementById("detectedName");
+    document.getElementById("detectedName");
 
 const detectedId =
-document.getElementById("detectedId");
+    document.getElementById("detectedId");
 
 const barcodeStatus =
-document.getElementById("barcodeStatus");
+    document.getElementById("barcodeStatus");
 
 const nameOCR =
-document.getElementById("nameOCR");
+    document.getElementById("nameOCR");
 
 const fullOCR =
-document.getElementById("fullOCR");
+    document.getElementById("fullOCR");
 
 const barcodeText =
-document.getElementById("barcodeText");
+    document.getElementById("barcodeText");
 
 const editor =
-document.getElementById("editor");
+    document.getElementById("editor");
 
 const editImage =
-document.getElementById("editImage");
+    document.getElementById("editImage");
 
 const cropArea =
-document.getElementById("cropArea");
+    document.getElementById("cropArea");
 
 const zoom =
-document.getElementById("zoom");
-
-const zoomValue =
-document.getElementById("zoomValue");
+    document.getElementById("zoom");
 
 const photoInput =
-document.getElementById("photoInput");
+    document.getElementById("photoInput");
 
 
 /* =========================================================
@@ -963,8 +1057,10 @@ document.getElementById("photoInput");
 ========================================================= */
 
 let stream = null;
+
 let scanning = false;
 let processing = false;
+
 let stableFrames = 0;
 let previousCorners = null;
 
@@ -976,8 +1072,6 @@ let cropState = {
     y: 0,
     scale: 1
 };
-
-let cropBaseScale = 1;
 
 let dragging = false;
 
@@ -993,22 +1087,90 @@ let dragOrigin = {
 
 
 /* =========================================================
+   TESSERACT WORKER
+   Reuse ONE worker instead of creating a new OCR engine
+   for every crop.
+========================================================= */
+
+let ocrWorker = null;
+let ocrWorkerPromise = null;
+
+async function getOCRWorker() {
+
+    if (ocrWorker)
+        return ocrWorker;
+
+    if (ocrWorkerPromise)
+        return ocrWorkerPromise;
+
+    ocrWorkerPromise =
+        (async () => {
+
+            const worker =
+                await Tesseract.createWorker(
+                    "eng",
+                    1,
+                    {
+                        logger(data) {
+
+                            if (
+                                data.status ===
+                                "recognizing text"
+                            ) {
+
+                                const progress =
+                                    Math.round(
+                                        data.progress * 100
+                                    );
+
+                                setProgress(
+                                    Math.min(
+                                        95,
+                                        progress
+                                    )
+                                );
+
+                            }
+
+                        }
+                    }
+                );
+
+            await worker.setParameters({
+
+                preserve_interword_spaces: "1"
+
+            });
+
+            ocrWorker = worker;
+
+            return worker;
+
+        })();
+
+    return ocrWorkerPromise;
+}
+
+
+/* =========================================================
    STATUS
 ========================================================= */
 
 function setStatus(type, html) {
 
-status.className =
-"status " + type;
+    status.className =
+        "status " + type;
 
-status.innerHTML =
-html +
-`
-<div class="progress">
-<div class="progressBar"></div>
-</div>
-`;
-
+    status.innerHTML =
+        html +
+        `
+        <div class="progress">
+            <div
+                id="progressBar"
+                class="progressBar">
+            </div>
+        </div>
+        `;
 }
 
 
@@ -1018,111 +1180,111 @@ html +
 
 async function openCamera() {
 
-startCamera.disabled = true;
+    startCamera.disabled = true;
 
-startCamera.textContent =
-"Requesting camera...";
+    startCamera.textContent =
+        "Requesting camera...";
 
-cameraError.textContent = "";
+    cameraError.textContent = "";
 
-try {
+    try {
 
-if (
-!navigator.mediaDevices ||
-!navigator.mediaDevices.getUserMedia
-) {
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
 
-throw new Error(
-"Camera API unavailable"
-);
+            throw new Error(
+                "Camera API unavailable"
+            );
 
-}
+        }
 
-stream =
-await navigator.mediaDevices
-.getUserMedia({
+        stream =
+            await navigator.mediaDevices
+                .getUserMedia({
 
-video: {
+                    video: {
 
-facingMode: {
-ideal: "environment"
-},
+                        facingMode: {
+                            ideal: "environment"
+                        },
 
-width: {
-ideal: 1920
-},
+                        width: {
+                            ideal: 1920
+                        },
 
-height: {
-ideal: 1080
-},
+                        height: {
+                            ideal: 1080
+                        },
 
-frameRate: {
-ideal: 30
-}
+                        frameRate: {
+                            ideal: 30
+                        }
 
-},
+                    },
 
-audio: false
+                    audio: false
 
-});
+                });
 
-video.srcObject =
-stream;
+        video.srcObject =
+            stream;
 
-await video.play();
+        await video.play();
 
-permission.style.display =
-"none";
+        permission.style.display =
+            "none";
 
-scannerInterface.style.display =
-"block";
+        scannerInterface.style.display =
+            "block";
 
-scanning = true;
+        scanning = true;
 
-setStatus(
-"good",
-`
-<strong>📷 Camera ready</strong><br>
-Hold the complete card inside the frame.
-`
-);
+        setStatus(
+            "good",
+            `
+            <strong>📷 Camera ready</strong><br>
+            Hold the complete card inside the frame.
+            `
+        );
 
-requestAnimationFrame(
-detectionLoop
-);
+        requestAnimationFrame(
+            detectionLoop
+        );
 
-} catch(error) {
+    } catch(error) {
 
-console.error(error);
+        console.error(error);
 
-startCamera.disabled =
-false;
+        startCamera.disabled =
+            false;
 
-startCamera.textContent =
-"Try Again";
+        startCamera.textContent =
+            "Try Again";
 
-if (
-error.name ===
-"NotAllowedError"
-) {
+        if (
+            error.name ===
+            "NotAllowedError"
+        ) {
 
-cameraError.textContent =
-"Camera permission was denied. Allow camera access and try again.";
+            cameraError.textContent =
+                "Camera permission was denied. Allow camera access and try again.";
 
-} else {
+        } else {
 
-cameraError.textContent =
-"The camera could not be opened. Camera access normally requires HTTPS or localhost.";
+            cameraError.textContent =
+                "The camera could not be opened. Camera access normally requires HTTPS or localhost.";
 
-}
+        }
 
-}
+    }
 
 }
 
 startCamera.addEventListener(
-"click",
-openCamera
+    "click",
+    openCamera
 );
 
 
@@ -1132,14 +1294,21 @@ openCamera
 
 function resizeOverlay() {
 
-if (!video.videoWidth)
-return;
+    if (!video.videoWidth)
+        return;
 
-overlay.width =
-video.videoWidth;
+    if (
+        overlay.width !== video.videoWidth ||
+        overlay.height !== video.videoHeight
+    ) {
 
-overlay.height =
-video.videoHeight;
+        overlay.width =
+            video.videoWidth;
+
+        overlay.height =
+            video.videoHeight;
+
+    }
 
 }
 
@@ -1150,57 +1319,57 @@ video.videoHeight;
 
 function distance(a,b) {
 
-return Math.sqrt(
-((a.x - b.x) ** 2) +
-((a.y - b.y) ** 2)
-);
+    return Math.sqrt(
+        ((a.x - b.x) ** 2) +
+        ((a.y - b.y) ** 2)
+    );
 
 }
 
 
 /* =========================================================
-   ORDER DOCUMENT CORNERS
+   ORDER CORNERS
 ========================================================= */
 
 function orderPoints(points) {
 
-const sums =
-points.map(
-p => p.x + p.y
-);
+    const sums =
+        points.map(
+            p => p.x + p.y
+        );
 
-const diffs =
-points.map(
-p => p.x - p.y
-);
+    const diffs =
+        points.map(
+            p => p.x - p.y
+        );
 
-return [
+    return [
 
-points[
-sums.indexOf(
-Math.min(...sums)
-)
-],
+        points[
+            sums.indexOf(
+                Math.min(...sums)
+            )
+        ],
 
-points[
-diffs.indexOf(
-Math.max(...diffs)
-)
-],
+        points[
+            diffs.indexOf(
+                Math.max(...diffs)
+            )
+        ],
 
-points[
-sums.indexOf(
-Math.max(...sums)
-)
-],
+        points[
+            sums.indexOf(
+                Math.max(...sums)
+            )
+        ],
 
-points[
-diffs.indexOf(
-Math.min(...diffs)
-)
-]
+        points[
+            diffs.indexOf(
+                Math.min(...diffs)
+            )
+        ]
 
-];
+    ];
 
 }
 
@@ -1211,279 +1380,280 @@ Math.min(...diffs)
 
 function detectDocument(imageData) {
 
-if (
-typeof cv === "undefined"
-) {
+    if (
+        typeof cv === "undefined"
+    )
+        return null;
 
-return null;
+    const src =
+        cv.matFromImageData(
+            imageData
+        );
 
-}
+    const gray =
+        new cv.Mat();
 
-const src =
-cv.matFromImageData(
-imageData
-);
+    const blur =
+        new cv.Mat();
 
-const gray =
-new cv.Mat();
+    const edges =
+        new cv.Mat();
 
-const blur =
-new cv.Mat();
+    const contours =
+        new cv.MatVector();
 
-const edges =
-new cv.Mat();
+    const hierarchy =
+        new cv.Mat();
 
-const contours =
-new cv.MatVector();
+    cv.cvtColor(
+        src,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
 
-const hierarchy =
-new cv.Mat();
+    cv.GaussianBlur(
+        gray,
+        blur,
+        new cv.Size(5,5),
+        0
+    );
 
-cv.cvtColor(
-src,
-gray,
-cv.COLOR_RGBA2GRAY
-);
+    cv.Canny(
+        blur,
+        edges,
+        45,
+        140
+    );
 
-cv.GaussianBlur(
-gray,
-blur,
-new cv.Size(5,5),
-0
-);
+    const kernel =
+        cv.Mat.ones(
+            3,
+            3,
+            cv.CV_8U
+        );
 
-cv.Canny(
-blur,
-edges,
-45,
-140
-);
+    cv.dilate(
+        edges,
+        edges,
+        kernel
+    );
 
-const kernel =
-cv.Mat.ones(
-3,
-3,
-cv.CV_8U
-);
+    kernel.delete();
 
-cv.dilate(
-edges,
-edges,
-kernel
-);
+    cv.findContours(
+        edges,
+        contours,
+        hierarchy,
+        cv.RETR_LIST,
+        cv.CHAIN_APPROX_SIMPLE
+    );
 
-kernel.delete();
+    let best = null;
+    let bestScore = 0;
 
-cv.findContours(
-edges,
-contours,
-hierarchy,
-cv.RETR_LIST,
-cv.CHAIN_APPROX_SIMPLE
-);
+    const imageArea =
+        imageData.width *
+        imageData.height;
 
-let best = null;
-let bestScore = 0;
+    for (
+        let i = 0;
+        i < contours.size();
+        i++
+    ) {
 
-const imageArea =
-imageData.width *
-imageData.height;
+        const contour =
+            contours.get(i);
 
-for (
-let i = 0;
-i < contours.size();
-i++
-) {
+        const perimeter =
+            cv.arcLength(
+                contour,
+                true
+            );
 
-const contour =
-contours.get(i);
+        if (
+            perimeter < 250
+        ) {
 
-const perimeter =
-cv.arcLength(
-contour,
-true
-);
+            contour.delete();
+            continue;
 
-if (
-perimeter < 250
-) {
+        }
 
-contour.delete();
-continue;
+        const approx =
+            new cv.Mat();
 
-}
+        cv.approxPolyDP(
+            contour,
+            approx,
+            perimeter * .025,
+            true
+        );
 
-const approx =
-new cv.Mat();
+        if (
+            approx.rows === 4 &&
+            cv.isContourConvex(approx)
+        ) {
 
-cv.approxPolyDP(
-contour,
-approx,
-perimeter * .025,
-true
-);
+            const area =
+                Math.abs(
+                    cv.contourArea(
+                        approx
+                    )
+                );
 
-if (
-approx.rows === 4 &&
-cv.isContourConvex(approx)
-) {
+            const areaRatio =
+                area /
+                imageArea;
 
-const area =
-Math.abs(
-cv.contourArea(
-approx
-)
-);
+            if (
+                areaRatio > .08 &&
+                areaRatio < .95
+            ) {
 
-const areaRatio =
-area / imageArea;
+                const points = [];
 
-if (
-areaRatio > .08 &&
-areaRatio < .95
-) {
+                for (
+                    let j = 0;
+                    j < 4;
+                    j++
+                ) {
 
-const points = [];
+                    let x;
+                    let y;
 
-for (
-let j = 0;
-j < 4;
-j++
-) {
+                    if (
+                        approx.data32S.length >= 8
+                    ) {
 
-let x;
-let y;
+                        x =
+                            approx.data32S[
+                                j * 2
+                            ];
 
-if (
-approx.data32S.length >= 8
-) {
+                        y =
+                            approx.data32S[
+                                j * 2 + 1
+                            ];
 
-x =
-approx.data32S[
-j * 2
-];
+                    } else {
 
-y =
-approx.data32S[
-j * 2 + 1
-];
+                        x =
+                            approx.data32F[
+                                j * 2
+                            ];
 
-} else {
+                        y =
+                            approx.data32F[
+                                j * 2 + 1
+                            ];
 
-x =
-approx.data32F[
-j * 2
-];
+                    }
 
-y =
-approx.data32F[
-j * 2 + 1
-];
+                    points.push({
+                        x,
+                        y
+                    });
 
-}
+                }
 
-points.push({
-x,
-y
-});
+                const ordered =
+                    orderPoints(
+                        points
+                    );
 
-}
+                const top =
+                    distance(
+                        ordered[0],
+                        ordered[1]
+                    );
 
-const ordered =
-orderPoints(points);
+                const bottom =
+                    distance(
+                        ordered[3],
+                        ordered[2]
+                    );
 
-const top =
-distance(
-ordered[0],
-ordered[1]
-);
+                const left =
+                    distance(
+                        ordered[0],
+                        ordered[3]
+                    );
 
-const bottom =
-distance(
-ordered[3],
-ordered[2]
-);
+                const right =
+                    distance(
+                        ordered[1],
+                        ordered[2]
+                    );
 
-const left =
-distance(
-ordered[0],
-ordered[3]
-);
+                const width =
+                    (top + bottom) / 2;
 
-const right =
-distance(
-ordered[1],
-ordered[2]
-);
+                const height =
+                    (left + right) / 2;
 
-const width =
-(top + bottom) / 2;
+                const ratio =
+                    Math.max(
+                        width,
+                        height
+                    ) /
+                    Math.max(
+                        1,
+                        Math.min(
+                            width,
+                            height
+                        )
+                    );
 
-const height =
-(left + right) / 2;
+                if (
+                    ratio >= 1.25 &&
+                    ratio <= 2.1
+                ) {
 
-const ratio =
-Math.max(
-width,
-height
-) /
-Math.max(
-1,
-Math.min(
-width,
-height
-)
-);
+                    const edgeConsistency =
+                        (
+                            Math.min(top,bottom) /
+                            Math.max(top,bottom)
+                            +
+                            Math.min(left,right) /
+                            Math.max(left,right)
+                        ) / 2;
 
-if (
-ratio >= 1.25 &&
-ratio <= 2.1
-) {
+                    const score =
+                        areaRatio *
+                        edgeConsistency;
 
-const edgeConsistency =
-(
-Math.min(top,bottom) /
-Math.max(top,bottom)
-+
-Math.min(left,right) /
-Math.max(left,right)
-) / 2;
+                    if (
+                        score >
+                        bestScore
+                    ) {
 
-const score =
-areaRatio *
-edgeConsistency;
+                        bestScore =
+                            score;
 
-if (
-score > bestScore
-) {
+                        best =
+                            ordered;
 
-bestScore =
-score;
+                    }
 
-best =
-ordered;
+                }
 
-}
+            }
 
-}
+        }
 
-}
+        approx.delete();
+        contour.delete();
 
-}
+    }
 
-approx.delete();
-contour.delete();
+    src.delete();
+    gray.delete();
+    blur.delete();
+    edges.delete();
+    contours.delete();
+    hierarchy.delete();
 
-}
-
-src.delete();
-gray.delete();
-blur.delete();
-edges.delete();
-contours.delete();
-hierarchy.delete();
-
-return best;
+    return best;
 
 }
 
@@ -1494,72 +1664,72 @@ return best;
 
 function drawDocument(points) {
 
-resizeOverlay();
+    resizeOverlay();
 
-overlayCtx.clearRect(
-0,
-0,
-overlay.width,
-overlay.height
-);
+    overlayCtx.clearRect(
+        0,
+        0,
+        overlay.width,
+        overlay.height
+    );
 
-if (!points)
-return;
+    if (!points)
+        return;
 
-overlayCtx.beginPath();
+    overlayCtx.beginPath();
 
-overlayCtx.moveTo(
-points[0].x,
-points[0].y
-);
+    overlayCtx.moveTo(
+        points[0].x,
+        points[0].y
+    );
 
-for (
-let i = 1;
-i < 4;
-i++
-) {
+    for (
+        let i = 1;
+        i < 4;
+        i++
+    ) {
 
-overlayCtx.lineTo(
-points[i].x,
-points[i].y
-);
+        overlayCtx.lineTo(
+            points[i].x,
+            points[i].y
+        );
 
-}
+    }
 
-overlayCtx.closePath();
+    overlayCtx.closePath();
 
-overlayCtx.lineWidth =
-7;
+    overlayCtx.lineWidth =
+        7;
 
-overlayCtx.strokeStyle =
-stableFrames >= 10
-? "#35d68b"
-: "#268cf5";
+    overlayCtx.strokeStyle =
+        stableFrames >= 10
+            ? "#35d68b"
+            : "#268cf5";
 
-overlayCtx.stroke();
+    overlayCtx.stroke();
 
-for (
-const p of points
-) {
+    for (
+        const p of points
+    ) {
 
-overlayCtx.beginPath();
+        overlayCtx.beginPath();
 
-overlayCtx.arc(
-p.x,
-p.y,
-9,
-0,
-Math.PI * 2
-);
+        overlayCtx.arc(
+            p.x,
+            p.y,
+            9,
+            0,
+            Math.PI * 2
+        );
 
-overlayCtx.fillStyle =
-stableFrames >= 10
-? "#35d68b"
-: "#268cf5";
+        overlayCtx.fillStyle =
+            stableFrames >= 10
+                ? "#35d68b"
+                : "#268cf5";
 
-overlayCtx.fill();
+        overlayCtx.fill();
 
-}
+    }
 
 }
 
@@ -1570,35 +1740,35 @@ overlayCtx.fill();
 
 function isStable(points) {
 
-if (!previousCorners) {
+    if (!previousCorners) {
 
-previousCorners =
-points;
+        previousCorners =
+            points;
 
-return false;
+        return false;
 
-}
+    }
 
-let movement = 0;
+    let movement = 0;
 
-for (
-let i = 0;
-i < 4;
-i++
-) {
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
 
-movement +=
-distance(
-points[i],
-previousCorners[i]
-);
+        movement +=
+            distance(
+                points[i],
+                previousCorners[i]
+            );
 
-}
+    }
 
-previousCorners =
-points;
+    previousCorners =
+        points;
 
-return movement < 45;
+    return movement < 45;
 
 }
 
@@ -1609,31 +1779,40 @@ return movement < 45;
 
 function captureFrame() {
 
-const canvas =
-document.createElement(
-"canvas"
-);
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-canvas.width =
-video.videoWidth;
+    canvas.width =
+        video.videoWidth;
 
-canvas.height =
-video.videoHeight;
+    canvas.height =
+        video.videoHeight;
 
-const ctx =
-canvas.getContext(
-"2d"
-);
+    const ctx =
+        canvas.getContext(
+            "2d",
+            {
+                alpha: false
+            }
+        );
 
-ctx.drawImage(
-video,
-0,
-0,
-canvas.width,
-canvas.height
-);
+    ctx.imageSmoothingEnabled =
+        true;
 
-return canvas;
+    ctx.imageSmoothingQuality =
+        "high";
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    return canvas;
 
 }
 
@@ -1644,54 +1823,54 @@ return canvas;
 
 function sharpness(canvas) {
 
-if (
-typeof cv === "undefined"
-)
-return 0;
+    if (
+        typeof cv === "undefined"
+    )
+        return 0;
 
-const src =
-cv.imread(canvas);
+    const src =
+        cv.imread(canvas);
 
-const gray =
-new cv.Mat();
+    const gray =
+        new cv.Mat();
 
-const lap =
-new cv.Mat();
+    const lap =
+        new cv.Mat();
 
-const mean =
-new cv.Mat();
+    const mean =
+        new cv.Mat();
 
-const std =
-new cv.Mat();
+    const std =
+        new cv.Mat();
 
-cv.cvtColor(
-src,
-gray,
-cv.COLOR_RGBA2GRAY
-);
+    cv.cvtColor(
+        src,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
 
-cv.Laplacian(
-gray,
-lap,
-cv.CV_64F
-);
+    cv.Laplacian(
+        gray,
+        lap,
+        cv.CV_64F
+    );
 
-cv.meanStdDev(
-lap,
-mean,
-std
-);
+    cv.meanStdDev(
+        lap,
+        mean,
+        std
+    );
 
-const value =
-std.doubleAt(0,0) ** 2;
+    const value =
+        std.doubleAt(0,0) ** 2;
 
-src.delete();
-gray.delete();
-lap.delete();
-mean.delete();
-std.delete();
+    src.delete();
+    gray.delete();
+    lap.delete();
+    mean.delete();
+    std.delete();
 
-return value;
+    return value;
 
 }
 
@@ -1701,796 +1880,959 @@ return value;
 ========================================================= */
 
 function straighten(
-canvas,
-points
+    canvas,
+    points
 ) {
 
-const src =
-cv.imread(canvas);
+    const src =
+        cv.imread(canvas);
 
-const p =
-orderPoints(points);
+    const p =
+        orderPoints(points);
 
-const width =
-1200;
+    const width =
+        1200;
 
-const height =
-760;
+    const height =
+        760;
 
-const sourcePoints =
-cv.matFromArray(
-4,
-1,
-cv.CV_32FC2,
-[
-p[0].x,
-p[0].y,
+    const sourcePoints =
+        cv.matFromArray(
+            4,
+            1,
+            cv.CV_32FC2,
+            [
 
-p[1].x,
-p[1].y,
+                p[0].x,
+                p[0].y,
 
-p[2].x,
-p[2].y,
+                p[1].x,
+                p[1].y,
 
-p[3].x,
-p[3].y
-]
-);
+                p[2].x,
+                p[2].y,
 
-const destinationPoints =
-cv.matFromArray(
-4,
-1,
-cv.CV_32FC2,
-[
-0,
-0,
+                p[3].x,
+                p[3].y
 
-width,
-0,
+            ]
+        );
 
-width,
-height,
+    const destinationPoints =
+        cv.matFromArray(
+            4,
+            1,
+            cv.CV_32FC2,
+            [
 
-0,
-height
-]
-);
+                0,
+                0,
 
-const matrix =
-cv.getPerspectiveTransform(
-sourcePoints,
-destinationPoints
-);
+                width,
+                0,
 
-const output =
-new cv.Mat();
+                width,
+                height,
 
-cv.warpPerspective(
-src,
-output,
-matrix,
-new cv.Size(
-width,
-height
-)
-);
+                0,
+                height
 
-cv.imshow(
-corrected,
-output
-);
+            ]
+        );
 
-src.delete();
-output.delete();
-sourcePoints.delete();
-destinationPoints.delete();
-matrix.delete();
+    const matrix =
+        cv.getPerspectiveTransform(
+            sourcePoints,
+            destinationPoints
+        );
+
+    const output =
+        new cv.Mat();
+
+    cv.warpPerspective(
+        src,
+        output,
+        matrix,
+        new cv.Size(
+            width,
+            height
+        ),
+        cv.INTER_CUBIC,
+        cv.BORDER_REPLICATE
+    );
+
+    cv.imshow(
+        corrected,
+        output
+    );
+
+    src.delete();
+    output.delete();
+
+    sourcePoints.delete();
+    destinationPoints.delete();
+    matrix.delete();
 
 }
 
 
 /* =========================================================
-   EXTRACT PORTRAIT
+   PORTRAIT EXTRACTION
 ========================================================= */
 
 function extractPortrait() {
 
-const source =
-corrected;
+    const source =
+        corrected;
 
-const canvas =
-document.createElement(
-"canvas"
-);
+    /*
+     * Slightly larger portrait crop than before.
+     *
+     * The crop stays inside the card and is kept
+     * completely separate from the original capture.
+     */
 
-const x =
-Math.round(
-source.width * .045
-);
+    const x =
+        Math.round(
+            source.width * .025
+        );
 
-const y =
-Math.round(
-source.height * .045
-);
+    const y =
+        Math.round(
+            source.height * .025
+        );
 
-const width =
-Math.round(
-source.width * .255
-);
+    const width =
+        Math.round(
+            source.width * .30
+        );
 
-const height =
-Math.round(
-source.height * .445
-);
+    const height =
+        Math.round(
+            source.height * .48
+        );
 
-canvas.width =
-width;
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-canvas.height =
-height;
+    /*
+     * Render at 2x resolution so the editor gets
+     * a cleaner source image.
+     */
 
-const ctx =
-canvas.getContext(
-"2d"
-);
+    canvas.width =
+        width * 2;
 
-ctx.imageSmoothingEnabled =
-true;
+    canvas.height =
+        height * 2;
 
-ctx.imageSmoothingQuality =
-"high";
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
 
-ctx.drawImage(
-source,
-x,
-y,
-width,
-height,
-0,
-0,
-width,
-height
-);
+    ctx.imageSmoothingEnabled =
+        true;
 
-currentPhotoSource =
-canvas.toDataURL(
-"image/jpeg",
-.98
-);
+    ctx.imageSmoothingQuality =
+        "high";
 
-profilePicture.src =
-currentPhotoSource;
+    ctx.drawImage(
 
-return currentPhotoSource;
+        source,
+
+        x,
+        y,
+        width,
+        height,
+
+        0,
+        0,
+        canvas.width,
+        canvas.height
+
+    );
+
+    currentPhotoSource =
+        canvas.toDataURL(
+            "image/jpeg",
+            .98
+        );
+
+    profilePicture.src =
+        currentPhotoSource;
+
+    return currentPhotoSource;
 
 }
 
 
 /* =========================================================
-   OCR
+   IMAGE PROCESSING FOR OCR
 ========================================================= */
 
-function enhanceContrastGray(
-sourceCanvas
-) {
+function makeGray(sourceCanvas) {
 
-if (
-typeof cv === "undefined"
-) {
+    if (
+        typeof cv === "undefined"
+    )
+        return sourceCanvas;
 
-return sourceCanvas;
+    const mat =
+        cv.imread(sourceCanvas);
 
-}
+    const gray =
+        new cv.Mat();
 
-const mat =
-cv.imread(sourceCanvas);
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
 
-const gray =
-new cv.Mat();
+    const out =
+        document.createElement(
+            "canvas"
+        );
 
-cv.cvtColor(
-mat,
-gray,
-cv.COLOR_RGBA2GRAY
-);
+    cv.imshow(
+        out,
+        gray
+    );
 
-const clahe =
-new cv.CLAHE(
-2.5,
-new cv.Size(8,8)
-);
+    mat.delete();
+    gray.delete();
 
-const contrasted =
-new cv.Mat();
-
-clahe.apply(
-gray,
-contrasted
-);
-
-clahe.delete();
-
-const outCanvas =
-document.createElement(
-"canvas"
-);
-
-cv.imshow(
-outCanvas,
-contrasted
-);
-
-mat.delete();
-gray.delete();
-contrasted.delete();
-
-return outCanvas;
+    return out;
 
 }
 
 
-function binarizeTextCrop(
-sourceCanvas
-) {
+function makeContrast(sourceCanvas) {
 
-if (
-typeof cv === "undefined"
-) {
+    if (
+        typeof cv === "undefined"
+    )
+        return sourceCanvas;
 
-return sourceCanvas;
+    const mat =
+        cv.imread(sourceCanvas);
 
-}
+    const gray =
+        new cv.Mat();
 
-const mat =
-cv.imread(sourceCanvas);
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
 
-const gray =
-new cv.Mat();
+    const clahe =
+        new cv.CLAHE(
+            2.0,
+            new cv.Size(8,8)
+        );
 
-cv.cvtColor(
-mat,
-gray,
-cv.COLOR_RGBA2GRAY
-);
+    const result =
+        new cv.Mat();
 
-const enhanced =
-new cv.Mat();
+    clahe.apply(
+        gray,
+        result
+    );
 
-cv.normalize(
-gray,
-enhanced,
-0,
-255,
-cv.NORM_MINMAX
-);
+    clahe.delete();
 
-const binary =
-new cv.Mat();
+    const out =
+        document.createElement(
+            "canvas"
+        );
 
-cv.threshold(
-enhanced,
-binary,
-0,
-255,
-cv.THRESH_BINARY +
-cv.THRESH_OTSU
-);
+    cv.imshow(
+        out,
+        result
+    );
 
-const outCanvas =
-document.createElement(
-"canvas"
-);
+    mat.delete();
+    gray.delete();
+    result.delete();
 
-cv.imshow(
-outCanvas,
-binary
-);
-
-mat.delete();
-gray.delete();
-enhanced.delete();
-binary.delete();
-
-return outCanvas;
+    return out;
 
 }
 
+
+function makeThreshold(sourceCanvas) {
+
+    if (
+        typeof cv === "undefined"
+    )
+        return sourceCanvas;
+
+    const mat =
+        cv.imread(sourceCanvas);
+
+    const gray =
+        new cv.Mat();
+
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
+
+    const normalized =
+        new cv.Mat();
+
+    cv.normalize(
+        gray,
+        normalized,
+        0,
+        255,
+        cv.NORM_MINMAX
+    );
+
+    const binary =
+        new cv.Mat();
+
+    cv.threshold(
+        normalized,
+        binary,
+        0,
+        255,
+        cv.THRESH_BINARY +
+        cv.THRESH_OTSU
+    );
+
+    const out =
+        document.createElement(
+            "canvas"
+        );
+
+    cv.imshow(
+        out,
+        binary
+    );
+
+    mat.delete();
+    gray.delete();
+    normalized.delete();
+    binary.delete();
+
+    return out;
+
+}
+
+
+/* =========================================================
+   CLEAN TEXT
+========================================================= */
 
 function cleanNameText(raw) {
 
-let name =
-String(raw || "")
-.replace(
-/[^A-Za-zÀ-ÿ' -]/g,
-" "
-)
-.replace(
-/\s+/g,
-" "
-)
-.trim();
+    let text =
+        String(raw || "")
+            .replace(
+                /[\r\n]+/g,
+                " "
+            )
+            .replace(
+                /[^A-Za-zÀ-ÿ' -]/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
 
-name =
-name.replace(
-/^(name|student|student name|full name|cardholder)\s*[:\-]?\s*/i,
-""
-);
+    if (!text)
+        return "";
 
-if (!name)
-return "";
+    text =
+        text.replace(
+            /^(name|student|student name|full name|cardholder|card holder|holder)\s*[:\-]?\s*/i,
+            ""
+        );
 
-const lowercaseConnectors =
-new Set([
-"de",
-"van",
-"der",
-"den",
-"la",
-"le",
-"of",
-"di"
-]);
+    text =
+        text.replace(
+            /\s+(id|number|no|dob|date|birth|expires?)\s*$/i,
+            ""
+        );
 
-name =
-name
-.split(" ")
-.map(
-(word,index) => {
+    const words =
+        text
+            .split(/\s+/)
+            .filter(Boolean);
 
-if (!word)
-return word;
+    const connectors =
+        new Set([
+            "de",
+            "van",
+            "von",
+            "der",
+            "den",
+            "di",
+            "da",
+            "la",
+            "le"
+        ]);
 
-const lower =
-word.toLowerCase();
+    return words
+        .map(
+            (word, index) => {
 
-if (
-index > 0 &&
-lowercaseConnectors.has(lower)
-) {
+                const lower =
+                    word.toLowerCase();
 
-return lower;
+                if (
+                    index > 0 &&
+                    connectors.has(lower)
+                ) {
 
-}
+                    return lower;
 
-return (
-lower.charAt(0).toUpperCase() +
-lower.slice(1)
-);
+                }
 
-}
-)
-.join(" ");
+                return (
+                    lower.charAt(0).toUpperCase() +
+                    lower.slice(1)
+                );
 
-return name;
-
-}
-
-
-function extractNameFromResult(result) {
-
-const words =
-(result.data.words || [])
-.filter(
-w =>
-w.text &&
-w.text.trim()
-);
-
-if (words.length) {
-
-const kept =
-words
-.filter(w => {
-
-const t =
-w.text.trim();
-
-if (
-!/^[A-Za-zÀ-ÿ'-]+$/.test(t)
-) {
-
-return false;
-
-}
-
-if (
-t.length < 2
-)
-return false;
-
-if (
-(w.confidence || 0) < 45
-) {
-
-return false;
-
-}
-
-return true;
-
-})
-.map(
-w => w.text.trim()
-);
-
-const confidences =
-words
-.filter(
-w =>
-kept.includes(
-w.text.trim()
-)
-)
-.map(
-w => w.confidence || 0
-);
-
-const avgConfidence =
-confidences.length
-?
-confidences.reduce(
-(a,b) => a + b,
-0
-) /
-confidences.length
-:
-0;
-
-const cleaned =
-cleanNameText(
-kept.join(" ")
-);
-
-if (cleaned) {
-
-return {
-text: cleaned,
-confidence: avgConfidence,
-wordCount:
-kept.length
-};
-
-}
-
-}
-
-const cleaned =
-cleanNameText(
-result.data.text
-);
-
-return {
-text: cleaned,
-confidence:
-result.data.confidence || 0,
-wordCount:
-cleaned
-?
-cleaned.split(" ").length
-:
-0
-};
+            }
+        )
+        .join(" ");
 
 }
 
 
 /* =========================================================
-   NAME REGION
+   NAME VALIDATION
+========================================================= */
+
+function nameQuality(text, confidence) {
+
+    const cleaned =
+        cleanNameText(text);
+
+    if (!cleaned)
+        return -999;
+
+    const words =
+        cleaned.split(/\s+/);
+
+    if (
+        words.length < 1 ||
+        words.length > 5
+    )
+        return -500;
+
+    let score =
+        Number(confidence || 0);
+
+    /*
+     * Names normally contain letters rather than
+     * random punctuation/numbers.
+     */
+
+    const allLetters =
+        words.every(
+            word =>
+                /^[A-Za-zÀ-ÿ'-]+$/.test(word)
+        );
+
+    if (allLetters)
+        score += 30;
+
+    /*
+     * Penalize extremely short garbage.
+     */
+
+    for (
+        const word of words
+    ) {
+
+        if (word.length === 1)
+            score -= 20;
+
+        if (word.length >= 2)
+            score += 5;
+
+        if (word.length > 25)
+            score -= 50;
+
+    }
+
+    /*
+     * A name usually has multiple words.
+     */
+
+    if (
+        words.length >= 2
+    )
+        score += 20;
+
+    /*
+     * Reject obvious field labels.
+     */
+
+    const joined =
+        cleaned.toLowerCase();
+
+    const badLabels = [
+        "address",
+        "license",
+        "number",
+        "birth",
+        "date",
+        "expires",
+        "sex",
+        "class",
+        "height",
+        "weight"
+    ];
+
+    for (
+        const label of badLabels
+    ) {
+
+        if (
+            joined.includes(label)
+        ) {
+
+            score -= 70;
+
+        }
+
+    }
+
+    return score;
+
+}
+
+
+/* =========================================================
+   MAKE NAME CROPS
+========================================================= */
+
+function makeNameCrops(source) {
+
+    const crops = [];
+
+    /*
+     * Primary region based on the card layout.
+     */
+
+    const regions = [
+
+        {
+            x: .025,
+            y: .515,
+            w: .52,
+            h: .15
+        },
+
+        {
+            x: .025,
+            y: .485,
+            w: .58,
+            h: .18
+        },
+
+        {
+            x: .02,
+            y: .545,
+            w: .60,
+            h: .14
+        }
+
+    ];
+
+    for (
+        const region of regions
+    ) {
+
+        const x =
+            Math.round(
+                source.width * region.x
+            );
+
+        const y =
+            Math.round(
+                source.height * region.y
+            );
+
+        const w =
+            Math.round(
+                source.width * region.w
+            );
+
+        const h =
+            Math.round(
+                source.height * region.h
+            );
+
+        const crop =
+            document.createElement(
+                "canvas"
+            );
+
+        /*
+         * 5x upscale gives Tesseract much more
+         * character detail.
+         */
+
+        crop.width =
+            w * 5;
+
+        crop.height =
+            h * 5;
+
+        const ctx =
+            crop.getContext(
+                "2d"
+            );
+
+        ctx.imageSmoothingEnabled =
+            true;
+
+        ctx.imageSmoothingQuality =
+            "high";
+
+        ctx.drawImage(
+            source,
+            x,
+            y,
+            w,
+            h,
+            0,
+            0,
+            crop.width,
+            crop.height
+        );
+
+        crops.push(crop);
+
+    }
+
+    return crops;
+
+}
+
+
+/* =========================================================
+   NAME OCR
 ========================================================= */
 
 async function readName() {
 
-const source =
-originalCapture;
+    /*
+     * IMPORTANT:
+     * Use the perspective-corrected card rather than
+     * the raw camera image. This gives OCR a flatter,
+     * higher quality source.
+     */
 
-const crop =
-document.createElement(
-"canvas"
-);
+    const source =
+        corrected;
 
-const x =
-Math.round(
-source.width * .03
-);
+    const crops =
+        makeNameCrops(
+            source
+        );
 
-const y =
-Math.round(
-source.height * .535
-);
+    const worker =
+        await getOCRWorker();
 
-const width =
-Math.round(
-source.width * .48
-);
+    const candidates = [];
 
-const height =
-Math.round(
-source.height * .14
-);
+    for (
+        let i = 0;
+        i < crops.length;
+        i++
+    ) {
 
-crop.width =
-width * 4;
+        const crop =
+            crops[i];
 
-crop.height =
-height * 4;
+        const versions = [
 
-const ctx =
-crop.getContext(
-"2d"
-);
+            crop,
 
-ctx.imageSmoothingEnabled =
-true;
+            makeContrast(
+                crop
+            ),
 
-ctx.imageSmoothingQuality =
-"high";
+            makeThreshold(
+                crop
+            )
 
-ctx.drawImage(
-source,
-x,
-y,
-width,
-height,
-0,
-0,
-crop.width,
-crop.height
-);
+        ];
 
-const binarized =
-binarizeTextCrop(
-crop
-);
+        for (
+            const version of versions
+        ) {
 
-const whitelist =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-"abcdefghijklmnopqrstuvwxyz" +
-"ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ" +
-"àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ" +
-"'- .";
+            try {
 
-const attempts = [
-binarized,
-crop
-];
+                await worker.setParameters({
 
-const candidates = [];
+                    tessedit_pageseg_mode:
+                        "7",
 
-for (
-const attemptCanvas of attempts
-) {
+                    tessedit_char_whitelist:
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿ'- "
 
-try {
+                });
 
-const result =
-await Tesseract.recognize(
-attemptCanvas,
-"eng",
-{
+                const result =
+                    await worker.recognize(
+                        version
+                    );
 
-logger(data) {
+                const raw =
+                    result.data.text || "";
 
-if (
-data.status ===
-"recognizing text"
-) {
+                const confidence =
+                    result.data.confidence || 0;
 
-setProgress(
-40 +
-data.progress * 20
-);
+                const cleaned =
+                    cleanNameText(
+                        raw
+                    );
 
-}
+                if (!cleaned)
+                    continue;
 
-},
+                const quality =
+                    nameQuality(
+                        cleaned,
+                        confidence
+                    );
 
-config: {
+                candidates.push({
 
-tessedit_pageseg_mode:
-"7",
+                    text:
+                        cleaned,
 
-tessedit_char_whitelist:
-whitelist
+                    confidence,
 
-}
+                    quality
 
-}
-);
+                });
 
-const extracted =
-extractNameFromResult(
-result
-);
+            } catch(error) {
 
-if (
-extracted.text
-) {
+                console.warn(
+                    "Name OCR:",
+                    error
+                );
 
-candidates.push(
-extracted
-);
+            }
 
-}
+        }
 
-} catch(error) {
+    }
 
-console.log(
-"Name OCR attempt failed:",
-error
-);
+    if (!candidates.length)
+        return "Name not detected";
 
-}
+    /*
+     * Remove duplicate OCR guesses.
+     */
 
-}
+    const unique =
+        new Map();
 
-if (
-!candidates.length
-) {
+    for (
+        const candidate of candidates
+    ) {
 
-return "Name not detected";
+        const key =
+            candidate.text
+                .toLowerCase();
 
-}
+        if (
+            !unique.has(key) ||
+            unique.get(key).quality <
+            candidate.quality
+        ) {
 
-candidates.sort(
-(a,b) => {
+            unique.set(
+                key,
+                candidate
+            );
 
-const aPlausible =
-a.wordCount >= 1 &&
-a.wordCount <= 4;
+        }
 
-const bPlausible =
-b.wordCount >= 1 &&
-b.wordCount <= 4;
+    }
 
-if (
-aPlausible !==
-bPlausible
-) {
+    const finalCandidates =
+        [...unique.values()];
 
-return aPlausible
-? -1
-: 1;
+    finalCandidates.sort(
+        (a,b) =>
+            b.quality -
+            a.quality
+    );
 
-}
-
-return (
-b.confidence -
-a.confidence
-);
-
-}
-);
-
-return candidates[0].text;
+    return finalCandidates[0].text;
 
 }
 
 
 /* =========================================================
-   FULL OCR
+   FULL CARD OCR
 ========================================================= */
 
-function scoreOcrText(
-text,
-confidence
+function scoreFullOCR(
+    text,
+    confidence
 ) {
 
-const tokens =
-String(text || "")
-.split(/\s+/)
-.filter(Boolean);
+    const cleaned =
+        String(text || "")
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
 
-if (!tokens.length)
-return -1;
+    if (!cleaned)
+        return -999;
 
-const goodTokens =
-tokens.filter(
-t =>
-/^[A-Za-z0-9À-ÿ'.,#:%-]{2,}$/.test(t)
-);
+    const tokens =
+        cleaned.split(" ");
 
-const ratio =
-goodTokens.length /
-tokens.length;
+    let score =
+        Number(confidence || 0);
 
-return (
-(confidence || 0) *
-ratio
-);
+    for (
+        const token of tokens
+    ) {
+
+        if (
+            /^[A-Za-zÀ-ÿ]{2,}$/.test(
+                token
+            )
+        ) {
+
+            score += 5;
+
+        }
+
+        if (
+            /^\d{3,}$/.test(
+                token
+            )
+        ) {
+
+            score += 3;
+
+        }
+
+        if (
+            /[^A-Za-zÀ-ÿ0-9.,#:%\-]/.test(
+                token
+            )
+        ) {
+
+            score -= 4;
+
+        }
+
+    }
+
+    return score;
 
 }
 
 
 async function readFullCard() {
 
-const contrastEnhanced =
-enhanceContrastGray(
-originalCapture
-);
+    const worker =
+        await getOCRWorker();
 
-const attempts = [
-originalCapture,
-contrastEnhanced
-];
+    const versions = [
 
-let best = {
-text: "",
-score: -1
-};
+        originalCapture,
 
-for (
-const attemptCanvas of attempts
-) {
+        makeGray(
+            originalCapture
+        ),
 
-try {
+        makeContrast(
+            originalCapture
+        )
 
-const result =
-await Tesseract.recognize(
-attemptCanvas,
-"eng",
-{
+    ];
 
-logger(data) {
+    let best = {
 
-if (
-data.status ===
-"recognizing text"
-) {
+        text: "",
+        score: -999
 
-setProgress(
-60 +
-data.progress * 15
-);
+    };
 
-}
+    for (
+        const version of versions
+    ) {
 
-},
+        try {
 
-config: {
+            await worker.setParameters({
 
-tessedit_pageseg_mode:
-"6"
+                tessedit_pageseg_mode:
+                    "6"
 
-}
+            });
 
-}
-);
+            const result =
+                await worker.recognize(
+                    version
+                );
 
-const text =
-(result.data.text || "")
-.trim();
+            const text =
+                (
+                    result.data.text ||
+                    ""
+                ).trim();
 
-const score =
-scoreOcrText(
-text,
-result.data.confidence
-);
+            const score =
+                scoreFullOCR(
+                    text,
+                    result.data.confidence
+                );
 
-if (
-text &&
-score > best.score
-) {
+            if (
+                text &&
+                score > best.score
+            ) {
 
-best = {
-text,
-score
-};
+                best = {
 
-}
+                    text,
+                    score
 
-} catch(error) {
+                };
 
-console.log(
-"Full card OCR attempt failed:",
-error
-);
+            }
 
-}
+        } catch(error) {
 
-}
+            console.warn(
+                "Full OCR:",
+                error
+            );
 
-return best.text;
+        }
+
+    }
+
+    return best.text;
 
 }
 
@@ -2501,120 +2843,126 @@ return best.text;
 
 async function readBarcode() {
 
-if (
-!("BarcodeDetector" in window)
-) {
+    if (
+        !("BarcodeDetector" in window)
+    ) {
 
-return "";
+        return "";
 
-}
+    }
 
-try {
+    try {
 
-let formats =
-await BarcodeDetector
-.getSupportedFormats();
+        let formats =
+            await BarcodeDetector
+                .getSupportedFormats();
 
-const preferred = [
-"code_128",
-"code_39",
-"code_93",
-"itf",
-"codabar",
-"ean_13",
-"ean_8",
-"upc_a",
-"upc_e"
-];
+        const preferred = [
 
-formats =
-preferred.filter(
-f =>
-formats.includes(f)
-);
+            "code_128",
+            "code_39",
+            "code_93",
+            "itf",
+            "codabar",
+            "ean_13",
+            "ean_8",
+            "upc_a",
+            "upc_e"
 
-const detector =
-new BarcodeDetector({
-formats
-});
+        ];
 
-const results =
-await detector.detect(
-corrected
-);
+        formats =
+            preferred.filter(
+                f =>
+                    formats.includes(f)
+            );
 
-if (
-results.length
-) {
+        if (!formats.length)
+            return "";
 
-return results
-.map(
-x => x.rawValue
-)
-.join("\n");
+        const detector =
+            new BarcodeDetector({
+                formats
+            });
 
-}
+        const detected =
+            await detector.detect(
+                corrected
+            );
 
-} catch(error) {
+        if (
+            detected.length
+        ) {
 
-console.log(
-"Barcode detection:",
-error
-);
+            return detected
+                .map(
+                    x =>
+                        x.rawValue
+                )
+                .join("\n");
 
-}
+        }
 
-return "";
+    } catch(error) {
+
+        console.warn(
+            "Barcode:",
+            error
+        );
+
+    }
+
+    return "";
 
 }
 
 
 /* =========================================================
-   NUMERIC SUFFIX
+   ID SUFFIX
 ========================================================= */
 
 function findNumericSuffix(
-barcode,
-text
+    barcode,
+    text
 ) {
 
-const barcodeDigits =
-String(
-barcode || ""
-)
-.replace(
-/\D/g,
-""
-);
+    const barcodeDigits =
+        String(
+            barcode || ""
+        )
+        .replace(
+            /\D/g,
+            ""
+        );
 
-if (
-barcodeDigits.length >= 5
-) {
+    if (
+        barcodeDigits.length >= 5
+    ) {
 
-return barcodeDigits.slice(-5);
+        return barcodeDigits.slice(-5);
 
-}
+    }
 
-const matches =
-String(
-text || ""
-)
-.match(
-/\d{5,}/g
-);
+    const matches =
+        String(
+            text || ""
+        )
+        .match(
+            /\d{5,}/g
+        );
 
-if (
-matches &&
-matches.length
-) {
+    if (
+        matches &&
+        matches.length
+    ) {
 
-return matches[
-matches.length - 1
-].slice(-5);
+        return matches[
+            matches.length - 1
+        ].slice(-5);
 
-}
+    }
 
-return "";
+    return "";
 
 }
 
@@ -2625,23 +2973,22 @@ return "";
 
 function setProgress(percent) {
 
-const bar =
-status.querySelector(
-".progressBar"
-);
+    const bar =
+        document.getElementById(
+            "progressBar"
+        );
 
-if (bar) {
+    if (!bar)
+        return;
 
-bar.style.width =
-Math.max(
-0,
-Math.min(
-100,
-percent
-)
-) + "%";
-
-}
+    bar.style.width =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        ) + "%";
 
 }
 
@@ -2651,88 +2998,95 @@ percent
 ========================================================= */
 
 async function captureMultipleFrames(
-points
+    points
 ) {
 
-scanning = false;
+    scanning = false;
 
-guide.classList.add(
-"stable"
-);
+    guide.classList.add(
+        "stable"
+    );
 
-scanMessage.textContent =
-"📸 Capturing multiple frames...";
+    scanMessage.textContent =
+        "📸 Selecting clearest frame...";
 
-const frames = [];
+    const frames = [];
 
-for (
-let i = 0;
-i < 7;
-i++
-) {
+    /*
+     * Fewer frames than before for speed,
+     * while still giving us several chances
+     * to catch a sharp image.
+     */
 
-await new Promise(
-resolve =>
-setTimeout(
-resolve,
-130
-)
-);
+    for (
+        let i = 0;
+        i < 5;
+        i++
+    ) {
 
-const frame =
-captureFrame();
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    100
+                )
+        );
 
-frames.push({
+        const frame =
+            captureFrame();
 
-canvas:
-frame,
+        frames.push({
 
-points:
-points.map(
-p => ({
-x: p.x,
-y: p.y
-})
-)
+            canvas:
+                frame,
 
-});
+            points:
+                points.map(
+                    p => ({
+                        x: p.x,
+                        y: p.y
+                    })
+                )
 
-setProgress(
-((i + 1) / 7) * 30
-);
+        });
 
-}
+        setProgress(
+            ((i + 1) / 5) * 25
+        );
 
-let best =
-frames[0];
+    }
 
-let bestScore =
--Infinity;
+    let best =
+        frames[0];
 
-for (
-const frame of frames
-) {
+    let bestScore =
+        -Infinity;
 
-const score =
-sharpness(
-frame.canvas
-);
+    for (
+        const frame of frames
+    ) {
 
-if (
-score > bestScore
-) {
+        const score =
+            sharpness(
+                frame.canvas
+            );
 
-bestScore =
-score;
+        if (
+            score >
+            bestScore
+        ) {
 
-best =
-frame;
+            bestScore =
+                score;
 
-}
+            best =
+                frame;
 
-}
+        }
 
-return best;
+    }
+
+    return best;
 
 }
 
@@ -2742,137 +3096,159 @@ return best;
 ========================================================= */
 
 async function processScan(
-frame
+    frame
 ) {
 
-if (processing)
-return;
+    if (processing)
+        return;
 
-processing = true;
+    processing = true;
 
-try {
+    try {
 
-setStatus(
-"warn",
-`
-<strong>🔎 Processing card...</strong><br>
-Selecting the clearest frame and correcting perspective.
-`
-);
+        setStatus(
+            "warn",
+            `
+            <strong>🔎 Processing card...</strong><br>
+            Improving the image and reading the card locally.
+            `
+        );
 
-originalCapture =
-frame.canvas;
+        /*
+         * NEVER replace this with the cropped portrait.
+         * This remains the complete original frame.
+         */
 
-straighten(
-frame.canvas,
-frame.points
-);
+        originalCapture =
+            frame.canvas;
 
-setProgress(35);
+        straighten(
+            frame.canvas,
+            frame.points
+        );
 
-extractPortrait();
+        setProgress(25);
 
-setProgress(40);
+        /*
+         * Portrait.
+         */
 
-scanMessage.textContent =
-"📝 Reading name...";
+        scanMessage.textContent =
+            "🖼️ Extracting portrait...";
 
-const name =
-await readName();
+        extractPortrait();
 
-detectedName.textContent =
-name;
+        setProgress(35);
 
-nameOCR.textContent =
-name;
+        /*
+         * Name.
+         */
 
-setProgress(62);
+        scanMessage.textContent =
+            "📝 Reading name...";
 
-scanMessage.textContent =
-"🔎 Reading card text...";
+        const name =
+            await readName();
 
-const allText =
-await readFullCard();
+        detectedName.textContent =
+            name;
 
-fullOCR.textContent =
-allText ||
-"No text detected.";
+        nameOCR.textContent =
+            name;
 
-setProgress(78);
+        setProgress(62);
 
-scanMessage.textContent =
-"📊 Checking barcode...";
+        /*
+         * Full OCR.
+         */
 
-const barcode =
-await readBarcode();
+        scanMessage.textContent =
+            "🔎 Reading card text...";
 
-barcodeText.textContent =
-barcode ||
-"Barcode not detected by this browser.";
+        const allText =
+            await readFullCard();
 
-if (barcode) {
+        fullOCR.textContent =
+            allText ||
+            "No text detected.";
 
-barcodeStatus.textContent =
-"📊 Barcode detected";
+        setProgress(80);
 
-} else {
+        /*
+         * Barcode.
+         */
 
-barcodeStatus.textContent =
-"📊 Barcode not detected";
+        scanMessage.textContent =
+            "📊 Checking barcode...";
 
-}
+        const barcode =
+            await readBarcode();
 
-const suffix =
-findNumericSuffix(
-barcode,
-allText
-);
+        barcodeText.textContent =
+            barcode ||
+            "Barcode not detected by this browser.";
 
-detectedId.textContent =
-suffix
-?
-"Detected numeric suffix: " +
-suffix
-:
-"No numeric suffix detected";
+        if (barcode) {
 
-setProgress(100);
+            barcodeStatus.textContent =
+                "📊 Barcode detected";
 
-results.style.display =
-"block";
+        } else {
 
-setStatus(
-"good",
-`
-<strong>✅ Scan complete</strong><br>
-The card was processed locally in your browser.
-`
-);
+            barcodeStatus.textContent =
+                "📊 Barcode not detected";
 
-scanMessage.textContent =
-"✅ Done";
+        }
 
-currentPhotoSource =
-profilePicture.src;
+        const suffix =
+            findNumericSuffix(
+                barcode,
+                allText
+            );
 
-} catch(error) {
+        detectedId.textContent =
+            suffix
+                ? "Detected numeric suffix: " +
+                  suffix
+                : "No numeric suffix detected";
 
-console.error(error);
+        setProgress(100);
 
-setStatus(
-"bad",
-`
-<strong>❌ Processing failed</strong><br>
-Try moving the card into better lighting and holding it flatter.
-`
-);
+        results.style.display =
+            "block";
 
-scanMessage.textContent =
-"Scan failed";
+        setStatus(
+            "good",
+            `
+            <strong>✅ Scan complete</strong><br>
+            The card was processed locally in your browser.
+            `
+        );
 
-}
+        scanMessage.textContent =
+            "✅ Done";
 
-processing = false;
+        currentPhotoSource =
+            profilePicture.src;
+
+    } catch(error) {
+
+        console.error(error);
+
+        setStatus(
+            "bad",
+            `
+            <strong>❌ Processing failed</strong><br>
+            Try moving the card into better lighting and holding it flatter.
+            `
+        );
+
+        scanMessage.textContent =
+            "Scan failed";
+
+    }
+
+    processing = false;
 
 }
 
@@ -2883,189 +3259,208 @@ processing = false;
 
 function detectionLoop() {
 
-if (!scanning)
-return;
+    if (!scanning)
+        return;
 
-if (
-video.readyState < 2
-) {
+    if (
+        video.readyState < 2
+    ) {
 
-requestAnimationFrame(
-detectionLoop
-);
+        requestAnimationFrame(
+            detectionLoop
+        );
 
-return;
+        return;
 
-}
+    }
 
-if (
-typeof cv ===
-"undefined"
-) {
+    if (
+        typeof cv ===
+        "undefined"
+    ) {
 
-scanMessage.textContent =
-"⏳ Loading document detector...";
+        scanMessage.textContent =
+            "⏳ Loading document detector...";
 
-requestAnimationFrame(
-detectionLoop
-);
+        requestAnimationFrame(
+            detectionLoop
+        );
 
-return;
+        return;
 
-}
+    }
 
-resizeOverlay();
+    resizeOverlay();
 
-const width =
-640;
+    /*
+     * Smaller processing image keeps detection fast.
+     */
 
-const height =
-Math.round(
-video.videoHeight *
-width /
-video.videoWidth
-);
+    const width =
+        640;
 
-const canvas =
-document.createElement(
-"canvas"
-);
+    const height =
+        Math.round(
+            video.videoHeight *
+            width /
+            video.videoWidth
+        );
 
-canvas.width =
-width;
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-canvas.height =
-height;
+    canvas.width =
+        width;
 
-const ctx =
-canvas.getContext(
-"2d"
-);
+    canvas.height =
+        height;
 
-ctx.drawImage(
-video,
-0,
-0,
-width,
-height
-);
+    const ctx =
+        canvas.getContext(
+            "2d",
+            {
+                willReadFrequently: true
+            }
+        );
 
-const image =
-ctx.getImageData(
-0,
-0,
-width,
-height
-);
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        width,
+        height
+    );
 
-const detected =
-detectDocument(
-image
-);
+    const image =
+        ctx.getImageData(
+            0,
+            0,
+            width,
+            height
+        );
 
-if (detected) {
+    const detected =
+        detectDocument(
+            image
+        );
 
-const sx =
-video.videoWidth /
-width;
+    if (detected) {
 
-const sy =
-video.videoHeight /
-height;
+        const sx =
+            video.videoWidth /
+            width;
 
-const points =
-detected.map(
-p => ({
-x: p.x * sx,
-y: p.y * sy
-})
-);
+        const sy =
+            video.videoHeight /
+            height;
 
-drawDocument(
-points
-);
+        const points =
+            detected.map(
+                p => ({
 
-guide.classList.add(
-"detected"
-);
+                    x:
+                        p.x * sx,
 
-if (
-isStable(points)
-) {
+                    y:
+                        p.y * sy
 
-stableFrames++;
+                })
+            );
 
-} else {
+        drawDocument(
+            points
+        );
 
-stableFrames =
-Math.max(
-0,
-stableFrames - 1
-);
+        guide.classList.add(
+            "detected"
+        );
 
-}
+        if (
+            isStable(points)
+        ) {
 
-if (
-stableFrames >= 5
-) {
+            stableFrames++;
 
-guide.classList.add(
-"stable"
-);
+        } else {
 
-scanMessage.textContent =
-"Hold still...";
+            stableFrames =
+                Math.max(
+                    0,
+                    stableFrames - 1
+                );
 
-} else {
+        }
 
-scanMessage.textContent =
-"📇 Card detected";
+        if (
+            stableFrames >= 5
+        ) {
 
-}
+            guide.classList.add(
+                "stable"
+            );
 
-if (
-stableFrames >= 12 &&
-!processing
-) {
+            scanMessage.textContent =
+                "Hold still...";
 
-captureMultipleFrames(
-points
-)
-.then(
-processScan
-);
+        } else {
 
-return;
+            scanMessage.textContent =
+                "📇 Card detected";
 
-}
+        }
 
-} else {
+        /*
+         * Slightly lower trigger than before,
+         * because we now capture several sharp frames.
+         */
 
-stableFrames = 0;
-previousCorners = null;
+        if (
+            stableFrames >= 10 &&
+            !processing
+        ) {
 
-guide.classList.remove(
-"detected"
-);
+            captureMultipleFrames(
+                points
+            )
+            .then(
+                processScan
+            );
 
-guide.classList.remove(
-"stable"
-);
+            return;
 
-drawDocument(
-null
-);
+        }
 
-scanMessage.textContent =
-"Looking for card...";
+    } else {
 
-setProgress(0);
+        stableFrames = 0;
 
-}
+        previousCorners =
+            null;
 
-requestAnimationFrame(
-detectionLoop
-);
+        guide.classList.remove(
+            "detected"
+        );
+
+        guide.classList.remove(
+            "stable"
+        );
+
+        drawDocument(
+            null
+        );
+
+        scanMessage.textContent =
+            "Looking for card...";
+
+        setProgress(0);
+
+    }
+
+    requestAnimationFrame(
+        detectionLoop
+    );
 
 }
 
@@ -3074,517 +3469,556 @@ detectionLoop
    PHOTO EDITOR
 ========================================================= */
 
-function openEditor(source) {
+function openEditor(
+    source
+) {
 
-if (!source)
-return;
+    if (!source)
+        return;
 
-currentPhotoSource =
-source;
+    currentPhotoSource =
+        source;
 
-editImage.onload =
-() => {
+    editor.style.display =
+        "block";
 
-requestAnimationFrame(
-() => {
+    /*
+     * Clear old onload handlers.
+     */
 
-setupEditorImage();
+    editImage.onload = null;
 
-}
-);
+    editImage.src =
+        source;
 
-};
+    cropState = {
 
-editImage.src =
-source;
+        x: 0,
+        y: 0,
+        scale: 1
 
-editor.style.display =
-"block";
+    };
 
-}
+    /*
+     * Much farther zoomed out.
+     */
 
+    zoom.value =
+        0.72;
 
-/* =========================================================
-   NEW EDITOR IMAGE SYSTEM
-=========================================================
+    if (
+        editImage.complete &&
+        editImage.naturalWidth
+    ) {
 
-   This is the important part.
+        fitEditorImage();
 
-   OLD behavior:
-   - Image was automatically made large.
-   - The crop often started zoomed in.
-   - The user had to zoom OUT manually.
+    } else {
 
-   NEW behavior:
-   - The image is initially scaled so the crop window
-     has substantially more breathing room.
-   - The slider starts at 35% of the old effective scale.
-   - The user can zoom in or out from that starting point.
-   - The full original image remains available.
-========================================================= */
+        editImage.onload =
+            fitEditorImage;
 
-function setupEditorImage() {
-
-const area =
-cropArea.getBoundingClientRect();
-
-if (
-!editImage.naturalWidth ||
-!editImage.naturalHeight
-)
-return;
-
-/*
- * The circular crop is 80% of the editor.
- */
-
-const cropDiameter =
-area.width * 0.80;
-
-/*
- * Fit the SHORTER image dimension to only about
- * 55% of the crop window initially.
- *
- * This makes the initial image dramatically more
- * zoomed out.
- */
-
-const minDimension =
-Math.min(
-editImage.naturalWidth,
-editImage.naturalHeight
-);
-
-cropBaseScale =
-(cropDiameter * 0.55) /
-minDimension;
-
-/*
- * Start at 65% of this base.
- *
- * This is intentionally zoomed out.
- */
-
-cropState.scale =
-cropBaseScale * 0.65;
-
-cropState.x = 0;
-cropState.y = 0;
-
-zoom.value =
-0.65;
-
-updateEditorImage();
+    }
 
 }
 
 
 /* =========================================================
-   UPDATE EDITOR IMAGE
+   FIT EDITOR IMAGE
 ========================================================= */
 
-function updateEditorImage() {
+function fitEditorImage() {
 
-if (
-!editImage.naturalWidth
-)
-return;
+    const area =
+        cropArea.getBoundingClientRect();
 
-const scale =
-parseFloat(
-zoom.value
-);
+    if (
+        !area.width ||
+        !editImage.naturalWidth
+    )
+        return;
 
-/*
- * Base scale is intentionally conservative.
- */
+    /*
+     * This is the important change.
+     *
+     * Previously the base scale was 1.35,
+     * which made the image start too zoomed in.
+     *
+     * We now make the complete image fit comfortably
+     * inside the editor first.
+     */
 
-cropState.scale =
-cropBaseScale *
-scale;
+    const fitScale =
+        Math.min(
+            area.width /
+                editImage.naturalWidth,
 
-const width =
-editImage.naturalWidth *
-cropState.scale;
+            area.height /
+                editImage.naturalHeight
+        );
 
-const height =
-editImage.naturalHeight *
-cropState.scale;
+    /*
+     * 0.72 is deliberately zoomed out.
+     */
 
-editImage.style.width =
-width + "px";
+    cropState.scale =
+        fitScale *
+        parseFloat(
+            zoom.value
+        );
 
-editImage.style.height =
-height + "px";
+    cropState.x = 0;
+    cropState.y = 0;
 
-editImage.style.transform =
-`
-translate(
-${cropState.x}px,
-${cropState.y}px
-)
-translate(-50%, -50%)
-`;
-
-zoomValue.textContent =
-Math.round(
-scale * 100
-) + "%";
+    applyEditorTransform();
 
 }
 
 
 /* =========================================================
-   ZOOM
+   APPLY EDITOR TRANSFORM
 ========================================================= */
+
+function applyEditorTransform() {
+
+    editImage.style.width =
+        (
+            editImage.naturalWidth *
+            cropState.scale
+        ) + "px";
+
+    editImage.style.height =
+        (
+            editImage.naturalHeight *
+            cropState.scale
+        ) + "px";
+
+    editImage.style.transform =
+        `
+        translate(
+            ${cropState.x}px,
+            ${cropState.y}px
+        )
+        translate(-50%, -50%)
+        `;
+
+}
+
+
+/* =========================================================
+   UPDATE EDITOR
+========================================================= */
+
+function updateEditor() {
+
+    const area =
+        cropArea.getBoundingClientRect();
+
+    if (
+        !area.width ||
+        !editImage.naturalWidth
+    )
+        return;
+
+    const fitScale =
+        Math.min(
+            area.width /
+                editImage.naturalWidth,
+
+            area.height /
+                editImage.naturalHeight
+        );
+
+    cropState.scale =
+        fitScale *
+        parseFloat(
+            zoom.value
+        );
+
+    applyEditorTransform();
+
+}
+
 
 zoom.addEventListener(
-"input",
-() => {
-
-updateEditorImage();
-
-}
+    "input",
+    updateEditor
 );
 
 
 /* =========================================================
-   DRAG
+   DRAG EDITOR
 ========================================================= */
 
 function beginDrag(x,y) {
 
-dragging = true;
+    dragging = true;
 
-dragStart = {
-x,
-y
-};
+    dragStart = {
+        x,
+        y
+    };
 
-dragOrigin = {
-x: cropState.x,
-y: cropState.y
-};
+    dragOrigin = {
+        x: cropState.x,
+        y: cropState.y
+    };
 
 }
 
 
 function moveDrag(x,y) {
 
-if (!dragging)
-return;
+    if (!dragging)
+        return;
 
-cropState.x =
-dragOrigin.x +
-(x - dragStart.x);
+    cropState.x =
+        dragOrigin.x +
+        (x - dragStart.x);
 
-cropState.y =
-dragOrigin.y +
-(y - dragStart.y);
+    cropState.y =
+        dragOrigin.y +
+        (y - dragStart.y);
 
-updateEditorImage();
+    applyEditorTransform();
 
 }
 
 
 function endDrag() {
 
-dragging = false;
+    dragging = false;
 
 }
 
 
 cropArea.addEventListener(
-"pointerdown",
-event => {
+    "pointerdown",
+    event => {
 
-cropArea.setPointerCapture(
-event.pointerId
-);
+        cropArea.setPointerCapture(
+            event.pointerId
+        );
 
-beginDrag(
-event.clientX,
-event.clientY
-);
+        beginDrag(
+            event.clientX,
+            event.clientY
+        );
 
-}
-);
-
-cropArea.addEventListener(
-"pointermove",
-event => {
-
-moveDrag(
-event.clientX,
-event.clientY
-);
-
-}
+    }
 );
 
 cropArea.addEventListener(
-"pointerup",
-endDrag
+    "pointermove",
+    event => {
+
+        moveDrag(
+            event.clientX,
+            event.clientY
+        );
+
+    }
 );
 
 cropArea.addEventListener(
-"pointercancel",
-endDrag
+    "pointerup",
+    endDrag
+);
+
+cropArea.addEventListener(
+    "pointercancel",
+    endDrag
 );
 
 
 /* =========================================================
-   RESET
+   RESET CROP
 ========================================================= */
 
 document
-.getElementById("resetCrop")
-.addEventListener(
-"click",
-() => {
+    .getElementById("resetCrop")
+    .addEventListener(
+        "click",
+        () => {
 
-setupEditorImage();
+            cropState.x = 0;
+            cropState.y = 0;
 
-}
-);
+            zoom.value =
+                0.72;
+
+            fitEditorImage();
+
+        }
+    );
 
 
 /* =========================================================
    SAVE CROP
-=========================================================
-
-   This version calculates the crop directly from the
-   displayed image geometry, making the saved image match
-   what the user sees inside the circle.
 ========================================================= */
 
 document
-.getElementById("saveCrop")
-.addEventListener(
-"click",
-() => {
+    .getElementById("saveCrop")
+    .addEventListener(
+        "click",
+        () => {
 
-if (
-!editImage.naturalWidth ||
-!editImage.naturalHeight
-)
-return;
+            if (
+                !editImage.naturalWidth
+            )
+                return;
 
-const output =
-document.createElement(
-"canvas"
-);
+            const output =
+                document.createElement(
+                    "canvas"
+                );
 
-const outputSize =
-800;
+            const outputSize =
+                700;
 
-output.width =
-outputSize;
+            output.width =
+                outputSize;
 
-output.height =
-outputSize;
+            output.height =
+                outputSize;
 
-const ctx =
-output.getContext(
-"2d"
-);
+            const ctx =
+                output.getContext(
+                    "2d"
+                );
 
-const areaRect =
-cropArea.getBoundingClientRect();
+            const area =
+                cropArea.getBoundingClientRect();
 
-const imageRect =
-editImage.getBoundingClientRect();
+            const cropWindowSize =
+                area.width * .80;
 
-/*
- * Actual circular crop size on screen.
- */
+            const imageWidth =
+                editImage.naturalWidth *
+                cropState.scale;
 
-const cropSize =
-areaRect.width * 0.80;
+            const imageHeight =
+                editImage.naturalHeight *
+                cropState.scale;
 
-/*
- * Center of crop circle.
- */
+            /*
+             * Convert the editor position into
+             * image-space coordinates.
+             */
 
-const cropCenterX =
-areaRect.left +
-areaRect.width / 2;
+            const cropCenterX =
+                area.width / 2;
 
-const cropCenterY =
-areaRect.top +
-areaRect.height / 2;
+            const cropCenterY =
+                area.height / 2;
 
-/*
- * Image center.
- */
+            const imageCenterX =
+                cropCenterX +
+                cropState.x;
 
-const imageCenterX =
-imageRect.left +
-imageRect.width / 2;
+            const imageCenterY =
+                cropCenterY +
+                cropState.y;
 
-const imageCenterY =
-imageRect.top +
-imageRect.height / 2;
+            const left =
+                imageCenterX -
+                imageWidth / 2;
 
-/*
- * Difference between image and crop centers.
- */
+            const top =
+                imageCenterY -
+                imageHeight / 2;
 
-const offsetX =
-imageCenterX -
-cropCenterX;
+            const cropLeft =
+                cropCenterX -
+                cropWindowSize / 2;
 
-const offsetY =
-imageCenterY -
-cropCenterY;
+            const cropTop =
+                cropCenterY -
+                cropWindowSize / 2;
 
-/*
- * Pixels of original image represented by one
- * screen pixel.
- */
+            const sourceX =
+                (
+                    cropLeft -
+                    left
+                ) /
+                cropState.scale;
 
-const scaleX =
-editImage.naturalWidth /
-imageRect.width;
+            const sourceY =
+                (
+                    cropTop -
+                    top
+                ) /
+                cropState.scale;
 
-const scaleY =
-editImage.naturalHeight /
-imageRect.height;
+            const sourceSize =
+                cropWindowSize /
+                cropState.scale;
 
-/*
- * Original-image dimensions represented by the
- * circular crop.
- */
+            /*
+             * Draw the crop safely.
+             *
+             * This avoids the previous problem where
+             * clamping sourceX/sourceY independently
+             * could produce an incorrectly positioned
+             * image.
+             */
 
-const sourceWidth =
-cropSize *
-scaleX;
+            ctx.clearRect(
+                0,
+                0,
+                outputSize,
+                outputSize
+            );
 
-const sourceHeight =
-cropSize *
-scaleY;
+            ctx.beginPath();
 
-/*
- * Find the source rectangle corresponding to
- * exactly what is visible inside the crop.
- */
+            ctx.arc(
+                outputSize / 2,
+                outputSize / 2,
+                outputSize / 2,
+                0,
+                Math.PI * 2
+            );
 
-const sourceCenterX =
-editImage.naturalWidth / 2 -
-offsetX * scaleX;
+            ctx.clip();
 
-const sourceCenterY =
-editImage.naturalHeight / 2 -
-offsetY * scaleY;
+            /*
+             * Background fill if the requested crop
+             * extends slightly outside the source image.
+             */
 
-const sourceX =
-sourceCenterX -
-sourceWidth / 2;
+            ctx.fillStyle =
+                "#111";
 
-const sourceY =
-sourceCenterY -
-sourceHeight / 2;
+            ctx.fillRect(
+                0,
+                0,
+                outputSize,
+                outputSize
+            );
 
-/*
- * Prevent the canvas from being stretched if the
- * source reaches outside the image.
- */
+            /*
+             * Calculate a safe source rectangle.
+             */
 
-const sx =
-Math.max(
-0,
-Math.min(
-editImage.naturalWidth - sourceWidth,
-sourceX
-)
-);
+            const sx =
+                Math.max(
+                    0,
+                    sourceX
+                );
 
-const sy =
-Math.max(
-0,
-Math.min(
-editImage.naturalHeight - sourceHeight,
-sourceY
-)
-);
+            const sy =
+                Math.max(
+                    0,
+                    sourceY
+                );
 
-/*
- * Circular clipping.
- */
+            const ex =
+                Math.min(
+                    editImage.naturalWidth,
+                    sourceX + sourceSize
+                );
 
-ctx.save();
+            const ey =
+                Math.min(
+                    editImage.naturalHeight,
+                    sourceY + sourceSize
+                );
 
-ctx.beginPath();
+            const sw =
+                ex - sx;
 
-ctx.arc(
-outputSize / 2,
-outputSize / 2,
-outputSize / 2,
-0,
-Math.PI * 2
-);
+            const sh =
+                ey - sy;
 
-ctx.clip();
+            if (
+                sw > 0 &&
+                sh > 0
+            ) {
 
-/*
- * High-quality image rendering.
- */
+                const dx =
+                    (
+                        sx -
+                        sourceX
+                    ) /
+                    sourceSize *
+                    outputSize;
 
-ctx.imageSmoothingEnabled =
-true;
+                const dy =
+                    (
+                        sy -
+                        sourceY
+                    ) /
+                    sourceSize *
+                    outputSize;
 
-ctx.imageSmoothingQuality =
-"high";
+                const dw =
+                    sw /
+                    sourceSize *
+                    outputSize;
 
-ctx.drawImage(
-editImage,
-sx,
-sy,
-sourceWidth,
-sourceHeight,
-0,
-0,
-outputSize,
-outputSize
-);
+                const dh =
+                    sh /
+                    sourceSize *
+                    outputSize;
 
-ctx.restore();
+                ctx.imageSmoothingEnabled =
+                    true;
 
-/*
- * High-quality JPEG.
- */
+                ctx.imageSmoothingQuality =
+                    "high";
 
-currentPhotoSource =
-output.toDataURL(
-"image/jpeg",
-0.98
-);
+                ctx.drawImage(
 
-profilePicture.src =
-currentPhotoSource;
+                    editImage,
 
-editor.style.display =
-"none";
+                    sx,
+                    sy,
+                    sw,
+                    sh,
 
-}
-);
+                    dx,
+                    dy,
+                    dw,
+                    dh
+
+                );
+
+            }
+
+            ctx.restore();
+
+            currentPhotoSource =
+                output.toDataURL(
+                    "image/jpeg",
+                    .98
+                );
+
+            profilePicture.src =
+                currentPhotoSource;
+
+            editor.style.display =
+                "none";
+
+        }
+    );
 
 
 /* =========================================================
-   CANCEL
+   CANCEL EDITOR
 ========================================================= */
 
 document
-.getElementById("cancelCrop")
-.addEventListener(
-"click",
-() => {
+    .getElementById("cancelCrop")
+    .addEventListener(
+        "click",
+        () => {
 
-editor.style.display =
-"none";
+            editor.style.display =
+                "none";
 
-}
-);
+        }
+    );
 
 
 /* =========================================================
@@ -3592,68 +4026,69 @@ editor.style.display =
 ========================================================= */
 
 document
-.getElementById("editPhoto")
-.addEventListener(
-"click",
-() => {
+    .getElementById("editPhoto")
+    .addEventListener(
+        "click",
+        () => {
 
-openEditor(
-profilePicture.src
-);
+            openEditor(
+                profilePicture.src
+            );
 
-}
-);
+        }
+    );
 
 
 /* =========================================================
-   REPLACE IMAGE
+   REPLACE PHOTO
 ========================================================= */
 
 document
-.getElementById("replacePhoto")
-.addEventListener(
-"click",
-() => {
+    .getElementById("replacePhoto")
+    .addEventListener(
+        "click",
+        () => {
 
-photoInput.click();
+            photoInput.click();
 
-}
-);
+        }
+    );
+
 
 photoInput.addEventListener(
-"change",
-event => {
+    "change",
+    event => {
 
-const file =
-event.target.files[0];
+        const file =
+            event.target.files[0];
 
-if (!file)
-return;
+        if (!file)
+            return;
 
-if (
-!file.type.startsWith(
-"image/"
-)
-)
-return;
+        if (
+            !file.type.startsWith(
+                "image/"
+            )
+        )
+            return;
 
-const reader =
-new FileReader();
+        const reader =
+            new FileReader();
 
-reader.onload =
-() => {
+        reader.onload =
+            () => {
 
-openEditor(
-reader.result
-);
+                openEditor(
+                    reader.result
+                );
 
-};
+            };
 
-reader.readAsDataURL(
-file
-);
+        reader.readAsDataURL(
+            file
+        );
 
-}
+    }
 );
 
 
@@ -3663,43 +4098,45 @@ file
 
 function saveLocalProfile() {
 
-const profile = {
+    const profile = {
 
-name:
-detectedName.textContent,
+        name:
+            detectedName.textContent,
 
-idSuffix:
-detectedId.textContent,
+        idSuffix:
+            detectedId.textContent,
 
-photo:
-currentPhotoSource ||
-profilePicture.src,
+        photo:
+            currentPhotoSource ||
+            profilePicture.src,
 
-cardPhoto:
-originalCapture
-?
-originalCapture.toDataURL(
-"image/jpeg",
-.98
-)
-:
-null,
+        /*
+         * Full, original, uncropped card image.
+         */
 
-created:
-Date.now()
+        cardPhoto:
+            originalCapture
+                ? originalCapture.toDataURL(
+                    "image/jpeg",
+                    .98
+                )
+                : null,
 
-};
+        created:
+            Date.now()
 
-localStorage.setItem(
-"localCardProfile",
-JSON.stringify(
-profile
-)
-);
+    };
 
-showHome(
-profile
-);
+    localStorage.setItem(
+        "localCardProfile",
+        JSON.stringify(
+            profile
+        )
+    );
+
+    showHome(
+        profile
+    );
 
 }
 
@@ -3710,31 +4147,31 @@ profile
 
 function showHome(profile) {
 
-document.getElementById(
-"scannerPage"
-).style.display =
-"none";
+    document.getElementById(
+        "scannerPage"
+    ).style.display =
+        "none";
 
-document.getElementById(
-"homePage"
-).style.display =
-"block";
+    document.getElementById(
+        "homePage"
+    ).style.display =
+        "block";
 
-document.getElementById(
-"homePicture"
-).src =
-profile.photo;
+    document.getElementById(
+        "homePicture"
+    ).src =
+        profile.photo;
 
-document.getElementById(
-"homeName"
-).textContent =
-profile.name;
+    document.getElementById(
+        "homeName"
+    ).textContent =
+        profile.name;
 
-document.getElementById(
-"homeId"
-).textContent =
-profile.idSuffix ||
-"ID information unavailable";
+    document.getElementById(
+        "homeId"
+    ).textContent =
+        profile.idSuffix ||
+        "ID information unavailable";
 
 }
 
@@ -3744,13 +4181,13 @@ profile.idSuffix ||
 ========================================================= */
 
 document
-.getElementById(
-"createLocalProfile"
-)
-.addEventListener(
-"click",
-saveLocalProfile
-);
+    .getElementById(
+        "createLocalProfile"
+    )
+    .addEventListener(
+        "click",
+        saveLocalProfile
+    );
 
 
 /* =========================================================
@@ -3758,29 +4195,93 @@ saveLocalProfile
 ========================================================= */
 
 document
-.getElementById(
-"homeEdit"
-)
-.addEventListener(
-"click",
-() => {
+    .getElementById(
+        "homeEdit"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-const profile =
-JSON.parse(
-localStorage.getItem(
-"localCardProfile"
-)
-);
+            const saved =
+                localStorage.getItem(
+                    "localCardProfile"
+                );
 
-if (!profile)
-return;
+            if (!saved)
+                return;
 
-openEditor(
-profile.photo
-);
+            const profile =
+                JSON.parse(
+                    saved
+                );
 
-}
-);
+            openEditor(
+                profile.photo
+            );
+
+            /*
+             * The normal Save Profile Picture button
+             * updates profilePicture. We also update
+             * localStorage immediately after saving by
+             * observing the editor closing.
+             */
+
+            const observer =
+                new MutationObserver(
+                    () => {
+
+                        if (
+                            editor.style.display ===
+                            "none"
+                        ) {
+
+                            const updated =
+                                JSON.parse(
+                                    localStorage.getItem(
+                                        "localCardProfile"
+                                    ) || "{}"
+                                );
+
+                            if (
+                                currentPhotoSource
+                            ) {
+
+                                updated.photo =
+                                    currentPhotoSource;
+
+                                localStorage.setItem(
+                                    "localCardProfile",
+                                    JSON.stringify(
+                                        updated
+                                    )
+                                );
+
+                                document.getElementById(
+                                    "homePicture"
+                                ).src =
+                                    currentPhotoSource;
+
+                            }
+
+                            observer.disconnect();
+
+                        }
+
+                    }
+                );
+
+            observer.observe(
+                editor,
+                {
+                    attributes: true,
+                    attributeFilter: [
+                        "style"
+                    ]
+                }
+            );
+
+        }
+    );
 
 
 /* =========================================================
@@ -3788,21 +4289,21 @@ profile.photo
 ========================================================= */
 
 document
-.getElementById(
-"clearProfile"
-)
-.addEventListener(
-"click",
-() => {
+    .getElementById(
+        "clearProfile"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-localStorage.removeItem(
-"localCardProfile"
-);
+            localStorage.removeItem(
+                "localCardProfile"
+            );
 
-location.reload();
+            location.reload();
 
-}
-);
+        }
+    );
 
 
 /* =========================================================
@@ -3811,38 +4312,75 @@ location.reload();
 
 try {
 
-const saved =
-localStorage.getItem(
-"localCardProfile"
-);
+    const saved =
+        localStorage.getItem(
+            "localCardProfile"
+        );
 
-if (saved) {
+    if (saved) {
 
-const profile =
-JSON.parse(
-saved
-);
+        const profile =
+            JSON.parse(
+                saved
+            );
 
-if (
-profile &&
-profile.photo
-) {
+        if (
+            profile &&
+            profile.photo
+        ) {
 
-showHome(
-profile
-);
+            showHome(
+                profile
+            );
 
-}
+        }
 
-}
+    }
 
 } catch(error) {
 
-localStorage.removeItem(
-"localCardProfile"
-);
+    console.error(
+        "Profile restore:",
+        error
+    );
+
+    localStorage.removeItem(
+        "localCardProfile"
+    );
 
 }
+
+
+/* =========================================================
+   CLEANUP CAMERA
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (stream) {
+
+            stream
+                .getTracks()
+                .forEach(
+                    track =>
+                        track.stop()
+                );
+
+        }
+
+        if (ocrWorker) {
+
+            ocrWorker.terminate()
+                .catch(
+                    () => {}
+                );
+
+        }
+
+    }
+);
 
 </script>
 
