@@ -2177,6 +2177,304 @@ function extractPortrait() {
 
 
 /* =========================================================
+   OCR PREPROCESSING
+
+   Shared image-cleanup pipeline used by both the name
+   pass and the full-card pass. Boosts local contrast,
+   removes sensor noise while keeping edges crisp, then
+   binarizes with an adaptive threshold so Tesseract sees
+   clean dark-on-light text regardless of card lighting.
+   Automatically flips light-on-dark card designs so the
+   output is always dark text on a light background.
+========================================================= */
+
+function preprocessForOCR(
+    sourceCanvas,
+    options = {}
+) {
+
+    if (
+        typeof cv === "undefined"
+    ) {
+
+        return sourceCanvas;
+
+    }
+
+
+    const {
+        blockSize = 31,
+        C = 12,
+        useAdaptive = true
+    } = options;
+
+
+    const mat =
+        cv.imread(sourceCanvas);
+
+    const gray =
+        new cv.Mat();
+
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
+
+
+    /*
+     * Local contrast boost so faint or
+     * unevenly-lit printing becomes legible.
+     */
+
+    const clahe =
+        new cv.CLAHE(3, new cv.Size(8, 8));
+
+    const contrasted =
+        new cv.Mat();
+
+    clahe.apply(
+        gray,
+        contrasted
+    );
+
+    clahe.delete();
+
+
+    /*
+     * Edge-preserving smoothing to
+     * knock out sensor / paper noise.
+     */
+
+    const smooth =
+        new cv.Mat();
+
+    cv.bilateralFilter(
+        contrasted,
+        smooth,
+        7,
+        50,
+        50
+    );
+
+
+    /*
+     * Unsharp mask to make character
+     * strokes crisper for the OCR engine.
+     */
+
+    const blurred =
+        new cv.Mat();
+
+    cv.GaussianBlur(
+        smooth,
+        blurred,
+        new cv.Size(0, 0),
+        3
+    );
+
+    const sharp =
+        new cv.Mat();
+
+    cv.addWeighted(
+        smooth,
+        1.5,
+        blurred,
+        -0.5,
+        0,
+        sharp
+    );
+
+
+    const binary =
+        new cv.Mat();
+
+    if (useAdaptive) {
+
+        const size =
+            blockSize % 2 === 0
+                ? blockSize + 1
+                : blockSize;
+
+        cv.adaptiveThreshold(
+            sharp,
+            binary,
+            255,
+            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv.THRESH_BINARY,
+            size,
+            C
+        );
+
+    } else {
+
+        cv.threshold(
+            sharp,
+            binary,
+            0,
+            255,
+            cv.THRESH_BINARY +
+            cv.THRESH_OTSU
+        );
+
+    }
+
+
+    /*
+     * Normalize polarity: Tesseract wants
+     * dark text on a light background.
+     */
+
+    let result =
+        binary;
+
+    let inverted =
+        null;
+
+    const whiteRatio =
+        cv.countNonZero(binary) /
+        (binary.rows * binary.cols);
+
+    if (whiteRatio < 0.5) {
+
+        inverted =
+            new cv.Mat();
+
+        cv.bitwise_not(
+            binary,
+            inverted
+        );
+
+        result =
+            inverted;
+
+    }
+
+
+    const outCanvas =
+        document.createElement(
+            "canvas"
+        );
+
+    cv.imshow(
+        outCanvas,
+        result
+    );
+
+
+    mat.delete();
+    gray.delete();
+    contrasted.delete();
+    smooth.delete();
+    blurred.delete();
+    sharp.delete();
+    binary.delete();
+
+    if (inverted)
+        inverted.delete();
+
+
+    return outCanvas;
+
+}
+
+
+/* =========================================================
+   NAME CLEANUP
+
+   Strips OCR noise, drops stray leading labels like
+   "Name:", and title-cases the result so "JOHN q SMITH"
+   or "john smith" both come out as "John Smith".
+========================================================= */
+
+function cleanName(raw) {
+
+    let name =
+        String(raw || "")
+            .replace(
+                /[^A-Za-zÀ-ÿ' -]/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+
+    name =
+        name.replace(
+            /^(name|student|student name|full name|cardholder)\s*[:\-]?\s*/i,
+            ""
+        );
+
+
+    /*
+     * Drop leftover single stray letters
+     * that adaptive thresholding sometimes
+     * produces at the start/end of the line.
+     */
+
+    name =
+        name
+            .split(" ")
+            .filter(
+                (word, index, all) =>
+                    word.length > 1 ||
+                    all.length === 1
+            )
+            .join(" ");
+
+
+    if (!name)
+        return "";
+
+
+    const lowercaseConnectors =
+        new Set([
+            "de", "van", "der", "den",
+            "la", "le", "of", "di"
+        ]);
+
+
+    name =
+        name
+            .split(" ")
+            .map(
+                (word, index) => {
+
+                    if (!word)
+                        return word;
+
+                    const lower =
+                        word.toLowerCase();
+
+                    if (
+                        index > 0 &&
+                        lowercaseConnectors.has(lower)
+                    ) {
+
+                        return lower;
+
+                    }
+
+
+                    return (
+                        lower.charAt(0).toUpperCase() +
+                        lower.slice(1)
+                    );
+
+                }
+            )
+            .join(" ");
+
+
+    return name;
+
+}
+
+
+/* =========================================================
    NAME REGION
 ========================================================= */
 
@@ -2241,6 +2539,9 @@ async function readName() {
     ctx.imageSmoothingEnabled =
         true;
 
+    ctx.imageSmoothingQuality =
+        "high";
+
 
     ctx.drawImage(
 
@@ -2260,132 +2561,147 @@ async function readName() {
 
 
     /*
-     * OCR copy.
-     *
      * The original profile photo remains
-     * completely untouched and in color.
+     * completely untouched and in color;
+     * only this OCR copy is processed.
      */
 
-    const mat =
-        cv.imread(crop);
-
-    const gray =
-        new cv.Mat();
-
-    const enhanced =
-        new cv.Mat();
-
-    const binary =
-        new cv.Mat();
+    const preprocessed =
+        preprocessForOCR(crop, {
+            blockSize: 35,
+            C: 15
+        });
 
 
-    cv.cvtColor(
-        mat,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
+    const whitelist =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "abcdefghijklmnopqrstuvwxyz" +
+        "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ" +
+        "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ" +
+        "'- .";
 
 
-    cv.normalize(
-        gray,
-        enhanced,
-        0,
-        255,
-        cv.NORM_MINMAX
-    );
+    /*
+     * Several passes with different
+     * segmentation modes and inputs; the
+     * highest-confidence reading wins.
+     */
+
+    const attempts = [
+
+        {
+            canvas: preprocessed,
+            psm: "7"
+        },
+
+        {
+            canvas: preprocessed,
+            psm: "6"
+        },
+
+        {
+            canvas: crop,
+            psm: "7"
+        }
+
+    ];
 
 
-    cv.threshold(
-        enhanced,
-        binary,
-        0,
-        255,
-        cv.THRESH_BINARY +
-        cv.THRESH_OTSU
-    );
+    const candidates = [];
 
 
-    const ocrCanvas =
-        document.createElement(
-            "canvas"
-        );
+    for (
+        const attempt of attempts
+    ) {
 
+        try {
 
-    cv.imshow(
-        ocrCanvas,
-        binary
-    );
+            const result =
+                await Tesseract.recognize(
 
+                    attempt.canvas,
 
-    const result =
-        await Tesseract.recognize(
+                    "eng",
 
-            ocrCanvas,
+                    {
 
-            "eng",
+                        logger(data) {
 
-            {
+                            if (
+                                data.status ===
+                                "recognizing text"
+                            ) {
 
-                logger(data) {
+                                setProgress(
+                                    40 +
+                                    data.progress * 20
+                                );
 
-                    if (
-                        data.status ===
-                        "recognizing text"
-                    ) {
+                            }
 
-                        setProgress(
-                            40 +
-                            data.progress * 20
-                        );
+                        },
+
+                        config: {
+
+                            tessedit_pageseg_mode:
+                                attempt.psm,
+
+                            tessedit_char_whitelist:
+                                whitelist
+
+                        }
 
                     }
 
-                },
+                );
 
-                config: {
 
-                    /*
-                     * One line of text.
-                     */
+            const cleaned =
+                cleanName(
+                    result.data.text
+                );
 
-                    tessedit_pageseg_mode:
-                        "7"
 
-                }
+            if (cleaned) {
+
+                candidates.push({
+
+                    text: cleaned,
+
+                    confidence:
+                        result.data.confidence || 0
+
+                });
 
             }
 
-        );
+        } catch(error) {
+
+            console.log(
+                "Name OCR attempt failed:",
+                error
+            );
+
+        }
+
+    }
 
 
-    mat.delete();
-    gray.delete();
-    enhanced.delete();
-    binary.delete();
+    if (!candidates.length) {
+
+        return "Name not detected";
+
+    }
 
 
-    let name =
-        result.data.text
-            .replace(
-                /[^A-Za-zÀ-ÿ' -]/g,
-                " "
-            )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
+    candidates.sort(
+        (a, b) =>
+            b.confidence -
+            a.confidence
+    );
 
 
-    name =
-        name.replace(
-            /^(name|student|student name)\s*/i,
-            ""
-        );
-
-
-    return name ||
-        "Name not detected";
+    return candidates[0].text;
 
 }
 
@@ -2396,44 +2712,125 @@ async function readName() {
 
 async function readFullCard() {
 
-    const result =
-        await Tesseract.recognize(
-
+    const preprocessed =
+        preprocessForOCR(
             originalCapture,
-
-            "eng",
-
             {
-
-                logger(data) {
-
-                    if (
-                        data.status ===
-                        "recognizing text"
-                    ) {
-
-                        setProgress(
-                            60 +
-                            data.progress * 15
-                        );
-
-                    }
-
-                },
-
-                config: {
-
-                    tessedit_pageseg_mode:
-                        "6"
-
-                }
-
+                blockSize: 41,
+                C: 10
             }
-
         );
 
 
-    return result.data.text || "";
+    /*
+     * Run the raw color frame and a
+     * cleaned-up binary version through
+     * two segmentation modes each, and
+     * keep whichever pass Tesseract was
+     * most confident about.
+     */
+
+    const attempts = [
+
+        {
+            canvas: preprocessed,
+            psm: "6"
+        },
+
+        {
+            canvas: originalCapture,
+            psm: "6"
+        },
+
+        {
+            canvas: preprocessed,
+            psm: "11"
+        }
+
+    ];
+
+
+    let best = {
+        text: "",
+        confidence: -1
+    };
+
+
+    for (
+        const attempt of attempts
+    ) {
+
+        try {
+
+            const result =
+                await Tesseract.recognize(
+
+                    attempt.canvas,
+
+                    "eng",
+
+                    {
+
+                        logger(data) {
+
+                            if (
+                                data.status ===
+                                "recognizing text"
+                            ) {
+
+                                setProgress(
+                                    60 +
+                                    data.progress * 15
+                                );
+
+                            }
+
+                        },
+
+                        config: {
+
+                            tessedit_pageseg_mode:
+                                attempt.psm
+
+                        }
+
+                    }
+
+                );
+
+
+            const confidence =
+                result.data.confidence || 0;
+
+            const text =
+                (result.data.text || "").trim();
+
+
+            if (
+                text &&
+                confidence > best.confidence
+            ) {
+
+                best = {
+                    text,
+                    confidence
+                };
+
+            }
+
+        } catch(error) {
+
+            console.log(
+                "Full card OCR attempt failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    return best.text;
 
 }
 
