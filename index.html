@@ -5,11 +5,9 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>Card Scanner</title>
+<title>Card Scanner Pro</title>
 
-<script async
-        src="https://docs.opencv.org/4.x/opencv.js"></script>
-
+<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
@@ -23,6 +21,7 @@
     --blue: #268cf5;
     --green: #35d68b;
     --red: #ff6177;
+    --yellow: #f4c95d;
 }
 
 * {
@@ -85,6 +84,7 @@ button {
 .header p {
     margin: 8px 0 0;
     color: var(--muted);
+    line-height: 1.5;
 }
 
 .permission {
@@ -164,7 +164,7 @@ button {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
-    background: black;
+    background: #000;
     overflow: hidden;
 }
 
@@ -191,11 +191,11 @@ button {
 .guide {
     position: absolute;
 
-    left: 8%;
-    right: 8%;
+    left: 6%;
+    right: 6%;
 
-    top: 18%;
-    bottom: 18%;
+    top: 14%;
+    bottom: 14%;
 
     border: 2px solid rgba(255,255,255,.35);
     border-radius: 18px;
@@ -275,9 +275,11 @@ button {
 
 .progress {
     height: 5px;
+
     margin-top: 12px;
 
     background: #182a3b;
+
     border-radius: 999px;
 
     overflow: hidden;
@@ -289,7 +291,7 @@ button {
 
     background: var(--blue);
 
-    transition: width .15s;
+    transition: width .12s;
 }
 
 /* =========================================================
@@ -309,7 +311,7 @@ button {
 
     border-radius: 16px;
 
-    background: black;
+    background: #000;
 
     border: 1px solid var(--border);
 }
@@ -356,7 +358,6 @@ button {
 
 .profile p {
     margin: 6px 0;
-
     color: var(--muted);
 }
 
@@ -416,8 +417,7 @@ button {
 .cropArea {
     position: relative;
 
-    width: min(500px, 100%);
-
+    width: min(520px, 100%);
     aspect-ratio: 1 / 1;
 
     margin: 18px auto;
@@ -443,9 +443,6 @@ button {
     left: 50%;
     top: 50%;
 
-    width: auto;
-    height: auto;
-
     max-width: none;
 
     transform-origin: center;
@@ -453,7 +450,7 @@ button {
     pointer-events: none;
     user-select: none;
 
-    will-change: transform, width, height;
+    will-change: transform;
 }
 
 .cropWindow {
@@ -477,7 +474,7 @@ button {
     align-items: center;
     gap: 12px;
 
-    max-width: 500px;
+    max-width: 520px;
 
     margin: auto;
 }
@@ -495,6 +492,17 @@ button {
 
     margin-top: 18px;
 }
+
+.zoomValue {
+    min-width: 50px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* =========================================================
+   OCR
+========================================================= */
 
 .output {
     margin-top: 18px;
@@ -576,7 +584,6 @@ pre {
 
 .account p {
     margin: 6px 0;
-
     color: var(--muted);
 }
 
@@ -625,18 +632,19 @@ pre {
 <section id="scannerPage">
 
     <div class="header">
-        <h1>📇 Card Scanner</h1>
+
+        <h1>📇 Card Scanner Pro</h1>
 
         <p>
-            Hold the card inside the frame. The scanner
-            automatically detects the document and chooses
-            a sharp frame before processing it.
+            Place the entire card inside the frame.
+            The scanner selects the sharpest frame,
+            straightens the card, and intelligently
+            identifies text fields.
         </p>
+
     </div>
 
-    <div
-        id="permission"
-        class="permission">
+    <div id="permission" class="permission">
 
         <div class="cameraIcon">
             📷
@@ -795,10 +803,9 @@ pre {
             </h2>
 
             <p class="editorHint">
-                Drag the image to reposition it.
-                The image starts zoomed farther out so
-                you can see the whole portrait. Use the
-                slider to zoom in only when needed.
+                Drag to reposition the image.
+                Zoom out farther when the original
+                photo is being cropped too tightly.
             </p>
 
             <div
@@ -822,12 +829,18 @@ pre {
                 <input
                     id="zoom"
                     type="range"
-                    min="0.30"
+                    min="0.18"
                     max="3"
                     value="0.72"
                     step="0.01">
 
                 <span>+</span>
+
+                <span
+                    id="zoomValue"
+                    class="zoomValue">
+                    72%
+                </span>
 
             </div>
 
@@ -864,12 +877,10 @@ pre {
         <div class="output">
 
             <h3>
-                📝 Name OCR
+                📝 Detected Name
             </h3>
 
-            <pre
-                id="nameOCR">
-            </pre>
+            <pre id="nameOCR"></pre>
 
         </div>
 
@@ -879,9 +890,7 @@ pre {
                 🔎 Card OCR
             </h3>
 
-            <pre
-                id="fullOCR">
-            </pre>
+            <pre id="fullOCR"></pre>
 
         </div>
 
@@ -891,9 +900,7 @@ pre {
                 📊 Barcode
             </h3>
 
-            <pre
-                id="barcodeText">
-            </pre>
+            <pre id="barcodeText"></pre>
 
         </div>
 
@@ -933,13 +940,9 @@ pre {
 
         <div>
 
-            <h2
-                id="homeName">
-            </h2>
+            <h2 id="homeName"></h2>
 
-            <p
-                id="homeId">
-            </p>
+            <p id="homeId"></p>
 
             <p>
                 Local profile
@@ -1048,6 +1051,9 @@ const cropArea =
 const zoom =
     document.getElementById("zoom");
 
+const zoomValue =
+    document.getElementById("zoomValue");
+
 const photoInput =
     document.getElementById("photoInput");
 
@@ -1057,15 +1063,15 @@ const photoInput =
 ========================================================= */
 
 let stream = null;
-
 let scanning = false;
 let processing = false;
 
 let stableFrames = 0;
 let previousCorners = null;
 
-let currentPhotoSource = null;
 let originalCapture = null;
+let correctedCapture = null;
+let currentPhotoSource = null;
 
 let cropState = {
     x: 0,
@@ -1087,72 +1093,6 @@ let dragOrigin = {
 
 
 /* =========================================================
-   TESSERACT WORKER
-   Reuse ONE worker instead of creating a new OCR engine
-   for every crop.
-========================================================= */
-
-let ocrWorker = null;
-let ocrWorkerPromise = null;
-
-async function getOCRWorker() {
-
-    if (ocrWorker)
-        return ocrWorker;
-
-    if (ocrWorkerPromise)
-        return ocrWorkerPromise;
-
-    ocrWorkerPromise =
-        (async () => {
-
-            const worker =
-                await Tesseract.createWorker(
-                    "eng",
-                    1,
-                    {
-                        logger(data) {
-
-                            if (
-                                data.status ===
-                                "recognizing text"
-                            ) {
-
-                                const progress =
-                                    Math.round(
-                                        data.progress * 100
-                                    );
-
-                                setProgress(
-                                    Math.min(
-                                        95,
-                                        progress
-                                    )
-                                );
-
-                            }
-
-                        }
-                    }
-                );
-
-            await worker.setParameters({
-
-                preserve_interword_spaces: "1"
-
-            });
-
-            ocrWorker = worker;
-
-            return worker;
-
-        })();
-
-    return ocrWorkerPromise;
-}
-
-
-/* =========================================================
    STATUS
 ========================================================= */
 
@@ -1171,6 +1111,27 @@ function setStatus(type, html) {
             </div>
         </div>
         `;
+}
+
+
+function setProgress(percent) {
+
+    const bar =
+        document.getElementById(
+            "progressBar"
+        );
+
+    if (!bar)
+        return;
+
+    bar.style.width =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        ) + "%";
 }
 
 
@@ -1314,22 +1275,18 @@ function resizeOverlay() {
 
 
 /* =========================================================
-   POINT DISTANCE
+   GEOMETRY
 ========================================================= */
 
-function distance(a,b) {
+function distance(a, b) {
 
-    return Math.sqrt(
-        ((a.x - b.x) ** 2) +
-        ((a.y - b.y) ** 2)
+    return Math.hypot(
+        a.x - b.x,
+        a.y - b.y
     );
 
 }
 
-
-/* =========================================================
-   ORDER CORNERS
-========================================================= */
 
 function orderPoints(points) {
 
@@ -1382,8 +1339,11 @@ function detectDocument(imageData) {
 
     if (
         typeof cv === "undefined"
-    )
+    ) {
+
         return null;
+
+    }
 
     const src =
         cv.matFromImageData(
@@ -1397,6 +1357,9 @@ function detectDocument(imageData) {
         new cv.Mat();
 
     const edges =
+        new cv.Mat();
+
+    const closed =
         new cv.Mat();
 
     const contours =
@@ -1414,34 +1377,32 @@ function detectDocument(imageData) {
     cv.GaussianBlur(
         gray,
         blur,
-        new cv.Size(5,5),
+        new cv.Size(5, 5),
         0
     );
 
     cv.Canny(
         blur,
         edges,
-        45,
-        140
+        35,
+        120
     );
 
     const kernel =
-        cv.Mat.ones(
-            3,
-            3,
-            cv.CV_8U
+        cv.getStructuringElement(
+            cv.MORPH_RECT,
+            new cv.Size(5, 5)
         );
 
-    cv.dilate(
+    cv.morphologyEx(
         edges,
-        edges,
+        closed,
+        cv.MORPH_CLOSE,
         kernel
     );
 
-    kernel.delete();
-
     cv.findContours(
-        edges,
+        closed,
         contours,
         hierarchy,
         cv.RETR_LIST,
@@ -1471,7 +1432,7 @@ function detectDocument(imageData) {
             );
 
         if (
-            perimeter < 250
+            perimeter < 300
         ) {
 
             contour.delete();
@@ -1485,7 +1446,7 @@ function detectDocument(imageData) {
         cv.approxPolyDP(
             contour,
             approx,
-            perimeter * .025,
+            perimeter * 0.02,
             true
         );
 
@@ -1506,8 +1467,8 @@ function detectDocument(imageData) {
                 imageArea;
 
             if (
-                areaRatio > .08 &&
-                areaRatio < .95
+                areaRatio > 0.12 &&
+                areaRatio < 0.92
             ) {
 
                 const points = [];
@@ -1522,6 +1483,7 @@ function detectDocument(imageData) {
                     let y;
 
                     if (
+                        approx.data32S &&
                         approx.data32S.length >= 8
                     ) {
 
@@ -1557,9 +1519,7 @@ function detectDocument(imageData) {
                 }
 
                 const ordered =
-                    orderPoints(
-                        points
-                    );
+                    orderPoints(points);
 
                 const top =
                     distance(
@@ -1567,22 +1527,22 @@ function detectDocument(imageData) {
                         ordered[1]
                     );
 
-                const bottom =
-                    distance(
-                        ordered[3],
-                        ordered[2]
-                    );
-
-                const left =
-                    distance(
-                        ordered[0],
-                        ordered[3]
-                    );
-
                 const right =
                     distance(
                         ordered[1],
                         ordered[2]
+                    );
+
+                const bottom =
+                    distance(
+                        ordered[2],
+                        ordered[3]
+                    );
+
+                const left =
+                    distance(
+                        ordered[3],
+                        ordered[0]
                     );
 
                 const width =
@@ -1605,22 +1565,54 @@ function detectDocument(imageData) {
                     );
 
                 if (
-                    ratio >= 1.25 &&
-                    ratio <= 2.1
+                    ratio >= 1.35 &&
+                    ratio <= 2.05
                 ) {
 
-                    const edgeConsistency =
-                        (
-                            Math.min(top,bottom) /
-                            Math.max(top,bottom)
-                            +
-                            Math.min(left,right) /
-                            Math.max(left,right)
-                        ) / 2;
+                    const horizontal =
+                        Math.min(
+                            top,
+                            bottom
+                        ) /
+                        Math.max(
+                            top,
+                            bottom
+                        );
+
+                    const vertical =
+                        Math.min(
+                            left,
+                            right
+                        ) /
+                        Math.max(
+                            left,
+                            right
+                        );
+
+                    const rectangularity =
+                        (horizontal +
+                         vertical) / 2;
+
+                    /*
+                     * Prefer cards that:
+                     * - are large
+                     * - are rectangular
+                     * - have a believable ID-card ratio
+                     */
+
+                    const ratioScore =
+                        1 -
+                        Math.min(
+                            1,
+                            Math.abs(
+                                ratio - 1.586
+                            ) / 0.75
+                        );
 
                     const score =
                         areaRatio *
-                        edgeConsistency;
+                        rectangularity *
+                        (0.75 + ratioScore * 0.25);
 
                     if (
                         score >
@@ -1650,11 +1642,12 @@ function detectDocument(imageData) {
     gray.delete();
     blur.delete();
     edges.delete();
+    closed.delete();
     contours.delete();
     hierarchy.delete();
+    kernel.delete();
 
     return best;
-
 }
 
 
@@ -1698,11 +1691,10 @@ function drawDocument(points) {
 
     overlayCtx.closePath();
 
-    overlayCtx.lineWidth =
-        7;
+    overlayCtx.lineWidth = 7;
 
     overlayCtx.strokeStyle =
-        stableFrames >= 10
+        stableFrames >= 8
             ? "#35d68b"
             : "#268cf5";
 
@@ -1717,13 +1709,13 @@ function drawDocument(points) {
         overlayCtx.arc(
             p.x,
             p.y,
-            9,
+            8,
             0,
             Math.PI * 2
         );
 
         overlayCtx.fillStyle =
-            stableFrames >= 10
+            stableFrames >= 8
                 ? "#35d68b"
                 : "#268cf5";
 
@@ -1743,7 +1735,12 @@ function isStable(points) {
     if (!previousCorners) {
 
         previousCorners =
-            points;
+            points.map(
+                p => ({
+                    x: p.x,
+                    y: p.y
+                })
+            );
 
         return false;
 
@@ -1766,10 +1763,14 @@ function isStable(points) {
     }
 
     previousCorners =
-        points;
+        points.map(
+            p => ({
+                x: p.x,
+                y: p.y
+            })
+        );
 
-    return movement < 45;
-
+    return movement < 35;
 }
 
 
@@ -1813,7 +1814,6 @@ function captureFrame() {
     );
 
     return canvas;
-
 }
 
 
@@ -1862,7 +1862,10 @@ function sharpness(canvas) {
     );
 
     const value =
-        std.doubleAt(0,0) ** 2;
+        Math.pow(
+            std.doubleAt(0, 0),
+            2
+        );
 
     src.delete();
     gray.delete();
@@ -1871,7 +1874,6 @@ function sharpness(canvas) {
     std.delete();
 
     return value;
-
 }
 
 
@@ -1879,10 +1881,7 @@ function sharpness(canvas) {
    PERSPECTIVE CORRECTION
 ========================================================= */
 
-function straighten(
-    canvas,
-    points
-) {
+function straighten(canvas, points) {
 
     const src =
         cv.imread(canvas);
@@ -1890,11 +1889,63 @@ function straighten(
     const p =
         orderPoints(points);
 
-    const width =
-        1200;
+    const top =
+        distance(
+            p[0],
+            p[1]
+        );
+
+    const bottom =
+        distance(
+            p[3],
+            p[2]
+        );
+
+    const left =
+        distance(
+            p[0],
+            p[3]
+        );
+
+    const right =
+        distance(
+            p[1],
+            p[2]
+        );
+
+    const measuredWidth =
+        (top + bottom) / 2;
+
+    const measuredHeight =
+        (left + right) / 2;
+
+    const cardRatio =
+        measuredWidth /
+        Math.max(
+            1,
+            measuredHeight
+        );
+
+    /*
+     * Keep a realistic card ratio.
+     * This avoids stretching the portrait.
+     */
+
+    const width = 1400;
+
+    const safeRatio =
+        Math.min(
+            1.95,
+            Math.max(
+                1.35,
+                cardRatio
+            )
+        );
 
     const height =
-        760;
+        Math.round(
+            width / safeRatio
+        );
 
     const sourcePoints =
         cv.matFromArray(
@@ -1928,14 +1979,14 @@ function straighten(
                 0,
                 0,
 
-                width,
+                width - 1,
                 0,
 
-                width,
-                height,
+                width - 1,
+                height - 1,
 
                 0,
-                height
+                height - 1
 
             ]
         );
@@ -1961,6 +2012,12 @@ function straighten(
         cv.BORDER_REPLICATE
     );
 
+    corrected.width =
+        width;
+
+    corrected.height =
+        height;
+
     cv.imshow(
         corrected,
         output
@@ -1968,11 +2025,14 @@ function straighten(
 
     src.delete();
     output.delete();
-
     sourcePoints.delete();
     destinationPoints.delete();
     matrix.delete();
 
+    return {
+        width,
+        height
+    };
 }
 
 
@@ -1982,34 +2042,47 @@ function straighten(
 
 function extractPortrait() {
 
+    /*
+     * The provided card layout has the portrait in the
+     * upper-left quadrant.
+     *
+     * These values are intentionally based on the
+     * STRAIGHTENED CARD rather than the camera frame.
+     */
+
     const source =
         corrected;
 
+    const cardW =
+        source.width;
+
+    const cardH =
+        source.height;
+
     /*
-     * Slightly larger portrait crop than before.
-     *
-     * The crop stays inside the card and is kept
-     * completely separate from the original capture.
+     * Slightly generous crop around the actual photo.
+     * This prevents the scanner from chopping off the
+     * edges of the portrait.
      */
 
     const x =
         Math.round(
-            source.width * .025
+            cardW * 0.038
         );
 
     const y =
         Math.round(
-            source.height * .025
+            cardH * 0.035
         );
 
     const width =
         Math.round(
-            source.width * .30
+            cardW * 0.275
         );
 
     const height =
         Math.round(
-            source.height * .48
+            cardH * 0.455
         );
 
     const canvas =
@@ -2017,16 +2090,11 @@ function extractPortrait() {
             "canvas"
         );
 
-    /*
-     * Render at 2x resolution so the editor gets
-     * a cleaner source image.
-     */
-
     canvas.width =
-        width * 2;
+        width;
 
     canvas.height =
-        height * 2;
+        height;
 
     const ctx =
         canvas.getContext(
@@ -2040,7 +2108,6 @@ function extractPortrait() {
         "high";
 
     ctx.drawImage(
-
         source,
 
         x,
@@ -2050,194 +2117,50 @@ function extractPortrait() {
 
         0,
         0,
-        canvas.width,
-        canvas.height
-
+        width,
+        height
     );
+
+    /*
+     * Store the full-resolution color portrait.
+     */
 
     currentPhotoSource =
         canvas.toDataURL(
             "image/jpeg",
-            .98
+            0.98
         );
 
     profilePicture.src =
         currentPhotoSource;
 
     return currentPhotoSource;
-
 }
 
 
 /* =========================================================
-   IMAGE PROCESSING FOR OCR
+   OCR HELPERS
 ========================================================= */
 
-function makeGray(sourceCanvas) {
+function normalizeText(text) {
 
-    if (
-        typeof cv === "undefined"
-    )
-        return sourceCanvas;
-
-    const mat =
-        cv.imread(sourceCanvas);
-
-    const gray =
-        new cv.Mat();
-
-    cv.cvtColor(
-        mat,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
-
-    const out =
-        document.createElement(
-            "canvas"
-        );
-
-    cv.imshow(
-        out,
-        gray
-    );
-
-    mat.delete();
-    gray.delete();
-
-    return out;
-
+    return String(text || "")
+        .replace(
+            /[|¦]/g,
+            "I"
+        )
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .trim();
 }
 
-
-function makeContrast(sourceCanvas) {
-
-    if (
-        typeof cv === "undefined"
-    )
-        return sourceCanvas;
-
-    const mat =
-        cv.imread(sourceCanvas);
-
-    const gray =
-        new cv.Mat();
-
-    cv.cvtColor(
-        mat,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
-
-    const clahe =
-        new cv.CLAHE(
-            2.0,
-            new cv.Size(8,8)
-        );
-
-    const result =
-        new cv.Mat();
-
-    clahe.apply(
-        gray,
-        result
-    );
-
-    clahe.delete();
-
-    const out =
-        document.createElement(
-            "canvas"
-        );
-
-    cv.imshow(
-        out,
-        result
-    );
-
-    mat.delete();
-    gray.delete();
-    result.delete();
-
-    return out;
-
-}
-
-
-function makeThreshold(sourceCanvas) {
-
-    if (
-        typeof cv === "undefined"
-    )
-        return sourceCanvas;
-
-    const mat =
-        cv.imread(sourceCanvas);
-
-    const gray =
-        new cv.Mat();
-
-    cv.cvtColor(
-        mat,
-        gray,
-        cv.COLOR_RGBA2GRAY
-    );
-
-    const normalized =
-        new cv.Mat();
-
-    cv.normalize(
-        gray,
-        normalized,
-        0,
-        255,
-        cv.NORM_MINMAX
-    );
-
-    const binary =
-        new cv.Mat();
-
-    cv.threshold(
-        normalized,
-        binary,
-        0,
-        255,
-        cv.THRESH_BINARY +
-        cv.THRESH_OTSU
-    );
-
-    const out =
-        document.createElement(
-            "canvas"
-        );
-
-    cv.imshow(
-        out,
-        binary
-    );
-
-    mat.delete();
-    gray.delete();
-    normalized.delete();
-    binary.delete();
-
-    return out;
-
-}
-
-
-/* =========================================================
-   CLEAN TEXT
-========================================================= */
 
 function cleanNameText(raw) {
 
-    let text =
-        String(raw || "")
-            .replace(
-                /[\r\n]+/g,
-                " "
-            )
+    let name =
+        normalizeText(raw)
             .replace(
                 /[^A-Za-zÀ-ÿ' -]/g,
                 " "
@@ -2248,25 +2171,28 @@ function cleanNameText(raw) {
             )
             .trim();
 
-    if (!text)
+    name =
+        name.replace(
+            /^(name|student|student name|full name|cardholder|holder)\s*[:\-]?\s*/i,
+            ""
+        );
+
+    name =
+        name.replace(
+            /\b(name|student|studentname|fullname)\b/gi,
+            ""
+        );
+
+    name =
+        name
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+    if (!name)
         return "";
-
-    text =
-        text.replace(
-            /^(name|student|student name|full name|cardholder|card holder|holder)\s*[:\-]?\s*/i,
-            ""
-        );
-
-    text =
-        text.replace(
-            /\s+(id|number|no|dob|date|birth|expires?)\s*$/i,
-            ""
-        );
-
-    const words =
-        text
-            .split(/\s+/)
-            .filter(Boolean);
 
     const connectors =
         new Set([
@@ -2275,15 +2201,19 @@ function cleanNameText(raw) {
             "von",
             "der",
             "den",
-            "di",
-            "da",
             "la",
-            "le"
+            "le",
+            "da",
+            "di"
         ]);
 
-    return words
+    return name
+        .split(" ")
         .map(
             (word, index) => {
+
+                if (!word)
+                    return "";
 
                 const lower =
                     word.toLowerCase();
@@ -2305,330 +2235,539 @@ function cleanNameText(raw) {
             }
         )
         .join(" ");
-
 }
 
 
 /* =========================================================
-   NAME VALIDATION
+   NAME CANDIDATE SCORING
 ========================================================= */
 
-function nameQuality(text, confidence) {
+const NAME_BLACKLIST = new Set([
+
+    "name",
+    "student",
+    "studentname",
+    "full",
+    "school",
+    "middle",
+    "high",
+    "elementary",
+    "district",
+    "grade",
+    "gr",
+    "class",
+    "id",
+    "year",
+    "years",
+    "card",
+    "schoolid",
+    "studentid",
+    "barcode",
+    "member",
+    "valid",
+    "expires",
+    "exp",
+    "issue"
+
+]);
+
+
+function nameCandidateScore(
+    text,
+    bbox,
+    confidence,
+    cardWidth,
+    cardHeight
+) {
 
     const cleaned =
         cleanNameText(text);
 
     if (!cleaned)
-        return -999;
+        return {
+            score: -Infinity,
+            text: ""
+        };
 
     const words =
-        cleaned.split(/\s+/);
+        cleaned
+            .split(/\s+/)
+            .filter(Boolean);
 
     if (
         words.length < 1 ||
         words.length > 5
-    )
-        return -500;
-
-    let score =
-        Number(confidence || 0);
-
-    /*
-     * Names normally contain letters rather than
-     * random punctuation/numbers.
-     */
-
-    const allLetters =
-        words.every(
-            word =>
-                /^[A-Za-zÀ-ÿ'-]+$/.test(word)
-        );
-
-    if (allLetters)
-        score += 30;
-
-    /*
-     * Penalize extremely short garbage.
-     */
-
-    for (
-        const word of words
     ) {
 
-        if (word.length === 1)
-            score -= 20;
+        return {
+            score: -Infinity,
+            text: ""
+        };
 
-        if (word.length >= 2)
-            score += 5;
+    }
 
-        if (word.length > 25)
-            score -= 50;
+    const letters =
+        cleaned.replace(
+            /[^A-Za-zÀ-ÿ]/g,
+            ""
+        );
+
+    const digits =
+        cleaned.replace(
+            /[^0-9]/g,
+            ""
+        );
+
+    if (
+        letters.length < 3
+    ) {
+
+        return {
+            score: -Infinity,
+            text: ""
+        };
 
     }
 
     /*
-     * A name usually has multiple words.
+     * Names should be mostly alphabetic.
+     */
+
+    const alphaRatio =
+        letters.length /
+        Math.max(
+            1,
+            cleaned.length
+        );
+
+    if (
+        alphaRatio < 0.70
+    ) {
+
+        return {
+            score: -Infinity,
+            text: ""
+        };
+
+    }
+
+    if (
+        digits.length
+    ) {
+
+        return {
+            score: -Infinity,
+            text: ""
+        };
+
+    }
+
+    const lowerWords =
+        words.map(
+            x => x.toLowerCase()
+        );
+
+    if (
+        lowerWords.some(
+            x =>
+                NAME_BLACKLIST.has(x)
+        )
+    ) {
+
+        return {
+            score: -Infinity,
+            text: ""
+        };
+
+    }
+
+    const x =
+        bbox.x0;
+
+    const y =
+        bbox.y0;
+
+    const w =
+        Math.max(
+            1,
+            bbox.x1 - bbox.x0
+        );
+
+    const h =
+        Math.max(
+            1,
+            bbox.y1 - bbox.y0
+        );
+
+    const centerY =
+        y + h / 2;
+
+    const xRatio =
+        x / cardWidth;
+
+    const yRatio =
+        centerY / cardHeight;
+
+    /*
+     * For this card family, the name is:
+     *
+     *   below the portrait
+     *   toward the left
+     *   above the barcode
+     *
+     * But the region is deliberately broad.
+     */
+
+    let score = 0;
+
+    /*
+     * Horizontal position.
      */
 
     if (
-        words.length >= 2
-    )
-        score += 20;
-
-    /*
-     * Reject obvious field labels.
-     */
-
-    const joined =
-        cleaned.toLowerCase();
-
-    const badLabels = [
-        "address",
-        "license",
-        "number",
-        "birth",
-        "date",
-        "expires",
-        "sex",
-        "class",
-        "height",
-        "weight"
-    ];
-
-    for (
-        const label of badLabels
+        xRatio < 0.58
     ) {
 
-        if (
-            joined.includes(label)
-        ) {
+        score += 22;
 
-            score -= 70;
+    } else {
 
-        }
+        score -=
+            Math.min(
+                35,
+                (xRatio - 0.58) * 90
+            );
 
     }
 
-    return score;
+    /*
+     * Vertical position.
+     *
+     * The name normally lives around the lower
+     * portion of the card.
+     */
 
+    if (
+        yRatio >= 0.56 &&
+        yRatio <= 0.84
+    ) {
+
+        score += 32;
+
+    } else if (
+        yRatio >= 0.48 &&
+        yRatio <= 0.90
+    ) {
+
+        score += 10;
+
+    } else {
+
+        score -= 25;
+
+    }
+
+    /*
+     * Names on the sample card are relatively large.
+     */
+
+    const normalizedHeight =
+        h / cardHeight;
+
+    if (
+        normalizedHeight > 0.025 &&
+        normalizedHeight < 0.14
+    ) {
+
+        score += 22;
+
+    }
+
+    /*
+     * Longer lines are more likely to be names.
+     */
+
+    if (
+        words.length === 2
+    ) {
+
+        score += 24;
+
+    } else if (
+        words.length === 3
+    ) {
+
+        score += 21;
+
+    } else if (
+        words.length === 1
+    ) {
+
+        score += 8;
+
+    } else if (
+        words.length === 4
+    ) {
+
+        score += 10;
+
+    }
+
+    /*
+     * Typical name length.
+     */
+
+    if (
+        cleaned.length >= 5 &&
+        cleaned.length <= 35
+    ) {
+
+        score += 10;
+
+    }
+
+    /*
+     * OCR confidence matters, but location matters more.
+     */
+
+    score +=
+        Math.min(
+            20,
+            Math.max(
+                0,
+                Number(confidence || 0) / 5
+            )
+        );
+
+    return {
+        score,
+        text: cleaned,
+        bbox,
+        confidence
+    };
 }
 
 
 /* =========================================================
-   MAKE NAME CROPS
+   EXTRACT NAME FROM OCR LINES
 ========================================================= */
 
-function makeNameCrops(source) {
-
-    const crops = [];
-
-    /*
-     * Primary region based on the card layout.
-     */
-
-    const regions = [
-
-        {
-            x: .025,
-            y: .515,
-            w: .52,
-            h: .15
-        },
-
-        {
-            x: .025,
-            y: .485,
-            w: .58,
-            h: .18
-        },
-
-        {
-            x: .02,
-            y: .545,
-            w: .60,
-            h: .14
-        }
-
-    ];
-
-    for (
-        const region of regions
-    ) {
-
-        const x =
-            Math.round(
-                source.width * region.x
-            );
-
-        const y =
-            Math.round(
-                source.height * region.y
-            );
-
-        const w =
-            Math.round(
-                source.width * region.w
-            );
-
-        const h =
-            Math.round(
-                source.height * region.h
-            );
-
-        const crop =
-            document.createElement(
-                "canvas"
-            );
-
-        /*
-         * 5x upscale gives Tesseract much more
-         * character detail.
-         */
-
-        crop.width =
-            w * 5;
-
-        crop.height =
-            h * 5;
-
-        const ctx =
-            crop.getContext(
-                "2d"
-            );
-
-        ctx.imageSmoothingEnabled =
-            true;
-
-        ctx.imageSmoothingQuality =
-            "high";
-
-        ctx.drawImage(
-            source,
-            x,
-            y,
-            w,
-            h,
-            0,
-            0,
-            crop.width,
-            crop.height
-        );
-
-        crops.push(crop);
-
-    }
-
-    return crops;
-
-}
-
-
-/* =========================================================
-   NAME OCR
-========================================================= */
-
-async function readName() {
-
-    /*
-     * IMPORTANT:
-     * Use the perspective-corrected card rather than
-     * the raw camera image. This gives OCR a flatter,
-     * higher quality source.
-     */
-
-    const source =
-        corrected;
-
-    const crops =
-        makeNameCrops(
-            source
-        );
-
-    const worker =
-        await getOCRWorker();
+function findNameFromOCR(
+    result,
+    cardWidth,
+    cardHeight
+) {
 
     const candidates = [];
 
+    /*
+     * First choice:
+     * Tesseract's LINE objects.
+     */
+
+    const lines =
+        result &&
+        result.data &&
+        Array.isArray(result.data.lines)
+            ? result.data.lines
+            : [];
+
     for (
-        let i = 0;
-        i < crops.length;
-        i++
+        const line of lines
     ) {
 
-        const crop =
-            crops[i];
+        if (
+            !line ||
+            !line.text ||
+            !line.bbox
+        )
+            continue;
 
-        const versions = [
+        const candidate =
+            nameCandidateScore(
+                line.text,
+                line.bbox,
+                line.confidence,
+                cardWidth,
+                cardHeight
+            );
 
-            crop,
-
-            makeContrast(
-                crop
-            ),
-
-            makeThreshold(
-                crop
+        if (
+            Number.isFinite(
+                candidate.score
             )
-
-        ];
-
-        for (
-            const version of versions
         ) {
 
-            try {
+            candidates.push(
+                candidate
+            );
 
-                await worker.setParameters({
+        }
 
-                    tessedit_pageseg_mode:
-                        "7",
+    }
 
-                    tessedit_char_whitelist:
-                        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿ'- "
+    /*
+     * Second choice:
+     * Build lines from OCR words when Tesseract
+     * doesn't expose useful line objects.
+     */
 
-                });
+    if (
+        !candidates.length &&
+        result &&
+        result.data &&
+        Array.isArray(result.data.words)
+    ) {
 
-                const result =
-                    await worker.recognize(
-                        version
-                    );
+        const words =
+            result.data.words
+                .filter(
+                    w =>
+                        w &&
+                        w.text &&
+                        w.bbox
+                );
 
-                const raw =
-                    result.data.text || "";
+        const groups = [];
 
-                const confidence =
-                    result.data.confidence || 0;
+        for (
+            const word of words
+        ) {
 
-                const cleaned =
-                    cleanNameText(
-                        raw
-                    );
+            const cy =
+                (
+                    word.bbox.y0 +
+                    word.bbox.y1
+                ) / 2;
 
-                if (!cleaned)
-                    continue;
+            let group = null;
 
-                const quality =
-                    nameQuality(
-                        cleaned,
-                        confidence
-                    );
+            for (
+                const existing of groups
+            ) {
 
-                candidates.push({
+                if (
+                    Math.abs(
+                        existing.cy - cy
+                    ) <
+                    Math.max(
+                        18,
+                        (word.bbox.y1 -
+                         word.bbox.y0) * 0.65
+                    )
+                ) {
 
-                    text:
-                        cleaned,
+                    group =
+                        existing;
 
+                    break;
+
+                }
+
+            }
+
+            if (!group) {
+
+                group = {
+                    cy,
+                    words: []
+                };
+
+                groups.push(
+                    group
+                );
+
+            }
+
+            group.words.push(
+                word
+            );
+
+        }
+
+        for (
+            const group of groups
+        ) {
+
+            group.words.sort(
+                (a, b) =>
+                    a.bbox.x0 -
+                    b.bbox.x0
+            );
+
+            const first =
+                group.words[0];
+
+            const last =
+                group.words[
+                    group.words.length - 1
+                ];
+
+            const bbox = {
+
+                x0:
+                    first.bbox.x0,
+
+                y0:
+                    Math.min(
+                        ...group.words.map(
+                            w => w.bbox.y0
+                        )
+                    ),
+
+                x1:
+                    last.bbox.x1,
+
+                y1:
+                    Math.max(
+                        ...group.words.map(
+                            w => w.bbox.y1
+                        )
+                    )
+
+            };
+
+            const text =
+                group.words
+                    .map(
+                        w => w.text
+                    )
+                    .join(" ");
+
+            const confidence =
+                group.words.reduce(
+                    (
+                        total,
+                        w
+                    ) =>
+                        total +
+                        Number(
+                            w.confidence || 0
+                        ),
+                    0
+                ) /
+                Math.max(
+                    1,
+                    group.words.length
+                );
+
+            const candidate =
+                nameCandidateScore(
+                    text,
+                    bbox,
                     confidence,
+                    cardWidth,
+                    cardHeight
+                );
 
-                    quality
+            if (
+                Number.isFinite(
+                    candidate.score
+                )
+            ) {
 
-                });
-
-            } catch(error) {
-
-                console.warn(
-                    "Name OCR:",
-                    error
+                candidates.push(
+                    candidate
                 );
 
             }
@@ -2637,49 +2776,190 @@ async function readName() {
 
     }
 
-    if (!candidates.length)
-        return "Name not detected";
-
-    /*
-     * Remove duplicate OCR guesses.
-     */
-
-    const unique =
-        new Map();
-
-    for (
-        const candidate of candidates
+    if (
+        !candidates.length
     ) {
 
-        const key =
-            candidate.text
-                .toLowerCase();
-
-        if (
-            !unique.has(key) ||
-            unique.get(key).quality <
-            candidate.quality
-        ) {
-
-            unique.set(
-                key,
-                candidate
-            );
-
-        }
+        return null;
 
     }
 
-    const finalCandidates =
-        [...unique.values()];
-
-    finalCandidates.sort(
-        (a,b) =>
-            b.quality -
-            a.quality
+    candidates.sort(
+        (a, b) =>
+            b.score -
+            a.score
     );
 
-    return finalCandidates[0].text;
+    return candidates[0];
+}
+
+
+/* =========================================================
+   TARGETED NAME OCR FALLBACK
+========================================================= */
+
+function makeNameCrop() {
+
+    const source =
+        corrected;
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    /*
+     * Broad region around the name.
+     * It intentionally includes extra space so small
+     * perspective errors don't make the name disappear.
+     */
+
+    const x =
+        Math.round(
+            source.width * 0.025
+        );
+
+    const y =
+        Math.round(
+            source.height * 0.55
+        );
+
+    const width =
+        Math.round(
+            source.width * 0.55
+        );
+
+    const height =
+        Math.round(
+            source.height * 0.28
+        );
+
+    const scale = 4;
+
+    canvas.width =
+        width * scale;
+
+    canvas.height =
+        height * scale;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    ctx.imageSmoothingEnabled =
+        true;
+
+    ctx.imageSmoothingQuality =
+        "high";
+
+    ctx.drawImage(
+        source,
+
+        x,
+        y,
+        width,
+        height,
+
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    return canvas;
+}
+
+
+async function targetedNameOCR() {
+
+    try {
+
+        const crop =
+            makeNameCrop();
+
+        const result =
+            await Tesseract.recognize(
+                crop,
+                "eng",
+                {
+                    config: {
+                        tessedit_pageseg_mode: "6",
+                        preserve_interword_spaces: "1",
+                        tessedit_char_whitelist:
+                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'- "
+                    }
+                }
+            );
+
+        const words =
+            result.data.words || [];
+
+        /*
+         * Select the largest plausible word line.
+         */
+
+        const usable =
+            words
+                .filter(
+                    w =>
+                        w.text &&
+                        /^[A-Za-zÀ-ÿ'-]+$/.test(
+                            w.text.trim()
+                        ) &&
+                        Number(
+                            w.confidence || 0
+                        ) >= 45
+                )
+                .sort(
+                    (a, b) => {
+
+                        const ah =
+                            a.bbox.y1 -
+                            a.bbox.y0;
+
+                        const bh =
+                            b.bbox.y1 -
+                            b.bbox.y0;
+
+                        return (
+                            bh - ah
+                        );
+
+                    }
+                );
+
+        if (!usable.length)
+            return "";
+
+        const selected =
+            usable
+                .slice(0, 5)
+                .sort(
+                    (a, b) =>
+                        a.bbox.x0 -
+                        b.bbox.x0
+                )
+                .map(
+                    w =>
+                        w.text.trim()
+                )
+                .join(" ");
+
+        return cleanNameText(
+            selected
+        );
+
+    } catch(error) {
+
+        console.warn(
+            "Targeted name OCR failed:",
+            error
+        );
+
+        return "";
+
+    }
 
 }
 
@@ -2688,152 +2968,122 @@ async function readName() {
    FULL CARD OCR
 ========================================================= */
 
-function scoreFullOCR(
-    text,
-    confidence
-) {
+async function readCardOCR() {
 
-    const cleaned =
-        String(text || "")
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
+    scanMessage.textContent =
+        "📝 Reading card...";
 
-    if (!cleaned)
-        return -999;
+    const result =
+        await Tesseract.recognize(
+            corrected,
+            "eng",
+            {
 
-    const tokens =
-        cleaned.split(" ");
+                logger(data) {
 
-    let score =
-        Number(confidence || 0);
+                    if (
+                        data.status ===
+                        "recognizing text"
+                    ) {
 
-    for (
-        const token of tokens
-    ) {
+                        setProgress(
+                            40 +
+                            data.progress * 25
+                        );
 
-        if (
-            /^[A-Za-zÀ-ÿ]{2,}$/.test(
-                token
-            )
-        ) {
+                    }
 
-            score += 5;
+                },
 
-        }
+                config: {
 
-        if (
-            /^\d{3,}$/.test(
-                token
-            )
-        ) {
+                    /*
+                     * 6 = uniform block.
+                     * Much better for a card than
+                     * treating the entire image as one line.
+                     */
 
-            score += 3;
+                    tessedit_pageseg_mode:
+                        "6",
 
-        }
+                    preserve_interword_spaces:
+                        "1"
 
-        if (
-            /[^A-Za-zÀ-ÿ0-9.,#:%\-]/.test(
-                token
-            )
-        ) {
+                }
 
-            score -= 4;
+            }
+        );
 
-        }
-
-    }
-
-    return score;
-
+    return result;
 }
 
 
-async function readFullCard() {
+/* =========================================================
+   NAME READING
+========================================================= */
 
-    const worker =
-        await getOCRWorker();
+async function readName(result) {
 
-    const versions = [
+    const candidate =
+        findNameFromOCR(
+            result,
+            corrected.width,
+            corrected.height
+        );
 
-        originalCapture,
-
-        makeGray(
-            originalCapture
-        ),
-
-        makeContrast(
-            originalCapture
-        )
-
-    ];
-
-    let best = {
-
-        text: "",
-        score: -999
-
-    };
-
-    for (
-        const version of versions
+    if (
+        candidate &&
+        candidate.text
     ) {
 
-        try {
+        return {
+            name:
+                candidate.text,
 
-            await worker.setParameters({
+            confidence:
+                candidate.confidence,
 
-                tessedit_pageseg_mode:
-                    "6"
-
-            });
-
-            const result =
-                await worker.recognize(
-                    version
-                );
-
-            const text =
-                (
-                    result.data.text ||
-                    ""
-                ).trim();
-
-            const score =
-                scoreFullOCR(
-                    text,
-                    result.data.confidence
-                );
-
-            if (
-                text &&
-                score > best.score
-            ) {
-
-                best = {
-
-                    text,
-                    score
-
-                };
-
-            }
-
-        } catch(error) {
-
-            console.warn(
-                "Full OCR:",
-                error
-            );
-
-        }
+            method:
+                "layout-aware OCR"
+        };
 
     }
 
-    return best.text;
+    /*
+     * Only do the second OCR pass if the intelligent
+     * whole-card pass could not find a convincing name.
+     *
+     * This keeps normal scans fast.
+     */
 
+    const fallback =
+        await targetedNameOCR();
+
+    if (fallback) {
+
+        return {
+            name:
+                fallback,
+
+            confidence:
+                0,
+
+            method:
+                "targeted fallback"
+        };
+
+    }
+
+    return {
+        name:
+            "Name not detected",
+
+        confidence:
+            0,
+
+        method:
+            "none"
+    };
 }
 
 
@@ -2885,16 +3135,36 @@ async function readBarcode() {
                 formats
             });
 
-        const detected =
+        /*
+         * Try corrected image first.
+         */
+
+        let found =
             await detector.detect(
                 corrected
             );
 
+        /*
+         * If necessary, try the original frame.
+         */
+
         if (
-            detected.length
+            !found.length &&
+            originalCapture
         ) {
 
-            return detected
+            found =
+                await detector.detect(
+                    originalCapture
+                );
+
+        }
+
+        if (
+            found.length
+        ) {
+
+            return found
                 .map(
                     x =>
                         x.rawValue
@@ -2905,32 +3175,34 @@ async function readBarcode() {
 
     } catch(error) {
 
-        console.warn(
-            "Barcode:",
+        console.log(
+            "Barcode detection:",
             error
         );
 
     }
 
     return "";
-
 }
 
 
 /* =========================================================
-   ID SUFFIX
+   ID EXTRACTION
 ========================================================= */
 
-function findNumericSuffix(
+function findIdNumber(
     barcode,
     text
 ) {
 
+    /*
+     * Prefer a barcode numeric value if it exists.
+     */
+
     const barcodeDigits =
         String(
             barcode || ""
-        )
-        .replace(
+        ).replace(
             /\D/g,
             ""
         );
@@ -2939,57 +3211,56 @@ function findNumericSuffix(
         barcodeDigits.length >= 5
     ) {
 
-        return barcodeDigits.slice(-5);
+        return barcodeDigits;
 
     }
 
-    const matches =
+    /*
+     * Look for common ID patterns.
+     */
+
+    const normalized =
         String(
             text || ""
         )
-        .match(
-            /\d{5,}/g
+        .replace(
+            /[|]/g,
+            "1"
         );
 
-    if (
-        matches &&
-        matches.length
+    const patterns = [
+
+        /ID\s*#?\s*([0-9]{5,})/i,
+
+        /ID\s*[:#-]?\s*([0-9]{5,})/i,
+
+        /(?:STUDENT|CARD)\s*ID\s*[:#-]?\s*([0-9]{5,})/i,
+
+        /\b([0-9]{7,12})\b/
+
+    ];
+
+    for (
+        const pattern of patterns
     ) {
 
-        return matches[
-            matches.length - 1
-        ].slice(-5);
+        const match =
+            normalized.match(
+                pattern
+            );
+
+        if (
+            match &&
+            match[1]
+        ) {
+
+            return match[1];
+
+        }
 
     }
 
     return "";
-
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function setProgress(percent) {
-
-    const bar =
-        document.getElementById(
-            "progressBar"
-        );
-
-    if (!bar)
-        return;
-
-    bar.style.width =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                percent
-            )
-        ) + "%";
-
 }
 
 
@@ -2998,7 +3269,7 @@ function setProgress(percent) {
 ========================================================= */
 
 async function captureMultipleFrames(
-    points
+    initialPoints
 ) {
 
     scanning = false;
@@ -3008,14 +3279,12 @@ async function captureMultipleFrames(
     );
 
     scanMessage.textContent =
-        "📸 Selecting clearest frame...";
+        "📸 Selecting the sharpest frame...";
 
     const frames = [];
 
     /*
-     * Fewer frames than before for speed,
-     * while still giving us several chances
-     * to catch a sharp image.
+     * Shorter sequence for speed.
      */
 
     for (
@@ -3041,7 +3310,7 @@ async function captureMultipleFrames(
                 frame,
 
             points:
-                points.map(
+                initialPoints.map(
                     p => ({
                         x: p.x,
                         y: p.y
@@ -3066,10 +3335,19 @@ async function captureMultipleFrames(
         const frame of frames
     ) {
 
-        const score =
+        const sharp =
             sharpness(
                 frame.canvas
             );
+
+        /*
+         * Tiny preference for later frames because
+         * autofocus often settles during capture.
+         */
+
+        const score =
+            sharp +
+            frames.indexOf(frame) * 0.001;
 
         if (
             score >
@@ -3087,7 +3365,6 @@ async function captureMultipleFrames(
     }
 
     return best;
-
 }
 
 
@@ -3095,9 +3372,7 @@ async function captureMultipleFrames(
    PROCESS SCAN
 ========================================================= */
 
-async function processScan(
-    frame
-) {
+async function processScan(frame) {
 
     if (processing)
         return;
@@ -3110,14 +3385,9 @@ async function processScan(
             "warn",
             `
             <strong>🔎 Processing card...</strong><br>
-            Improving the image and reading the card locally.
+            Correcting perspective and preparing the image.
             `
         );
-
-        /*
-         * NEVER replace this with the cropped portrait.
-         * This remains the complete original frame.
-         */
 
         originalCapture =
             frame.canvas;
@@ -3127,52 +3397,73 @@ async function processScan(
             frame.points
         );
 
-        setProgress(25);
+        correctedCapture =
+            document.createElement(
+                "canvas"
+            );
 
-        /*
-         * Portrait.
-         */
+        correctedCapture.width =
+            corrected.width;
 
-        scanMessage.textContent =
-            "🖼️ Extracting portrait...";
+        correctedCapture.height =
+            corrected.height;
 
-        extractPortrait();
+        correctedCapture
+            .getContext("2d")
+            .drawImage(
+                corrected,
+                0,
+                0
+            );
 
         setProgress(35);
 
         /*
-         * Name.
+         * Extract portrait from the corrected card.
          */
 
-        scanMessage.textContent =
-            "📝 Reading name...";
+        extractPortrait();
 
-        const name =
-            await readName();
-
-        detectedName.textContent =
-            name;
-
-        nameOCR.textContent =
-            name;
-
-        setProgress(62);
+        setProgress(40);
 
         /*
-         * Full OCR.
+         * ONE primary OCR pass.
          */
 
-        scanMessage.textContent =
-            "🔎 Reading card text...";
+        const ocrResult =
+            await readCardOCR();
 
         const allText =
-            await readFullCard();
+            (
+                ocrResult.data.text ||
+                ""
+            ).trim();
 
         fullOCR.textContent =
             allText ||
             "No text detected.";
 
-        setProgress(80);
+        setProgress(70);
+
+        /*
+         * Intelligent name identification.
+         */
+
+        scanMessage.textContent =
+            "🧠 Finding the name...";
+
+        const nameResult =
+            await readName(
+                ocrResult
+            );
+
+        detectedName.textContent =
+            nameResult.name;
+
+        nameOCR.textContent =
+            nameResult.name;
+
+        setProgress(82);
 
         /*
          * Barcode.
@@ -3200,17 +3491,20 @@ async function processScan(
 
         }
 
-        const suffix =
-            findNumericSuffix(
+        /*
+         * ID.
+         */
+
+        const id =
+            findIdNumber(
                 barcode,
                 allText
             );
 
         detectedId.textContent =
-            suffix
-                ? "Detected numeric suffix: " +
-                  suffix
-                : "No numeric suffix detected";
+            id
+                ? "ID: " + id
+                : "ID not detected";
 
         setProgress(100);
 
@@ -3233,13 +3527,16 @@ async function processScan(
 
     } catch(error) {
 
-        console.error(error);
+        console.error(
+            "PROCESSING ERROR:",
+            error
+        );
 
         setStatus(
             "bad",
             `
             <strong>❌ Processing failed</strong><br>
-            Try moving the card into better lighting and holding it flatter.
+            Try better lighting and hold the card flatter.
             `
         );
 
@@ -3249,7 +3546,6 @@ async function processScan(
     }
 
     processing = false;
-
 }
 
 
@@ -3275,8 +3571,7 @@ function detectionLoop() {
     }
 
     if (
-        typeof cv ===
-        "undefined"
+        typeof cv === "undefined"
     ) {
 
         scanMessage.textContent =
@@ -3293,11 +3588,13 @@ function detectionLoop() {
     resizeOverlay();
 
     /*
-     * Smaller processing image keeps detection fast.
+     * 720 px processing width is a good compromise.
+     * It gives OpenCV enough detail without making every
+     * animation frame expensive.
      */
 
     const width =
-        640;
+        720;
 
     const height =
         Math.round(
@@ -3359,13 +3656,11 @@ function detectionLoop() {
         const points =
             detected.map(
                 p => ({
-
                     x:
                         p.x * sx,
 
                     y:
                         p.y * sy
-
                 })
             );
 
@@ -3388,7 +3683,7 @@ function detectionLoop() {
             stableFrames =
                 Math.max(
                     0,
-                    stableFrames - 1
+                    stableFrames - 2
                 );
 
         }
@@ -3411,11 +3706,6 @@ function detectionLoop() {
 
         }
 
-        /*
-         * Slightly lower trigger than before,
-         * because we now capture several sharp frames.
-         */
-
         if (
             stableFrames >= 10 &&
             !processing
@@ -3435,9 +3725,7 @@ function detectionLoop() {
     } else {
 
         stableFrames = 0;
-
-        previousCorners =
-            null;
+        previousCorners = null;
 
         guide.classList.remove(
             "detected"
@@ -3447,9 +3735,7 @@ function detectionLoop() {
             "stable"
         );
 
-        drawDocument(
-            null
-        );
+        drawDocument(null);
 
         scanMessage.textContent =
             "Looking for card...";
@@ -3461,7 +3747,6 @@ function detectionLoop() {
     requestAnimationFrame(
         detectionLoop
     );
-
 }
 
 
@@ -3469,9 +3754,7 @@ function detectionLoop() {
    PHOTO EDITOR
 ========================================================= */
 
-function openEditor(
-    source
-) {
+function openEditor(source) {
 
     if (!source)
         return;
@@ -3479,14 +3762,12 @@ function openEditor(
     currentPhotoSource =
         source;
 
-    editor.style.display =
-        "block";
+    editImage.onload =
+        () => {
 
-    /*
-     * Clear old onload handlers.
-     */
+            fitEditorImage();
 
-    editImage.onload = null;
+        };
 
     editImage.src =
         source;
@@ -3500,26 +3781,28 @@ function openEditor(
     };
 
     /*
-     * Much farther zoomed out.
+     * Start zoomed OUT.
      */
 
     zoom.value =
         0.72;
 
-    if (
-        editImage.complete &&
-        editImage.naturalWidth
-    ) {
+    editor.style.display =
+        "block";
 
-        fitEditorImage();
+    requestAnimationFrame(
+        () => {
 
-    } else {
+            if (
+                editImage.complete
+            ) {
 
-        editImage.onload =
-            fitEditorImage;
+                fitEditorImage();
 
-    }
+            }
 
+        }
+    );
 }
 
 
@@ -3529,40 +3812,36 @@ function openEditor(
 
 function fitEditorImage() {
 
-    const area =
-        cropArea.getBoundingClientRect();
-
     if (
-        !area.width ||
-        !editImage.naturalWidth
+        !editImage.naturalWidth ||
+        !editImage.naturalHeight
     )
         return;
 
+    const area =
+        cropArea.getBoundingClientRect();
+
     /*
-     * This is the important change.
+     * The old editor used 1.35.
      *
-     * Previously the base scale was 1.35,
-     * which made the image start too zoomed in.
-     *
-     * We now make the complete image fit comfortably
-     * inside the editor first.
+     * This version starts considerably farther out.
+     * That means the entire original portrait is much
+     * easier to see and position.
      */
 
-    const fitScale =
-        Math.min(
-            area.width /
-                editImage.naturalWidth,
-
-            area.height /
-                editImage.naturalHeight
+    const largestDimension =
+        Math.max(
+            editImage.naturalWidth,
+            editImage.naturalHeight
         );
 
-    /*
-     * 0.72 is deliberately zoomed out.
-     */
+    const baseScale =
+        area.width /
+        largestDimension *
+        1.08;
 
     cropState.scale =
-        fitScale *
+        baseScale *
         parseFloat(
             zoom.value
         );
@@ -3570,28 +3849,54 @@ function fitEditorImage() {
     cropState.x = 0;
     cropState.y = 0;
 
-    applyEditorTransform();
+    updateEditor();
 
 }
 
 
 /* =========================================================
-   APPLY EDITOR TRANSFORM
+   EDITOR UPDATE
 ========================================================= */
 
-function applyEditorTransform() {
+function updateEditor() {
+
+    if (
+        !editImage.naturalWidth
+    )
+        return;
+
+    const area =
+        cropArea.getBoundingClientRect();
+
+    const largestDimension =
+        Math.max(
+            editImage.naturalWidth,
+            editImage.naturalHeight
+        );
+
+    const base =
+        area.width /
+        largestDimension *
+        1.08;
+
+    const relativeZoom =
+        parseFloat(
+            zoom.value
+        );
+
+    cropState.scale =
+        base *
+        relativeZoom;
 
     editImage.style.width =
-        (
-            editImage.naturalWidth *
-            cropState.scale
-        ) + "px";
+        editImage.naturalWidth *
+        cropState.scale +
+        "px";
 
     editImage.style.height =
-        (
-            editImage.naturalHeight *
-            cropState.scale
-        ) + "px";
+        editImage.naturalHeight *
+        cropState.scale +
+        "px";
 
     editImage.style.transform =
         `
@@ -3602,41 +3907,10 @@ function applyEditorTransform() {
         translate(-50%, -50%)
         `;
 
-}
-
-
-/* =========================================================
-   UPDATE EDITOR
-========================================================= */
-
-function updateEditor() {
-
-    const area =
-        cropArea.getBoundingClientRect();
-
-    if (
-        !area.width ||
-        !editImage.naturalWidth
-    )
-        return;
-
-    const fitScale =
-        Math.min(
-            area.width /
-                editImage.naturalWidth,
-
-            area.height /
-                editImage.naturalHeight
-        );
-
-    cropState.scale =
-        fitScale *
-        parseFloat(
-            zoom.value
-        );
-
-    applyEditorTransform();
-
+    zoomValue.textContent =
+        Math.round(
+            relativeZoom * 100
+        ) + "%";
 }
 
 
@@ -3647,10 +3921,10 @@ zoom.addEventListener(
 
 
 /* =========================================================
-   DRAG EDITOR
+   DRAGGING
 ========================================================= */
 
-function beginDrag(x,y) {
+function beginDrag(x, y) {
 
     dragging = true;
 
@@ -3663,25 +3937,25 @@ function beginDrag(x,y) {
         x: cropState.x,
         y: cropState.y
     };
-
 }
 
 
-function moveDrag(x,y) {
+function moveDrag(x, y) {
 
     if (!dragging)
         return;
 
     cropState.x =
         dragOrigin.x +
-        (x - dragStart.x);
+        x -
+        dragStart.x;
 
     cropState.y =
         dragOrigin.y +
-        (y - dragStart.y);
+        y -
+        dragStart.y;
 
-    applyEditorTransform();
-
+    updateEditor();
 }
 
 
@@ -3708,6 +3982,7 @@ cropArea.addEventListener(
     }
 );
 
+
 cropArea.addEventListener(
     "pointermove",
     event => {
@@ -3719,6 +3994,7 @@ cropArea.addEventListener(
 
     }
 );
+
 
 cropArea.addEventListener(
     "pointerup",
@@ -3747,7 +4023,7 @@ document
             zoom.value =
                 0.72;
 
-            fitEditorImage();
+            updateEditor();
 
         }
     );
@@ -3787,81 +4063,90 @@ document
                     "2d"
                 );
 
-            const area =
+            /*
+             * Make the final crop use exactly what is
+             * visible underneath the circular window.
+             */
+
+            const areaRect =
                 cropArea.getBoundingClientRect();
 
-            const cropWindowSize =
-                area.width * .80;
+            const imageRect =
+                editImage.getBoundingClientRect();
 
-            const imageWidth =
-                editImage.naturalWidth *
-                cropState.scale;
+            const cropDiameter =
+                areaRect.width * 0.80;
 
-            const imageHeight =
-                editImage.naturalHeight *
-                cropState.scale;
+            const scale =
+                imageRect.width /
+                editImage.naturalWidth;
 
-            /*
-             * Convert the editor position into
-             * image-space coordinates.
-             */
-
-            const cropCenterX =
-                area.width / 2;
-
-            const cropCenterY =
-                area.height / 2;
+            const cropSourceSize =
+                cropDiameter /
+                scale;
 
             const imageCenterX =
-                cropCenterX +
-                cropState.x;
+                imageRect.left +
+                imageRect.width / 2;
 
             const imageCenterY =
-                cropCenterY +
-                cropState.y;
+                imageRect.top +
+                imageRect.height / 2;
 
-            const left =
+            const cropCenterX =
+                areaRect.left +
+                areaRect.width / 2;
+
+            const cropCenterY =
+                areaRect.top +
+                areaRect.height / 2;
+
+            const relativeX =
                 imageCenterX -
-                imageWidth / 2;
+                cropCenterX;
 
-            const top =
+            const relativeY =
                 imageCenterY -
-                imageHeight / 2;
+                cropCenterY;
 
-            const cropLeft =
-                cropCenterX -
-                cropWindowSize / 2;
+            let sourceX =
+                editImage.naturalWidth / 2
+                -
+                cropSourceSize / 2
+                -
+                relativeX / scale;
 
-            const cropTop =
-                cropCenterY -
-                cropWindowSize / 2;
-
-            const sourceX =
-                (
-                    cropLeft -
-                    left
-                ) /
-                cropState.scale;
-
-            const sourceY =
-                (
-                    cropTop -
-                    top
-                ) /
-                cropState.scale;
-
-            const sourceSize =
-                cropWindowSize /
-                cropState.scale;
+            let sourceY =
+                editImage.naturalHeight / 2
+                -
+                cropSourceSize / 2
+                -
+                relativeY / scale;
 
             /*
-             * Draw the crop safely.
-             *
-             * This avoids the previous problem where
-             * clamping sourceX/sourceY independently
-             * could produce an incorrectly positioned
-             * image.
+             * Clamp only when the image is large enough.
+             * This prevents accidental empty edges.
              */
+
+            sourceX =
+                Math.max(
+                    0,
+                    Math.min(
+                        editImage.naturalWidth -
+                        cropSourceSize,
+                        sourceX
+                    )
+                );
+
+            sourceY =
+                Math.max(
+                    0,
+                    Math.min(
+                        editImage.naturalHeight -
+                        cropSourceSize,
+                        sourceY
+                    )
+                );
 
             ctx.clearRect(
                 0,
@@ -3882,116 +4167,34 @@ document
 
             ctx.clip();
 
-            /*
-             * Background fill if the requested crop
-             * extends slightly outside the source image.
-             */
+            ctx.imageSmoothingEnabled =
+                true;
 
-            ctx.fillStyle =
-                "#111";
+            ctx.imageSmoothingQuality =
+                "high";
 
-            ctx.fillRect(
+            ctx.drawImage(
+
+                editImage,
+
+                sourceX,
+                sourceY,
+
+                cropSourceSize,
+                cropSourceSize,
+
                 0,
                 0,
+
                 outputSize,
                 outputSize
+
             );
-
-            /*
-             * Calculate a safe source rectangle.
-             */
-
-            const sx =
-                Math.max(
-                    0,
-                    sourceX
-                );
-
-            const sy =
-                Math.max(
-                    0,
-                    sourceY
-                );
-
-            const ex =
-                Math.min(
-                    editImage.naturalWidth,
-                    sourceX + sourceSize
-                );
-
-            const ey =
-                Math.min(
-                    editImage.naturalHeight,
-                    sourceY + sourceSize
-                );
-
-            const sw =
-                ex - sx;
-
-            const sh =
-                ey - sy;
-
-            if (
-                sw > 0 &&
-                sh > 0
-            ) {
-
-                const dx =
-                    (
-                        sx -
-                        sourceX
-                    ) /
-                    sourceSize *
-                    outputSize;
-
-                const dy =
-                    (
-                        sy -
-                        sourceY
-                    ) /
-                    sourceSize *
-                    outputSize;
-
-                const dw =
-                    sw /
-                    sourceSize *
-                    outputSize;
-
-                const dh =
-                    sh /
-                    sourceSize *
-                    outputSize;
-
-                ctx.imageSmoothingEnabled =
-                    true;
-
-                ctx.imageSmoothingQuality =
-                    "high";
-
-                ctx.drawImage(
-
-                    editImage,
-
-                    sx,
-                    sy,
-                    sw,
-                    sh,
-
-                    dx,
-                    dy,
-                    dw,
-                    dh
-
-                );
-
-            }
-
-            ctx.restore();
 
             currentPhotoSource =
                 output.toDataURL(
                     "image/jpeg",
-                    .98
+                    0.97
                 );
 
             profilePicture.src =
@@ -4005,7 +4208,7 @@ document
 
 
 /* =========================================================
-   CANCEL EDITOR
+   CANCEL
 ========================================================= */
 
 document
@@ -4103,7 +4306,7 @@ function saveLocalProfile() {
         name:
             detectedName.textContent,
 
-        idSuffix:
+        id:
             detectedId.textContent,
 
         photo:
@@ -4111,14 +4314,26 @@ function saveLocalProfile() {
             profilePicture.src,
 
         /*
-         * Full, original, uncropped card image.
+         * Full uncropped original camera image.
          */
 
         cardPhoto:
             originalCapture
                 ? originalCapture.toDataURL(
                     "image/jpeg",
-                    .98
+                    0.96
+                )
+                : null,
+
+        /*
+         * Straightened card is also retained.
+         */
+
+        correctedCardPhoto:
+            correctedCapture
+                ? correctedCapture.toDataURL(
+                    "image/jpeg",
+                    0.96
                 )
                 : null,
 
@@ -4137,7 +4352,6 @@ function saveLocalProfile() {
     showHome(
         profile
     );
-
 }
 
 
@@ -4165,14 +4379,14 @@ function showHome(profile) {
     document.getElementById(
         "homeName"
     ).textContent =
-        profile.name;
+        profile.name ||
+        "Profile";
 
     document.getElementById(
         "homeId"
     ).textContent =
-        profile.idSuffix ||
+        profile.id ||
         "ID information unavailable";
-
 }
 
 
@@ -4210,75 +4424,31 @@ document
             if (!saved)
                 return;
 
-            const profile =
-                JSON.parse(
-                    saved
-                );
+            try {
 
-            openEditor(
-                profile.photo
-            );
+                const profile =
+                    JSON.parse(
+                        saved
+                    );
 
-            /*
-             * The normal Save Profile Picture button
-             * updates profilePicture. We also update
-             * localStorage immediately after saving by
-             * observing the editor closing.
-             */
+                if (
+                    profile &&
+                    profile.photo
+                ) {
 
-            const observer =
-                new MutationObserver(
-                    () => {
+                    openEditor(
+                        profile.photo
+                    );
 
-                        if (
-                            editor.style.display ===
-                            "none"
-                        ) {
-
-                            const updated =
-                                JSON.parse(
-                                    localStorage.getItem(
-                                        "localCardProfile"
-                                    ) || "{}"
-                                );
-
-                            if (
-                                currentPhotoSource
-                            ) {
-
-                                updated.photo =
-                                    currentPhotoSource;
-
-                                localStorage.setItem(
-                                    "localCardProfile",
-                                    JSON.stringify(
-                                        updated
-                                    )
-                                );
-
-                                document.getElementById(
-                                    "homePicture"
-                                ).src =
-                                    currentPhotoSource;
-
-                            }
-
-                            observer.disconnect();
-
-                        }
-
-                    }
-                );
-
-            observer.observe(
-                editor,
-                {
-                    attributes: true,
-                    attributeFilter: [
-                        "style"
-                    ]
                 }
-            );
+
+            } catch(error) {
+
+                console.error(
+                    error
+                );
+
+            }
 
         }
     );
@@ -4340,7 +4510,7 @@ try {
 } catch(error) {
 
     console.error(
-        "Profile restore:",
+        "Could not restore profile:",
         error
     );
 
@@ -4349,38 +4519,6 @@ try {
     );
 
 }
-
-
-/* =========================================================
-   CLEANUP CAMERA
-========================================================= */
-
-window.addEventListener(
-    "beforeunload",
-    () => {
-
-        if (stream) {
-
-            stream
-                .getTracks()
-                .forEach(
-                    track =>
-                        track.stop()
-                );
-
-        }
-
-        if (ocrWorker) {
-
-            ocrWorker.terminate()
-                .catch(
-                    () => {}
-                );
-
-        }
-
-    }
-);
 
 </script>
 
