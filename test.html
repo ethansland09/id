@@ -5,7 +5,7 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>Card Scanner Pro</title>
+<title>Herrick Social</title>
 
 <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -89,12 +89,10 @@ button {
 
 .permission {
     min-height: 650px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     padding: 30px;
     text-align: center;
 }
@@ -102,17 +100,12 @@ button {
 .cameraIcon {
     width: 100px;
     height: 100px;
-
     display: grid;
     place-items: center;
-
     border-radius: 50%;
-
     background: #102b44;
     border: 1px solid #2c5578;
-
     font-size: 44px;
-
     margin-bottom: 24px;
 }
 
@@ -130,14 +123,10 @@ button {
 .primary {
     border: 0;
     border-radius: 13px;
-
     padding: 14px 22px;
-
     color: white;
     background: var(--blue);
-
     font-weight: 750;
-
     transition: .15s;
 }
 
@@ -171,37 +160,28 @@ button {
 #video {
     position: absolute;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
 }
 
 #overlay {
     position: absolute;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     pointer-events: none;
 }
 
 .guide {
     position: absolute;
-
     left: 6%;
     right: 6%;
-
     top: 14%;
     bottom: 14%;
-
     border: 2px solid rgba(255,255,255,.35);
     border-radius: 18px;
-
     pointer-events: none;
-
     transition:
         border-color .2s,
         box-shadow .2s;
@@ -209,36 +189,26 @@ button {
 
 .guide.detected {
     border-color: var(--blue);
-
     box-shadow:
         0 0 35px rgba(38,140,245,.35);
 }
 
 .guide.stable {
     border-color: var(--green);
-
     box-shadow:
         0 0 45px rgba(53,214,139,.4);
 }
 
 .scanMessage {
     position: absolute;
-
     left: 50%;
     bottom: 22px;
-
     transform: translateX(-50%);
-
     padding: 11px 17px;
-
     max-width: 90%;
-
     border-radius: 999px;
-
     background: rgba(0,0,0,.78);
-
     backdrop-filter: blur(12px);
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -246,15 +216,10 @@ button {
 
 .status {
     margin: 18px;
-
     padding: 17px;
-
     border-radius: 15px;
-
     background: var(--panel);
-
     border: 1px solid var(--border);
-
     line-height: 1.5;
 }
 
@@ -275,22 +240,16 @@ button {
 
 .progress {
     height: 5px;
-
     margin-top: 12px;
-
     background: #182a3b;
-
     border-radius: 999px;
-
     overflow: hidden;
 }
 
 .progressBar {
     width: 0%;
     height: 100%;
-
     background: var(--blue);
-
     transition: width .12s;
 }
 
@@ -305,50 +264,31 @@ button {
 
 .cardPreview {
     display: block;
-
     width: 100%;
     height: auto;
-
     border-radius: 16px;
-
     background: #000;
-
     border: 1px solid var(--border);
 }
 
-/* =========================================================
-   PROFILE
-========================================================= */
-
 .profile {
     margin-top: 20px;
-
     padding: 20px;
-
     display: flex;
     align-items: center;
-
     gap: 20px;
-
     background: var(--panel);
-
     border: 1px solid var(--border);
-
     border-radius: 18px;
 }
 
 .profilePicture {
     width: 120px;
     height: 120px;
-
     flex: 0 0 auto;
-
     object-fit: cover;
-
     border-radius: 50%;
-
     border: 3px solid #3779a9;
-
     background: #111;
 }
 
@@ -363,15 +303,10 @@ button {
 
 .smallButton {
     border: 1px solid var(--border);
-
     border-radius: 10px;
-
     padding: 9px 13px;
-
     background: #172a3d;
-
     color: white;
-
     font-weight: 650;
 }
 
@@ -383,7 +318,6 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 9px;
-
     margin-top: 14px;
 }
 
@@ -393,15 +327,10 @@ button {
 
 .editor {
     display: none;
-
     margin-top: 22px;
-
     padding: 20px;
-
     border-radius: 18px;
-
     background: #091521;
-
     border: 1px solid var(--border);
 }
 
@@ -416,12 +345,9 @@ button {
 
 .cropArea {
     position: relative;
-
     width: min(520px, 100%);
     aspect-ratio: 1 / 1;
-
     margin: 18px auto;
-
     overflow: hidden;
 
     background:
@@ -432,40 +358,29 @@ button {
         50% / 24px 24px;
 
     border-radius: 18px;
-
     touch-action: none;
     user-select: none;
 }
 
 #editImage {
     position: absolute;
-
     left: 50%;
     top: 50%;
-
     max-width: none;
-
     transform-origin: center;
-
     pointer-events: none;
     user-select: none;
-
     will-change: transform;
 }
 
 .cropWindow {
     position: absolute;
-
     inset: 10%;
-
     border: 3px solid white;
-
     border-radius: 50%;
-
     box-shadow:
         0 0 0 9999px rgba(0,0,0,.53),
         0 0 30px rgba(0,0,0,.4);
-
     pointer-events: none;
 }
 
@@ -473,9 +388,7 @@ button {
     display: flex;
     align-items: center;
     gap: 12px;
-
     max-width: 520px;
-
     margin: auto;
 }
 
@@ -487,9 +400,7 @@ button {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-
     gap: 10px;
-
     margin-top: 18px;
 }
 
@@ -514,22 +425,14 @@ button {
 
 pre {
     margin: 0;
-
     padding: 14px;
-
     max-height: 220px;
-
     overflow: auto;
-
     white-space: pre-wrap;
     word-break: break-word;
-
     background: #050c13;
-
     border: 1px solid var(--border);
-
     border-radius: 12px;
-
     color: #adc0d1;
 }
 
@@ -552,29 +455,20 @@ pre {
 
 .account {
     margin-top: 28px;
-
     padding: 25px;
-
     display: flex;
     align-items: center;
-
     gap: 22px;
-
     border-radius: 20px;
-
     background: var(--panel);
-
     border: 1px solid var(--border);
 }
 
 .account img {
     width: 125px;
     height: 125px;
-
     object-fit: cover;
-
     border-radius: 50%;
-
     border: 3px solid #3779a9;
 }
 
@@ -591,7 +485,6 @@ pre {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-
     margin-top: 20px;
 }
 
@@ -633,13 +526,11 @@ pre {
 
     <div class="header">
 
-        <h1>📇 Card Scanner Pro</h1>
+        <h1>🏫 Herrick Social</h1>
 
         <p>
-            Place the entire card inside the frame.
-            The scanner selects the sharpest frame,
-            straightens the card, and intelligently
-            identifies text fields.
+            Create your Herrick Social account
+            by scanning your school card.
         </p>
 
     </div>
@@ -651,19 +542,20 @@ pre {
         </div>
 
         <h2>
-            Camera Access
+            Create Your Account
         </h2>
 
         <p>
-            Camera access is needed for automatic
-            document detection.
+            Allow camera access to scan your school
+            card. Your account keeps only your name,
+            card ID number, and profile picture.
         </p>
 
         <button
             id="startCamera"
             class="primary">
 
-            Allow Camera
+            Scan School Card
 
         </button>
 
@@ -733,7 +625,7 @@ pre {
         class="results">
 
         <h2>
-            Scan Result
+            Account Information
         </h2>
 
         <canvas
@@ -778,7 +670,7 @@ pre {
                         id="replacePhoto"
                         class="smallButton">
 
-                        🖼️ Change Image
+                        🖼️ Change Photo
 
                     </button>
 
@@ -803,9 +695,8 @@ pre {
             </h2>
 
             <p class="editorHint">
-                Drag to reposition the image.
-                Zoom out farther when the original
-                photo is being cropped too tightly.
+                Drag to reposition the photo and
+                use the slider to zoom.
             </p>
 
             <div
@@ -839,7 +730,9 @@ pre {
                 <span
                     id="zoomValue"
                     class="zoomValue">
+
                     72%
+
                 </span>
 
             </div>
@@ -910,7 +803,7 @@ pre {
                 id="createLocalProfile"
                 class="primary">
 
-                Continue to Local Home
+                Create Herrick Social Account
 
             </button>
 
@@ -920,16 +813,17 @@ pre {
 
 </section>
 
+
 <section
     id="homePage"
     class="home">
 
     <h1>
-        🏠 Home
+        🏠 Herrick Social
     </h1>
 
     <p class="subtitle">
-        Your profile is stored locally in this browser.
+        Welcome to your Herrick Social account.
     </p>
 
     <div class="account">
@@ -945,7 +839,7 @@ pre {
             <p id="homeId"></p>
 
             <p>
-                Local profile
+                Herrick Social member
             </p>
 
         </div>
@@ -966,7 +860,7 @@ pre {
             id="clearProfile"
             class="smallButton">
 
-            Clear Local Profile
+            Delete Account
 
         </button>
 
@@ -975,6 +869,7 @@ pre {
 </section>
 
 </div>
+
 
 <script>
 
@@ -1332,16 +1227,10 @@ function orderPoints(points) {
 
 
 /* =========================================================
-   ROTATED RECT -> 4 CORNERS
+   ROTATED RECTANGLE
 ========================================================= */
 
 function rotatedRectCorners(rect) {
-
-    /*
-     * Standard OpenCV RotatedRect::points() formula,
-     * reimplemented in JS so we don't depend on a
-     * particular opencv.js build exposing it.
-     */
 
     const angle =
         rect.angle * Math.PI / 180;
@@ -1366,10 +1255,25 @@ function rotatedRectCorners(rect) {
 
     return [
 
-        { x: cx - a * h - b * w, y: cy + b * h - a * w },
-        { x: cx + a * h - b * w, y: cy - b * h - a * w },
-        { x: cx + a * h + b * w, y: cy - b * h + a * w },
-        { x: cx - a * h + b * w, y: cy + b * h + a * w }
+        {
+            x: cx - a * h - b * w,
+            y: cy + b * h - a * w
+        },
+
+        {
+            x: cx + a * h - b * w,
+            y: cy - b * h - a * w
+        },
+
+        {
+            x: cx + a * h + b * w,
+            y: cy - b * h + a * w
+        },
+
+        {
+            x: cx - a * h + b * w,
+            y: cy + b * h + a * w
+        }
 
     ];
 
@@ -1425,16 +1329,6 @@ function detectDocument(imageData) {
         cv.COLOR_RGBA2GRAY
     );
 
-    /*
-     * Even out glare and uneven indoor lighting before
-     * looking for edges. Laminated ID cards catch a lot
-     * of glare, and a plain fixed-threshold Canny pass
-     * loses the card outline whenever a bright patch or a
-     * dim corner throws the contrast off. If this build of
-     * opencv.js doesn't expose CLAHE, just fall through to
-     * the plain grayscale frame.
-     */
-
     let lightingSource =
         gray;
 
@@ -1474,14 +1368,6 @@ function detectDocument(imageData) {
         0
     );
 
-    /*
-     * Pick the Canny thresholds from this frame's own
-     * brightness instead of one fixed pair. A single fixed
-     * (35, 120) pair only really works in one lighting
-     * condition; a dim room or a bright window each need a
-     * different pair to still find the card edge.
-     */
-
     const brightness =
         cv.mean(blur)[0];
 
@@ -1503,13 +1389,6 @@ function detectDocument(imageData) {
         lowerThreshold,
         upperThreshold
     );
-
-    /*
-     * A small dilate before the close bridges the faint,
-     * broken edge segments that glare and low contrast
-     * tend to leave behind, so the outline forms a full
-     * loop more often.
-     */
 
     const dilateKernel =
         cv.getStructuringElement(
@@ -1586,12 +1465,6 @@ function detectDocument(imageData) {
             area /
             imageArea;
 
-        /*
-         * Widened from (0.12, 0.92) so a card held a
-         * little farther from the camera than the guide
-         * suggests still registers.
-         */
-
         if (
             areaRatio < 0.07 ||
             areaRatio > 0.94
@@ -1601,16 +1474,6 @@ function detectDocument(imageData) {
             continue;
 
         }
-
-        /*
-         * Real cards rarely approximate to a clean 4-point
-         * outline: rounded plastic corners, a slightly
-         * noisy background, or minor lens distortion
-         * usually add extra vertices. Instead of throwing
-         * those away, fall back to the contour's minimum-
-         * area rectangle, which is far more forgiving and
-         * still yields four usable corners.
-         */
 
         const approx =
             new cv.Mat();
@@ -1742,12 +1605,6 @@ function detectDocument(imageData) {
                 )
             );
 
-        /*
-         * Widened from (1.35, 2.05) to tolerate the mild
-         * skew a hand-held angle or lens distortion adds
-         * to a true 1.586 card ratio.
-         */
-
         if (
             ratio < 1.30 ||
             ratio > 2.15
@@ -1780,13 +1637,6 @@ function detectDocument(imageData) {
         const rectangularity =
             (horizontal +
              vertical) / 2;
-
-        /*
-         * Prefer cards that:
-         * - are large
-         * - are rectangular
-         * - have a believable ID-card ratio
-         */
 
         const ratioScore =
             1 -
@@ -1952,14 +1802,6 @@ function isStable(points) {
             })
         );
 
-    /*
-     * A fixed 35px budget was measured against the full
-     * video resolution (often 1920x1080), which made normal
-     * handheld wobble reset the counter almost every frame
-     * and the scan rarely got to "hold still". Scale the
-     * tolerance to the stream's actual size instead.
-     */
-
     const diagonal =
         Math.hypot(
             video.videoWidth || 1280,
@@ -1977,7 +1819,7 @@ function isStable(points) {
 
 
 /* =========================================================
-   CAPTURE
+   CAPTURE FRAME
 ========================================================= */
 
 function captureFrame() {
@@ -2128,11 +1970,6 @@ function straighten(canvas, points) {
             measuredHeight
         );
 
-    /*
-     * Keep a realistic card ratio.
-     * This avoids stretching the portrait.
-     */
-
     const width = 1400;
 
     const safeRatio =
@@ -2155,7 +1992,6 @@ function straighten(canvas, points) {
             1,
             cv.CV_32FC2,
             [
-
                 p[0].x,
                 p[0].y,
 
@@ -2167,7 +2003,6 @@ function straighten(canvas, points) {
 
                 p[3].x,
                 p[3].y
-
             ]
         );
 
@@ -2177,7 +2012,6 @@ function straighten(canvas, points) {
             1,
             cv.CV_32FC2,
             [
-
                 0,
                 0,
 
@@ -2189,7 +2023,6 @@ function straighten(canvas, points) {
 
                 0,
                 height - 1
-
             ]
         );
 
@@ -2244,14 +2077,6 @@ function straighten(canvas, points) {
 
 function extractPortrait() {
 
-    /*
-     * The provided card layout has the portrait in the
-     * upper-left quadrant.
-     *
-     * These values are intentionally based on the
-     * STRAIGHTENED CARD rather than the camera frame.
-     */
-
     const source =
         corrected;
 
@@ -2260,12 +2085,6 @@ function extractPortrait() {
 
     const cardH =
         source.height;
-
-    /*
-     * Slightly generous crop around the actual photo.
-     * This prevents the scanner from chopping off the
-     * edges of the portrait.
-     */
 
     const x =
         Math.round(
@@ -2322,10 +2141,6 @@ function extractPortrait() {
         width,
         height
     );
-
-    /*
-     * Store the full-resolution color portrait.
-     */
 
     currentPhotoSource =
         canvas.toDataURL(
@@ -2441,7 +2256,7 @@ function cleanNameText(raw) {
 
 
 /* =========================================================
-   NAME CANDIDATE SCORING
+   NAME SCORING
 ========================================================= */
 
 const NAME_BLACKLIST = new Set([
@@ -2485,11 +2300,14 @@ function nameCandidateScore(
     const cleaned =
         cleanNameText(text);
 
-    if (!cleaned)
+    if (!cleaned) {
+
         return {
             score: -Infinity,
             text: ""
         };
+
+    }
 
     const words =
         cleaned
@@ -2521,7 +2339,8 @@ function nameCandidateScore(
         );
 
     if (
-        letters.length < 3
+        letters.length < 3 ||
+        digits.length
     ) {
 
         return {
@@ -2530,10 +2349,6 @@ function nameCandidateScore(
         };
 
     }
-
-    /*
-     * Names should be mostly alphabetic.
-     */
 
     const alphaRatio =
         letters.length /
@@ -2544,17 +2359,6 @@ function nameCandidateScore(
 
     if (
         alphaRatio < 0.70
-    ) {
-
-        return {
-            score: -Infinity,
-            text: ""
-        };
-
-    }
-
-    if (
-        digits.length
     ) {
 
         return {
@@ -2610,21 +2414,7 @@ function nameCandidateScore(
     const yRatio =
         centerY / cardHeight;
 
-    /*
-     * For this card family, the name is:
-     *
-     *   below the portrait
-     *   toward the left
-     *   above the barcode
-     *
-     * But the region is deliberately broad.
-     */
-
     let score = 0;
-
-    /*
-     * Horizontal position.
-     */
 
     if (
         xRatio < 0.58
@@ -2641,13 +2431,6 @@ function nameCandidateScore(
             );
 
     }
-
-    /*
-     * Vertical position.
-     *
-     * The name normally lives around the lower
-     * portion of the card.
-     */
 
     if (
         yRatio >= 0.56 &&
@@ -2669,10 +2452,6 @@ function nameCandidateScore(
 
     }
 
-    /*
-     * Names on the sample card are relatively large.
-     */
-
     const normalizedHeight =
         h / cardHeight;
 
@@ -2684,10 +2463,6 @@ function nameCandidateScore(
         score += 22;
 
     }
-
-    /*
-     * Longer lines are more likely to be names.
-     */
 
     if (
         words.length === 2
@@ -2715,10 +2490,6 @@ function nameCandidateScore(
 
     }
 
-    /*
-     * Typical name length.
-     */
-
     if (
         cleaned.length >= 5 &&
         cleaned.length <= 35
@@ -2727,10 +2498,6 @@ function nameCandidateScore(
         score += 10;
 
     }
-
-    /*
-     * OCR confidence matters, but location matters more.
-     */
 
     score +=
         Math.min(
@@ -2751,7 +2518,7 @@ function nameCandidateScore(
 
 
 /* =========================================================
-   EXTRACT NAME FROM OCR LINES
+   FIND NAME
 ========================================================= */
 
 function findNameFromOCR(
@@ -2761,11 +2528,6 @@ function findNameFromOCR(
 ) {
 
     const candidates = [];
-
-    /*
-     * First choice:
-     * Tesseract's LINE objects.
-     */
 
     const lines =
         result &&
@@ -2807,12 +2569,6 @@ function findNameFromOCR(
         }
 
     }
-
-    /*
-     * Second choice:
-     * Build lines from OCR words when Tesseract
-     * doesn't expose useful line objects.
-     */
 
     if (
         !candidates.length &&
@@ -2997,7 +2753,7 @@ function findNameFromOCR(
 
 
 /* =========================================================
-   TARGETED NAME OCR FALLBACK
+   TARGETED NAME OCR
 ========================================================= */
 
 function makeNameCrop() {
@@ -3009,12 +2765,6 @@ function makeNameCrop() {
         document.createElement(
             "canvas"
         );
-
-    /*
-     * Broad region around the name.
-     * It intentionally includes extra space so small
-     * perspective errors don't make the name disappear.
-     */
 
     const x =
         Math.round(
@@ -3097,10 +2847,6 @@ async function targetedNameOCR() {
         const words =
             result.data.words || [];
 
-        /*
-         * Select the largest plausible word line.
-         */
-
         const usable =
             words
                 .filter(
@@ -3124,9 +2870,7 @@ async function targetedNameOCR() {
                             b.bbox.y1 -
                             b.bbox.y0;
 
-                        return (
-                            bh - ah
-                        );
+                        return bh - ah;
 
                     }
                 );
@@ -3199,12 +2943,6 @@ async function readCardOCR() {
 
                 config: {
 
-                    /*
-                     * 6 = uniform block.
-                     * Much better for a card than
-                     * treating the entire image as one line.
-                     */
-
                     tessedit_pageseg_mode:
                         "6",
 
@@ -3250,13 +2988,6 @@ async function readName(result) {
         };
 
     }
-
-    /*
-     * Only do the second OCR pass if the intelligent
-     * whole-card pass could not find a convincing name.
-     *
-     * This keeps normal scans fast.
-     */
 
     const fallback =
         await targetedNameOCR();
@@ -3337,18 +3068,10 @@ async function readBarcode() {
                 formats
             });
 
-        /*
-         * Try corrected image first.
-         */
-
         let found =
             await detector.detect(
                 corrected
             );
-
-        /*
-         * If necessary, try the original frame.
-         */
 
         if (
             !found.length &&
@@ -3397,10 +3120,6 @@ function findIdNumber(
     text
 ) {
 
-    /*
-     * Prefer a barcode numeric value if it exists.
-     */
-
     const barcodeDigits =
         String(
             barcode || ""
@@ -3416,10 +3135,6 @@ function findIdNumber(
         return barcodeDigits;
 
     }
-
-    /*
-     * Look for common ID patterns.
-     */
 
     const normalized =
         String(
@@ -3485,10 +3200,6 @@ async function captureMultipleFrames(
 
     const frames = [];
 
-    /*
-     * Shorter sequence for speed.
-     */
-
     for (
         let i = 0;
         i < 5;
@@ -3542,11 +3253,6 @@ async function captureMultipleFrames(
                 frame.canvas
             );
 
-        /*
-         * Tiny preference for later frames because
-         * autofocus often settles during capture.
-         */
-
         const score =
             sharp +
             frames.indexOf(frame) * 0.001;
@@ -3587,9 +3293,14 @@ async function processScan(frame) {
             "warn",
             `
             <strong>🔎 Processing card...</strong><br>
-            Correcting perspective and preparing the image.
+            Correcting perspective and preparing your account.
             `
         );
+
+        /*
+         * Temporary only.
+         * These are NOT saved to localStorage.
+         */
 
         originalCapture =
             frame.canvas;
@@ -3620,17 +3331,9 @@ async function processScan(frame) {
 
         setProgress(35);
 
-        /*
-         * Extract portrait from the corrected card.
-         */
-
         extractPortrait();
 
         setProgress(40);
-
-        /*
-         * ONE primary OCR pass.
-         */
 
         const ocrResult =
             await readCardOCR();
@@ -3646,10 +3349,6 @@ async function processScan(frame) {
             "No text detected.";
 
         setProgress(70);
-
-        /*
-         * Intelligent name identification.
-         */
 
         scanMessage.textContent =
             "🧠 Finding the name...";
@@ -3667,15 +3366,16 @@ async function processScan(frame) {
 
         setProgress(82);
 
-        /*
-         * Barcode.
-         */
-
         scanMessage.textContent =
-            "📊 Checking barcode...";
+            "📊 Checking card ID...";
 
         const barcode =
             await readBarcode();
+
+        /*
+         * Barcode text is used temporarily to
+         * determine the ID, but is never saved.
+         */
 
         barcodeText.textContent =
             barcode ||
@@ -3684,18 +3384,14 @@ async function processScan(frame) {
         if (barcode) {
 
             barcodeStatus.textContent =
-                "📊 Barcode detected";
+                "📊 Card ID detected";
 
         } else {
 
             barcodeStatus.textContent =
-                "📊 Barcode not detected";
+                "📊 Looking for ID in card text";
 
         }
-
-        /*
-         * ID.
-         */
 
         const id =
             findIdNumber(
@@ -3716,13 +3412,18 @@ async function processScan(frame) {
         setStatus(
             "good",
             `
-            <strong>✅ Scan complete</strong><br>
-            The card was processed locally in your browser.
+            <strong>✅ Account information found</strong><br>
+            Review your name, card ID, and profile picture.
             `
         );
 
         scanMessage.textContent =
-            "✅ Done";
+            "✅ Ready to create account";
+
+        /*
+         * The OCR text and barcode remain available
+         * on screen temporarily, but are NOT persisted.
+         */
 
         currentPhotoSource =
             profilePicture.src;
@@ -3788,12 +3489,6 @@ function detectionLoop() {
     }
 
     resizeOverlay();
-
-    /*
-     * 720 px processing width is a good compromise.
-     * It gives OpenCV enough detail without making every
-     * animation frame expensive.
-     */
 
     const width =
         720;
@@ -3982,10 +3677,6 @@ function openEditor(source) {
 
     };
 
-    /*
-     * Start zoomed OUT.
-     */
-
     zoom.value =
         0.72;
 
@@ -4008,10 +3699,6 @@ function openEditor(source) {
 }
 
 
-/* =========================================================
-   FIT EDITOR IMAGE
-========================================================= */
-
 function fitEditorImage() {
 
     if (
@@ -4022,14 +3709,6 @@ function fitEditorImage() {
 
     const area =
         cropArea.getBoundingClientRect();
-
-    /*
-     * The old editor used 1.35.
-     *
-     * This version starts considerably farther out.
-     * That means the entire original portrait is much
-     * easier to see and position.
-     */
 
     const largestDimension =
         Math.max(
@@ -4052,13 +3731,8 @@ function fitEditorImage() {
     cropState.y = 0;
 
     updateEditor();
-
 }
 
-
-/* =========================================================
-   EDITOR UPDATE
-========================================================= */
 
 function updateEditor() {
 
@@ -4265,11 +3939,6 @@ document
                     "2d"
                 );
 
-            /*
-             * Make the final crop use exactly what is
-             * visible underneath the circular window.
-             */
-
             const areaRect =
                 cropArea.getBoundingClientRect();
 
@@ -4324,11 +3993,6 @@ document
                 cropSourceSize / 2
                 -
                 relativeY / scale;
-
-            /*
-             * Clamp only when the image is large enough.
-             * This prevents accidental empty edges.
-             */
 
             sourceX =
                 Math.max(
@@ -4498,62 +4162,132 @@ photoInput.addEventListener(
 
 
 /* =========================================================
-   LOCAL PROFILE
+   CREATE ACCOUNT
 ========================================================= */
 
 function saveLocalProfile() {
 
+    /*
+     * IMPORTANT:
+     *
+     * Only these three properties are persisted:
+     *
+     *   name
+     *   id
+     *   photo
+     *
+     * The original card image,
+     * corrected card image,
+     * OCR text,
+     * barcode text,
+     * and timestamp are NOT stored.
+     */
+
+    const name =
+        detectedName.textContent
+            .trim();
+
+    const id =
+        detectedId.textContent
+            .replace(
+                /^ID:\s*/i,
+                ""
+            )
+            .trim();
+
+    const photo =
+        currentPhotoSource ||
+        profilePicture.src;
+
+
+    /*
+     * Don't create an incomplete account.
+     */
+
+    if (
+        !name ||
+        name.toLowerCase() ===
+        "name not detected"
+    ) {
+
+        alert(
+            "The name could not be detected. Please scan the card again."
+        );
+
+        return;
+
+    }
+
+    if (
+        !id ||
+        id.toLowerCase() ===
+        "id not detected"
+    ) {
+
+        alert(
+            "The card ID could not be detected. Please scan the card again."
+        );
+
+        return;
+
+    }
+
+    if (!photo) {
+
+        alert(
+            "A profile picture is required."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * THE ONLY DATA THAT IS SAVED.
+     */
+
     const profile = {
 
         name:
-            detectedName.textContent,
+            name,
 
         id:
-            detectedId.textContent,
+            id,
 
         photo:
-            currentPhotoSource ||
-            profilePicture.src,
-
-        /*
-         * Full uncropped original camera image.
-         */
-
-        cardPhoto:
-            originalCapture
-                ? originalCapture.toDataURL(
-                    "image/jpeg",
-                    0.96
-                )
-                : null,
-
-        /*
-         * Straightened card is also retained.
-         */
-
-        correctedCardPhoto:
-            correctedCapture
-                ? correctedCapture.toDataURL(
-                    "image/jpeg",
-                    0.96
-                )
-                : null,
-
-        created:
-            Date.now()
+            photo
 
     };
 
+
     localStorage.setItem(
-        "localCardProfile",
-        JSON.stringify(
-            profile
-        )
+        "herrickSocialProfile",
+        JSON.stringify(profile)
     );
 
-    showHome(
-        profile
+
+    /*
+     * Remove anything the older scanner version
+     * may have stored.
+     */
+
+    localStorage.removeItem(
+        "localCardProfile"
     );
+
+
+    /*
+     * Clear temporary card information from memory.
+     */
+
+    originalCapture = null;
+    correctedCapture = null;
+
+    fullOCR.textContent = "";
+    barcodeText.textContent = "";
+
+    showHome(profile);
 }
 
 
@@ -4587,13 +4321,16 @@ function showHome(profile) {
     document.getElementById(
         "homeId"
     ).textContent =
-        profile.id ||
-        "ID information unavailable";
+        "Card ID: " +
+        (
+            profile.id ||
+            "Unavailable"
+        );
 }
 
 
 /* =========================================================
-   CONTINUE
+   CREATE ACCOUNT BUTTON
 ========================================================= */
 
 document
@@ -4607,7 +4344,7 @@ document
 
 
 /* =========================================================
-   HOME EDIT
+   HOME EDIT PHOTO
 ========================================================= */
 
 document
@@ -4620,7 +4357,7 @@ document
 
             const saved =
                 localStorage.getItem(
-                    "localCardProfile"
+                    "herrickSocialProfile"
                 );
 
             if (!saved)
@@ -4657,7 +4394,77 @@ document
 
 
 /* =========================================================
-   CLEAR PROFILE
+   SAVE EDITED HOME PHOTO
+========================================================= */
+
+document
+    .getElementById(
+        "saveCrop"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            /*
+             * This listener is intentionally handled
+             * by the crop-save logic above.
+             *
+             * If the user is editing an already-created
+             * account, update ONLY the photo field.
+             */
+
+            const saved =
+                localStorage.getItem(
+                    "herrickSocialProfile"
+                );
+
+            if (!saved)
+                return;
+
+            try {
+
+                const profile =
+                    JSON.parse(
+                        saved
+                    );
+
+                if (
+                    profile &&
+                    profile.name &&
+                    profile.id &&
+                    currentPhotoSource
+                ) {
+
+                    profile.photo =
+                        currentPhotoSource;
+
+                    localStorage.setItem(
+                        "herrickSocialProfile",
+                        JSON.stringify(profile)
+                    );
+
+                    document.getElementById(
+                        "homePicture"
+                    ).src =
+                        currentPhotoSource;
+
+                }
+
+            } catch(error) {
+
+                console.error(
+                    "Could not update profile photo:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   DELETE ACCOUNT
 ========================================================= */
 
 document
@@ -4667,6 +4474,23 @@ document
     .addEventListener(
         "click",
         () => {
+
+            const confirmed =
+                confirm(
+                    "Delete your Herrick Social account from this browser?"
+                );
+
+            if (!confirmed)
+                return;
+
+            localStorage.removeItem(
+                "herrickSocialProfile"
+            );
+
+            /*
+             * Clean up the previous version's
+             * storage too.
+             */
 
             localStorage.removeItem(
                 "localCardProfile"
@@ -4686,24 +4510,40 @@ try {
 
     const saved =
         localStorage.getItem(
-            "localCardProfile"
+            "herrickSocialProfile"
         );
 
     if (saved) {
 
         const profile =
-            JSON.parse(
-                saved
-            );
+            JSON.parse(saved);
+
+        /*
+         * Only restore the three allowed fields.
+         */
 
         if (
             profile &&
+            typeof profile.name === "string" &&
+            typeof profile.id === "string" &&
+            typeof profile.photo === "string" &&
+            profile.name &&
+            profile.id &&
             profile.photo
         ) {
 
-            showHome(
-                profile
-            );
+            showHome({
+
+                name:
+                    profile.name,
+
+                id:
+                    profile.id,
+
+                photo:
+                    profile.photo
+
+            });
 
         }
 
@@ -4717,7 +4557,7 @@ try {
     );
 
     localStorage.removeItem(
-        "localCardProfile"
+        "herrickSocialProfile"
     );
 
 }
