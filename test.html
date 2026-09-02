@@ -56,7 +56,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
     font: inherit;
 }
 
@@ -595,6 +596,513 @@ pre {
     margin-top: 20px;
 }
 
+/* =========================================================
+   SOCIAL FEED
+========================================================= */
+
+.social {
+    margin-top: 34px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+}
+
+.socialHeader {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.socialHeader h2 {
+    margin: 0 0 4px;
+}
+
+.viewToggle {
+    display: flex;
+    gap: 4px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px;
+}
+
+.viewToggle button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-weight: 650;
+    font-size: 13px;
+}
+
+.viewToggle button.active {
+    background: var(--blue);
+    color: white;
+}
+
+.storiesBar {
+    display: flex;
+    gap: 18px;
+    margin: 22px 0 4px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.storyItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.storyRing {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    display: grid;
+    place-items: center;
+}
+
+.storyRing img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #04101c;
+    background: #111;
+}
+
+.postComposer {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.postComposer textarea {
+    width: 100%;
+    min-height: 74px;
+    resize: vertical;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+    border: 1px solid var(--border);
+
+    background: var(--panel2);
+    color: var(--text);
+
+    line-height: 1.5;
+}
+
+.hashtagPreview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    min-height: 18px;
+}
+
+.hashtagPreview span {
+    color: var(--blue);
+    font-size: 12.5px;
+    font-weight: 650;
+}
+
+.imagePicker {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.composerPreviews {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.composerThumb {
+    position: relative;
+    width: 82px;
+    height: 82px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.composerThumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.composerThumb button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+    border: 0;
+
+    background: rgba(0,0,0,.65);
+    color: white;
+
+    font-size: 12px;
+    line-height: 1;
+    padding: 0;
+}
+
+.postHint {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.searchRow {
+    margin: 20px 0 8px;
+}
+
+.searchRow input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+}
+
+.filterChips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.filterChip {
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--muted);
+
+    border-radius: 999px;
+
+    padding: 6px 13px;
+
+    font-size: 12.5px;
+    font-weight: 650;
+}
+
+.filterChip.active {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+}
+
+.gridView {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-top: 18px;
+}
+
+.gridView button {
+    border: 0;
+    padding: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #04101c;
+}
+
+.gridView img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.posts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin-top: 18px;
+}
+
+.post {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.postTop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 16px;
+}
+
+.postTop img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3779a9;
+}
+
+.postTop .who {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    min-width: 0;
+}
+
+.postTop .who strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.postTop small {
+    color: var(--muted);
+}
+
+.postTop .deletePost {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    padding: 6px;
+}
+
+.postCarousel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #000;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.postCarousel .track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform .25s ease;
+}
+
+.postCarousel .track img {
+    width: 100%;
+    height: 100%;
+    flex: 0 0 100%;
+    object-fit: cover;
+}
+
+.carouselDots {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 5px;
+}
+
+.carouselDots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.4);
+}
+
+.carouselDots span.active {
+    background: white;
+}
+
+.heartBurst {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 88px;
+    opacity: 0;
+
+    pointer-events: none;
+
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.5));
+}
+
+.heartBurst.show {
+    animation: heartPop .7s ease forwards;
+}
+
+@keyframes heartPop {
+    0%   { opacity: 0; transform: scale(.4); }
+    22%  { opacity: 1; transform: scale(1.15); }
+    45%  { transform: scale(1); }
+    78%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(1); }
+}
+
+.postActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 12px 12px 2px;
+}
+
+.iconButton {
+    border: 0;
+    background: transparent;
+    color: var(--text);
+
+    font-size: 22px;
+    padding: 6px;
+    line-height: 1;
+}
+
+.iconButton.liked {
+    color: var(--red);
+}
+
+.iconButton.saved {
+    color: var(--yellow);
+}
+
+.likeCount {
+    padding: 0 16px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.postCaptionRow {
+    padding: 6px 16px 4px;
+    line-height: 1.5;
+}
+
+.postCaptionRow strong {
+    margin-right: 6px;
+}
+
+.hashtag {
+    color: var(--blue);
+    font-weight: 650;
+
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+}
+
+.postMeta {
+    padding: 2px 16px 10px;
+    color: var(--muted);
+    font-size: 12.5px;
+}
+
+.comments {
+    border-top: 1px solid var(--border);
+    padding: 12px 16px 14px;
+}
+
+.commentRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    padding: 5px 0;
+
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.commentRow strong {
+    margin-right: 4px;
+}
+
+.commentRow span {
+    flex: 1;
+}
+
+.commentRow button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.addComment {
+    display: flex;
+    gap: 8px;
+
+    padding-top: 10px;
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.addComment input {
+    flex: 1;
+
+    padding: 9px 13px;
+
+    border-radius: 999px;
+    border: 1px solid var(--border);
+
+    background: var(--panel2);
+    color: var(--text);
+}
+
+.addComment button {
+    border: 0;
+    background: var(--blue);
+    color: white;
+
+    border-radius: 999px;
+
+    padding: 8px 16px;
+
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.addComment button:disabled {
+    opacity: .5;
+}
+
+.emptyPosts {
+    text-align: center;
+    color: var(--muted);
+
+    padding: 44px 20px;
+
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+
+    margin-top: 16px;
+
+    line-height: 1.6;
+}
+
 @media(max-width: 650px) {
 
     .scanner {
@@ -620,6 +1128,14 @@ pre {
     .results,
     .home {
         padding: 16px;
+    }
+
+    .postCarousel {
+        aspect-ratio: 4 / 5;
+    }
+
+    .heartBurst {
+        font-size: 68px;
     }
 }
 </style>
@@ -972,31 +1488,79 @@ pre {
 
     </div>
 
-
-
     <section class="social" id="socialSection">
 
         <div class="socialHeader">
+
             <div>
-                <h2>📸 Social</h2>
-                <p class="subtitle">Share an image with a caption.</p>
+                <h2>📸 Your Posts</h2>
+                <p class="subtitle" id="postCountLabel">0 posts</p>
             </div>
+
+            <div class="viewToggle">
+                <button id="feedViewBtn" class="active" type="button">Feed</button>
+                <button id="gridViewBtn" type="button">Grid</button>
+            </div>
+
+        </div>
+
+        <div class="storiesBar">
+
+            <button id="storyAvatarBtn" class="storyItem" type="button">
+                <span class="storyRing">
+                    <img id="storyAvatar" alt="Your story">
+                </span>
+                Your story
+            </button>
+
         </div>
 
         <div class="postComposer">
-            <textarea id="postCaption" maxlength="1000" placeholder="Write a caption..."></textarea>
+
+            <textarea
+                id="postCaption"
+                maxlength="2200"
+                placeholder="Write a caption... use #hashtags">
+            </textarea>
+
+            <div class="hashtagPreview" id="hashtagPreview"></div>
 
             <div class="imagePicker">
-                <input id="postImageInput" type="file" accept="image/*" hidden>
-                <button id="choosePostImage" class="smallButton">🖼️ Choose Image</button>
-                <button id="publishPost" class="primary" disabled>Post Image</button>
+
+                <input
+                    id="postImageInput"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden>
+
+                <button id="choosePostImage" class="smallButton" type="button">
+                    🖼️ Choose Photos
+                </button>
+
+                <button id="publishPost" class="primary" type="button" disabled>
+                    Post
+                </button>
+
             </div>
 
-            <img id="postImagePreview" class="imagePreview" alt="Post preview">
-            <p class="postHint">Posts are stored only in this browser. Each post contains only its image, caption, and the profile name/photo used to display it.</p>
+            <div class="composerPreviews" id="composerPreviews"></div>
+
+            <p class="postHint">
+                Posts, likes and comments are stored only in this browser.
+                Add up to 5 photos to a single post.
+            </p>
+
         </div>
 
+        <div class="searchRow">
+            <input id="postSearch" type="text" placeholder="Search captions or #hashtags">
+        </div>
+
+        <div class="filterChips" id="hashtagFilters"></div>
+
         <div id="posts" class="posts"></div>
+        <div id="gridView" class="gridView" style="display:none;"></div>
 
     </section>
 
@@ -1100,6 +1664,14 @@ let previousCorners = null;
 let originalCapture = null;
 let correctedCapture = null;
 let currentPhotoSource = null;
+
+/*
+ * Tracks which flow opened the photo editor, so Save Profile
+ * Picture knows whether to also persist the change back into
+ * the local profile (edited from Home) or just hand the crop
+ * back to the in-progress scan (edited from the scan results).
+ */
+let editorContext = "scanner";
 
 let cropState = {
     x: 0,
@@ -4430,6 +5002,41 @@ document
             profilePicture.src =
                 currentPhotoSource;
 
+            /*
+             * When the editor was opened from Home (the
+             * story ring or "Edit Profile Picture"), also
+             * persist the new photo back into the saved
+             * local profile and refresh the feed, since
+             * those flows don't go through
+             * "Continue to Local Home" again.
+             */
+
+            if (editorContext === "home") {
+
+                const saved =
+                    getSavedProfile();
+
+                if (saved) {
+
+                    saved.photo =
+                        currentPhotoSource;
+
+                    localStorage.setItem(
+                        "localCardProfile",
+                        JSON.stringify(saved)
+                    );
+
+                    document.getElementById(
+                        "homePicture"
+                    ).src =
+                        saved.photo;
+
+                    renderApp();
+
+                }
+
+            }
+
             editor.style.display =
                 "none";
 
@@ -4463,6 +5070,9 @@ document
     .addEventListener(
         "click",
         () => {
+
+            editorContext =
+                "scanner";
 
             openEditor(
                 profilePicture.src
@@ -4511,6 +5121,9 @@ photoInput.addEventListener(
         reader.onload =
             () => {
 
+                editorContext =
+                    "scanner";
+
                 openEditor(
                     reader.result
                 );
@@ -4532,10 +5145,12 @@ photoInput.addEventListener(
 function saveLocalProfile() {
 
     /*
-     * IMPORTANT: only these three account fields are persisted.
-     * No raw card image, corrected card image, OCR text, barcode,
-     * or other scan data is written to localStorage.
+     * Only these three account fields are persisted.
+     * No raw card image, corrected card image, OCR text,
+     * or barcode is written to localStorage — the scan
+     * itself never leaves this session.
      */
+
     const profile = {
         name: (detectedName.textContent || "").trim(),
         id: (detectedId.textContent || "").replace(/^ID:\s*/i, "").trim(),
@@ -4550,14 +5165,9 @@ function saveLocalProfile() {
         profile.id = "";
     }
 
-    /* Remove any legacy card/scan fields from older versions. */
     localStorage.setItem(
         "localCardProfile",
-        JSON.stringify({
-            name: profile.name,
-            id: profile.id,
-            photo: profile.photo
-        })
+        JSON.stringify(profile)
     );
 
     showHome(profile);
@@ -4596,6 +5206,8 @@ function showHome(profile) {
     ).textContent =
         profile.id ||
         "ID information unavailable";
+
+    renderApp();
 }
 
 
@@ -4626,274 +5238,514 @@ document
         () => {
 
             const saved =
-                localStorage.getItem(
-                    "localCardProfile"
-                );
+                getSavedProfile();
 
             if (!saved)
                 return;
 
-            try {
+            editorContext =
+                "home";
 
-                const profile =
-                    JSON.parse(
-                        saved
-                    );
-
-                if (
-                    profile &&
-                    profile.photo
-                ) {
-
-                    openEditor(
-                        profile.photo
-                    );
-
-                }
-
-            } catch(error) {
-
-                console.error(
-                    error
-                );
-
-            }
+            openEditor(
+                saved.photo
+            );
 
         }
     );
 
 
-
 /* =========================================================
-   SOCIAL POSTS
+   SOCIAL FEED
 ========================================================= */
 
-const postCaption = document.getElementById("postCaption");
-const postImageInput = document.getElementById("postImageInput");
-const choosePostImage = document.getElementById("choosePostImage");
-const publishPost = document.getElementById("publishPost");
-const postImagePreview = document.getElementById("postImagePreview");
-const postsEl = document.getElementById("posts");
+const postCaption =
+    document.getElementById("postCaption");
 
-let pendingPostImage = "";
+const hashtagPreview =
+    document.getElementById("hashtagPreview");
+
+const postImageInput =
+    document.getElementById("postImageInput");
+
+const choosePostImage =
+    document.getElementById("choosePostImage");
+
+const publishPost =
+    document.getElementById("publishPost");
+
+const composerPreviews =
+    document.getElementById("composerPreviews");
+
+const postsEl =
+    document.getElementById("posts");
+
+const gridViewEl =
+    document.getElementById("gridView");
+
+const feedViewBtn =
+    document.getElementById("feedViewBtn");
+
+const gridViewBtn =
+    document.getElementById("gridViewBtn");
+
+const postSearch =
+    document.getElementById("postSearch");
+
+const hashtagFiltersEl =
+    document.getElementById("hashtagFilters");
+
+const postCountLabel =
+    document.getElementById("postCountLabel");
+
+const storyAvatar =
+    document.getElementById("storyAvatar");
+
+const storyAvatarBtn =
+    document.getElementById("storyAvatarBtn");
+
+let pendingImages = [];
+let currentView = "feed";
+let activeHashtag = "";
 
 function getSavedProfile() {
+
     try {
-        const raw = localStorage.getItem("localCardProfile");
-        if (!raw) return null;
-        const p = JSON.parse(raw);
-        if (!p || typeof p !== "object") return null;
+
+        const raw =
+            localStorage.getItem(
+                "localCardProfile"
+            );
+
+        if (!raw)
+            return null;
+
+        const p =
+            JSON.parse(raw);
+
+        if (
+            !p ||
+            typeof p !== "object"
+        )
+            return null;
+
         return {
             name: String(p.name || "Profile"),
             id: String(p.id || ""),
             photo: String(p.photo || "")
         };
-    } catch (e) {
+
+    } catch(e) {
+
         return null;
+
     }
+
 }
 
 function getPosts() {
+
     try {
-        const raw = localStorage.getItem("socialImagePosts");
-        const posts = raw ? JSON.parse(raw) : [];
-        return Array.isArray(posts) ? posts : [];
-    } catch (e) {
+
+        const raw =
+            localStorage.getItem(
+                "socialPosts"
+            );
+
+        const posts =
+            raw ? JSON.parse(raw) : [];
+
+        return Array.isArray(posts)
+            ? posts
+            : [];
+
+    } catch(e) {
+
         return [];
+
     }
+
 }
 
 function savePosts(posts) {
-    localStorage.setItem("socialImagePosts", JSON.stringify(posts));
+
+    localStorage.setItem(
+        "socialPosts",
+        JSON.stringify(posts)
+    );
+
 }
 
 function escapeHTML(value) {
+
     return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
 }
 
-function renderPosts() {
-    const posts = getPosts();
-    const profile = getSavedProfile();
+function extractHashtags(text) {
 
-    postsEl.innerHTML = "";
+    const matches =
+        String(text || "").match(
+            /#[A-Za-z0-9_]+/g
+        ) || [];
 
-    if (!posts.length) {
-        postsEl.innerHTML = '<div class="emptyPosts">No posts yet. Pick an image and make the first post. 📷</div>';
-        return;
-    }
+    const seen = new Set();
+    const out = [];
 
-    posts.slice().reverse().forEach(post => {
-        const article = document.createElement("article");
-        article.className = "post";
+    matches.forEach(tag => {
 
-        const safeCaption = escapeHTML(post.caption || "");
-        const safeName = escapeHTML(post.name || profile?.name || "Profile");
-        const avatar = post.profilePhoto || profile?.photo || "";
+        const lower =
+            tag.toLowerCase();
 
-        article.innerHTML = `
-            <div class="postTop">
-                ${avatar ? `<img src="${avatar}" alt="">` : `<div style="width:42px;height:42px;border-radius:50%;background:#172a3d"></div>`}
-                <div>
-                    <strong>${safeName}</strong>
-                    <small>${new Date(post.created || Date.now()).toLocaleString()}</small>
-                </div>
-                <button class="deletePost" title="Delete post" aria-label="Delete post">🗑️</button>
-            </div>
-            <img class="postImage" src="${post.image}" alt="Posted image">
-            ${safeCaption ? `<div class="postCaption">${safeCaption}</div>` : ""}
-        `;
+        if (!seen.has(lower)) {
 
-        article.querySelector(".deletePost").addEventListener("click", () => {
-            const remaining = getPosts().filter(item => item.id !== post.id);
-            savePosts(remaining);
-            renderPosts();
-        });
-
-        postsEl.appendChild(article);
-    });
-}
-
-choosePostImage.addEventListener("click", () => postImageInput.click());
-
-postImageInput.addEventListener("change", event => {
-    const file = event.target.files?.[0];
-    if (!file || !file.type.startsWith("image/")) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-        pendingPostImage = String(reader.result || "");
-        postImagePreview.src = pendingPostImage;
-        postImagePreview.style.display = pendingPostImage ? "block" : "none";
-        publishPost.disabled = !pendingPostImage;
-    };
-    reader.readAsDataURL(file);
-});
-
-publishPost.addEventListener("click", () => {
-    const profile = getSavedProfile();
-    if (!profile || !pendingPostImage) return;
-
-    const posts = getPosts();
-    posts.push({
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-        image: pendingPostImage,
-        caption: postCaption.value.trim(),
-        name: profile.name,
-        profilePhoto: profile.photo,
-        created: Date.now()
-    });
-
-    savePosts(posts);
-
-    pendingPostImage = "";
-    postCaption.value = "";
-    postImageInput.value = "";
-    postImagePreview.removeAttribute("src");
-    postImagePreview.style.display = "none";
-    publishPost.disabled = true;
-
-    renderPosts();
-});
-
-renderPosts();
-
-/* =========================================================
-   CLEAR PROFILE
-========================================================= */
-
-document
-    .getElementById(
-        "clearProfile"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            localStorage.removeItem(
-                "localCardProfile"
-            );
-
-            location.reload();
+            seen.add(lower);
+            out.push(tag);
 
         }
+
+    });
+
+    return out;
+}
+
+function renderCaptionHTML(caption) {
+
+    const escaped =
+        escapeHTML(caption);
+
+    return escaped.replace(
+        /#([A-Za-z0-9_]+)/g,
+        (match, tag) =>
+            `<button class="hashtag" type="button" data-tag="${escapeHTML(tag.toLowerCase())}">#${escapeHTML(tag)}</button>`
     );
 
-
-/* =========================================================
-   PROFILE DATA CLEANUP
-========================================================= */
-
-/*
- * Older versions stored cardPhoto/correctedCardPhoto/created.
- * Rewrite the profile immediately so only name, id and photo remain.
- */
-try {
-    const legacy = localStorage.getItem("localCardProfile");
-    if (legacy) {
-        const p = JSON.parse(legacy);
-        if (p && typeof p === "object" && p.photo) {
-            localStorage.setItem("localCardProfile", JSON.stringify({
-                name: String(p.name || "Profile"),
-                id: String(p.id || "").replace(/^ID:\s*/i, ""),
-                photo: String(p.photo)
-            }));
-        }
-    }
-} catch (error) {
-    localStorage.removeItem("localCardProfile");
 }
 
-/* =========================================================
-   RESTORE PROFILE
-========================================================= */
+function timeAgo(ts) {
 
-try {
-
-    const saved =
-        localStorage.getItem(
-            "localCardProfile"
+    const seconds =
+        Math.max(
+            0,
+            Math.floor((Date.now() - ts) / 1000)
         );
 
-    if (saved) {
+    if (seconds < 60)
+        return "just now";
 
-        const profile =
-            JSON.parse(
-                saved
+    const minutes =
+        Math.floor(seconds / 60);
+
+    if (minutes < 60)
+        return minutes + "m ago";
+
+    const hours =
+        Math.floor(minutes / 60);
+
+    if (hours < 24)
+        return hours + "h ago";
+
+    const days =
+        Math.floor(hours / 24);
+
+    if (days < 7)
+        return days + "d ago";
+
+    return new Date(ts).toLocaleDateString();
+}
+
+postCaption.addEventListener(
+    "input",
+    () => {
+
+        const tags =
+            extractHashtags(
+                postCaption.value
             );
 
-        if (
-            profile &&
-            profile.photo
-        ) {
-
-            showHome(
-                profile
-            );
-
-        }
+        hashtagPreview.innerHTML =
+            tags
+                .map(t => `<span>${escapeHTML(t)}</span>`)
+                .join("");
 
     }
+);
 
-} catch(error) {
+choosePostImage.addEventListener(
+    "click",
+    () =>
+        postImageInput.click()
+);
 
-    console.error(
-        "Could not restore profile:",
-        error
-    );
+postImageInput.addEventListener(
+    "change",
+    event => {
 
-    localStorage.removeItem(
-        "localCardProfile"
-    );
+        const files =
+            Array.from(
+                event.target.files || []
+            ).filter(
+                f => f.type.startsWith("image/")
+            );
+
+        if (!files.length)
+            return;
+
+        let remaining =
+            files.length;
+
+        files.forEach(file => {
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                () => {
+
+                    if (
+                        pendingImages.length < 5
+                    ) {
+
+                        pendingImages.push(
+                            String(reader.result || "")
+                        );
+
+                    }
+
+                    remaining--;
+
+                    if (
+                        remaining === 0
+                    ) {
+
+                        renderComposerPreviews();
+
+                    }
+
+                };
+
+            reader.readAsDataURL(
+                file
+            );
+
+        });
+
+    }
+);
+
+function renderComposerPreviews() {
+
+    composerPreviews.innerHTML =
+        pendingImages
+            .map(
+                (src, index) => `
+                <div class="composerThumb">
+                    <img src="${src}" alt="">
+                    <button type="button" data-remove="${index}">✕</button>
+                </div>
+                `
+            )
+            .join("");
+
+    composerPreviews
+        .querySelectorAll("[data-remove]")
+        .forEach(btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    const index =
+                        Number(btn.dataset.remove);
+
+                    pendingImages.splice(index, 1);
+
+                    renderComposerPreviews();
+
+                }
+            );
+
+        });
+
+    publishPost.disabled =
+        pendingImages.length === 0;
 
 }
 
-</script>
+publishPost.addEventListener(
+    "click",
+    () => {
 
-</body>
-</html>
+        const profile =
+            getSavedProfile();
 
+        if (
+            !profile ||
+            !pendingImages.length
+        )
+            return;
+
+        const posts =
+            getPosts();
+
+        posts.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+            images: pendingImages.slice(),
+            caption: postCaption.value.trim(),
+            name: profile.name,
+            profilePhoto: profile.photo,
+            created: Date.now(),
+            liked: false,
+            likeCount: 0,
+            saved: false,
+            comments: []
+        });
+
+        savePosts(posts);
+
+        pendingImages = [];
+        postCaption.value = "";
+        hashtagPreview.innerHTML = "";
+        postImageInput.value = "";
+
+        renderComposerPreviews();
+        renderApp();
+
+    }
+);
+
+function matchesFilters(post) {
+
+    const query =
+        postSearch.value.trim().toLowerCase();
+
+    const caption =
+        (post.caption || "").toLowerCase();
+
+    if (
+        activeHashtag &&
+        !caption.includes(activeHashtag.toLowerCase())
+    ) {
+
+        return false;
+
+    }
+
+    if (
+        query &&
+        !caption.includes(query)
+    ) {
+
+        return false;
+
+    }
+
+    return true;
+}
+
+function renderHashtagFilters(posts) {
+
+    const counts =
+        new Map();
+
+    posts.forEach(post => {
+
+        extractHashtags(post.caption).forEach(tag => {
+
+            const key =
+                tag.toLowerCase();
+
+            counts.set(
+                key,
+                (counts.get(key) || 0) + 1
+            );
+
+        });
+
+    });
+
+    const tags =
+        Array.from(counts.keys())
+            .sort(
+                (a, b) =>
+                    counts.get(b) - counts.get(a)
+            )
+            .slice(0, 8);
+
+    if (!tags.length) {
+
+        hashtagFiltersEl.innerHTML = "";
+        return;
+
+    }
+
+    hashtagFiltersEl.innerHTML =
+        tags
+            .map(
+                tag => `
+                <button type="button" class="filterChip ${activeHashtag.toLowerCase() === tag ? "active" : ""}" data-tag="${escapeHTML(tag)}">
+                    #${escapeHTML(tag.slice(1))}
+                </button>
+                `
+            )
+            .join("");
+
+    hashtagFiltersEl
+        .querySelectorAll("[data-tag]")
+        .forEach(btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    activeHashtag =
+                        activeHashtag === btn.dataset.tag
+                            ? ""
+                            : btn.dataset.tag;
+
+                    renderApp();
+
+                }
+            );
+
+        });
+
+}
+
+function toggleLike(postId) {
+
+    const posts =
+        getPosts();
+
+    const post =
+        posts.find(p => p.id === postId);
+
+    if (!post)
+        return;
+
+    post.liked = !post.liked;
+
+    post.likeCount =
+        Math.max(
+            0,
+            post.likeCount + (post.liked ? 1 : -1)
+        );
+
+    savePosts(posts);
+    renderApp();
+
+}
+
+function toggleSave(postId) {
+
+    const posts =
+        getPosts();
+
+    const post =
+        posts.find(p => p.id === postId);
+
+    if (!
